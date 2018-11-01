@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 from setuptools import find_packages
 from setuptools import setup
 
@@ -13,6 +10,7 @@ setup(
     author_email='opensource+swagger-spec-compatibility@yelp.com',
     install_requires=[
         'bravado-core',
+        'six',
     ],
     extras_require={
         ':python_version<"3.5"': ['typing'],
