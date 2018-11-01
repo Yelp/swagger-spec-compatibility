@@ -19,6 +19,9 @@ setup(
     },
     license='Copyright Yelp, Inc. 2018',
     packages=find_packages(exclude=('tests*', 'testing*')),
+    package_data={
+        'swagger_spec_compatibility': ['py.typed'],
+    },
     classifiers=[
         'Development Status :: 1 - Planning',
         'Environment :: Console',
