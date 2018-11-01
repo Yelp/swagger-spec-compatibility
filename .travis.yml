@@ -1,0 +1,41 @@
+sudo: false
+
+matrix:
+  include:
+  # Please remember to keep TOXENV environment variable and python attribute in sync.
+  # This is a workaround to make sure that we can run tests on OSX and Windows (that have no "native" support for python)
+  - {env: TOXENV=pre-commit, python: '3.6', os: linux, dist: xenial, language: python}
+  - {env: TOXENV=py27, python: '2.7', os: linux, dist: xenial, language: python}
+  - {env: TOXENV=py27, python: '2.7', os: osx, osx_image: xcode10, language: generic}
+  - {env: TOXENV=py35, python: '3.5', os: linux, dist: xenial, language: python}
+  - {env: TOXENV=py35, python: '3.5', os: osx, osx_image: xcode10, language: generic}
+  - {env: TOXENV=py36, python: '3.6', os: linux, dist: xenial, language: python}
+  - {env: TOXENV=py36, python: '3.6', os: osx, osx_image: xcode10, language: generic}
+  - {env: TOXENV=py37, python: '3.7', os: linux, dist: xenial, language: python, sudo: required}  # NOTE: sudo: required is a workaround to https://github.com/travis-ci/travis-ci/issues/9815
+  - {env: TOXENV=py37, python: '3.7', os: osx, osx_image: xcode10, language: generic}
+  # TODO(maci): Add Windows tests
+  # TODO(maci): enable once documentation is present
+
+  fast_finish: true
+  allow_failures:
+  # Windows is available in early release, we should not block ourselves if travis has some issues with Windows for now # TODO(maci) remove this
+  - os: windows
+
+install:
+- ./.travis/install.sh
+- source ${HOME}/generated-environment.sh  # NOTE: The file is generated from ./.travis/install.sh
+
+script:
+- tox
+
+after_success:
+# Upload coverage data only for Python 3.6 tests on Linux
+- if [ "${TRAVIS_OS_NAME}" == "linux" -a "${TOXENV}" = "py36" ]; then codecov; fi
+
+cache:
+  directories:
+  - ${HOME}/.cache/pip
+  - ${HOME}/.cache/pip-faster
+  - ${HOME}/.cache/pre-commit
+  - ${HOME}/.pyenv/
+  # TODO(maci): Add cache support for chocolatey on windows. NOTE: windows is in early release and have no cache support yet
