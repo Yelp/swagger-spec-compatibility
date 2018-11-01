@@ -4,4 +4,5 @@ from __future__ import unicode_literals
 
 
 def hello():
+    # type: () -> unicode
     return 'world'

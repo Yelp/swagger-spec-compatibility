@@ -1,4 +1,5 @@
 coverage
-detect-secrets==0.10.4  # Keep this in sync with the version on .pre-commit-config.yaml
+mypy; python_version >= "3.4"
 pre-commit>=1.12.0
 pytest
+typing; python_version < "3.5"

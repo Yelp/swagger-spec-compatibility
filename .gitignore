@@ -1,10 +1,11 @@
 *.egg-info
 *.py[co]
 /.cache
-/.idea/
 /.coverage
+/.idea/
+/.mypy_cache/
+/.pytest_cache
 /.tox
 /coverage-html
 /dist
 /venv
-/.pytest_cache

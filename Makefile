@@ -7,6 +7,8 @@ install-hooks: venv
 	./venv/bin/pre-commit install -f --install-hooks
 
 venv: requirements-dev.txt setup.py tox.ini
+	-deactivate
+	rm -rf venv
 	tox -e venv
 
 .PHONY: test
