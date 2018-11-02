@@ -14,7 +14,7 @@ class DummyRule(BaseRule):
     def description(self):
         return 'Rule description'
 
-    def error_level(self, old_spec, new_spec):  # pragma: no cover
+    def validate(self, old_spec, new_spec):  # pragma: no cover
         return None
 
 
@@ -22,7 +22,7 @@ class DummyFailRule(BaseRule):
     def description(self):
         return 'Rule description'
 
-    def error_level(self, old_spec, new_spec):  # pragma: no cover
+    def validate(self, old_spec, new_spec):  # pragma: no cover
         return None
 
 

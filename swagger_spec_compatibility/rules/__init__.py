@@ -8,7 +8,7 @@ from bravado.client import SwaggerClient
 from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.rules.common import BaseRule  # noqa: F401
-from swagger_spec_compatibility.rules.common import ErrorLevel  # noqa: F401
+from swagger_spec_compatibility.rules.common import RuleMessage  # noqa: F401
 from swagger_spec_compatibility.rules.common import RuleRegistry  # noqa: F401
 from swagger_spec_compatibility.rules.deleted_endpoint import DeletedEndpoint  # noqa: F401
 
@@ -28,7 +28,7 @@ def compatibility_status(
     rules=_ALL_RULES(),  # type: typing.Union[_ALL_RULES, typing.Iterable[BaseRule]]
     strict=False,  # type: bool
 ):
-    # type: (...) -> typing.Mapping[BaseRule, typing.Optional[ErrorLevel]]
+    # type: (...) -> typing.Mapping[BaseRule, typing.Iterable[RuleMessage]]
 
     old_spec = _load_spec_from_uri(old_spec_uri)
     new_spec = _load_spec_from_uri(new_spec_uri)
@@ -37,7 +37,7 @@ def compatibility_status(
         rules = RuleRegistry.rule_classes()
 
     rules_to_error_level_mapping = {
-        rule: rule.error_level(old_spec=old_spec, new_spec=new_spec)
+        rule: rule.validate(old_spec=old_spec, new_spec=new_spec)
         for rule in rules
     }
 

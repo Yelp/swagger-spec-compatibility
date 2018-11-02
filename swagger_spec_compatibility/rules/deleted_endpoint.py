@@ -7,7 +7,7 @@ import typing  # noqa: F401
 from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.rules.common import BaseRule
-from swagger_spec_compatibility.rules.common import ErrorLevel
+from swagger_spec_compatibility.rules.common import RuleMessage   # noqa: F401
 
 
 class DeletedEndpoint(BaseRule):
@@ -17,6 +17,6 @@ class DeletedEndpoint(BaseRule):
                'specs (like old mobile Apps) could continue to call the removed endpoint and this will cause an ' \
                'HTTP error status code (usually an HTTP/400 or HTTP/404)'
 
-    def error_level(self, old_spec, new_spec):
-        # type: (Spec, Spec) -> typing.Optional[ErrorLevel]
-        return ErrorLevel.ERROR
+    def validate(self, old_spec, new_spec):
+        # type: (Spec, Spec) -> typing.Iterable[RuleMessage]
+        return ()

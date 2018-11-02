@@ -2,22 +2,13 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import typing  # noqa: F401
+import typing
 from abc import ABCMeta
 from abc import abstractmethod
-from enum import Enum
+from enum import IntEnum
 
 from bravado_core.spec import Spec  # noqa: F401
 from six import with_metaclass
-
-
-class StringEnum(str, Enum):
-    """Enum where members are also (and must be) strings"""
-
-
-class ErrorLevel(StringEnum):
-    WARNING = 'WARNING'
-    ERROR = 'ERROR'
 
 
 class RuleRegistry(ABCMeta):
@@ -51,6 +42,20 @@ class RuleRegistry(ABCMeta):
         return RuleRegistry._REGISTRY[rule_name]
 
 
+class Level(IntEnum):
+    INFO = 0
+    WARNING = 1
+    ERROR = 2
+
+
+RuleMessage = typing.NamedTuple(
+    'RuleMessage', (
+        ('level', Level),
+        ('description', typing.Text),
+    ),
+)
+
+
 class BaseRule(with_metaclass(RuleRegistry)):
     @abstractmethod
     def description(self):
@@ -58,6 +63,6 @@ class BaseRule(with_metaclass(RuleRegistry)):
         pass
 
     @abstractmethod
-    def error_level(self, old_spec, new_spec):
-        # type: (Spec, Spec) -> typing.Optional[ErrorLevel]
+    def validate(self, old_spec, new_spec):
+        # type: (Spec, Spec) -> typing.Iterable[RuleMessage]
         pass
