@@ -3,12 +3,11 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import argparse
-import typing  # noqa: F401
 from textwrap import dedent
-from textwrap import TextWrapper
 
 from swagger_spec_compatibility.cli import explain  # noqa: F401
 from swagger_spec_compatibility.cli import run  # noqa: F401
+from swagger_spec_compatibility.cli.common import wrap
 from swagger_spec_compatibility.rules import RuleRegistry
 
 
@@ -16,12 +15,6 @@ _SUB_COMMAND_ASSOCIATED_FUNCTION_MAPPING = {
     explain.add_sub_parser: explain.execute,
     run.add_sub_parser: run.execute,
 }
-
-
-def wrap(text, width=120):
-    # type: (typing.Text, int) -> typing.Text
-    wrapper = TextWrapper(expand_tabs=False, replace_whitespace=False, break_long_words=False, width=width)
-    return '\n'.join('\n'.join(wrapper.wrap(line)) for line in text.splitlines())
 
 
 def parser():
@@ -47,6 +40,7 @@ def parser():
     )
 
     subparsers = parser.add_subparsers(help='help for sub-command', dest='command')
+    subparsers.required = True
     for add_sub_command_parser, associated_function in _SUB_COMMAND_ASSOCIATED_FUNCTION_MAPPING.items():
         add_sub_command_parser(subparsers).set_defaults(func=associated_function)
 

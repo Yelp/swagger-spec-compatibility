@@ -11,6 +11,7 @@ setup(
     install_requires=[
         'bravado-core',
         'six',
+        'termcolor',
     ],
     extras_require={
         ':python_version<"3.5"': ['typing'],

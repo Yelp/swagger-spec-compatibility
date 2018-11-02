@@ -10,8 +10,8 @@ from swagger_spec_compatibility.cli import parser
 def main(argv=None):
     # type: (typing.Optional[typing.Sequence[typing.Text]]) -> int
     args = parser().parse_args(argv)
-    print(args)
-    return 0
+    exit_code = args.func(args)  # type: int
+    return exit_code
 
 
 if __name__ == '__main__':
