@@ -24,19 +24,19 @@ def execute(args):
     # type: (_Namespace) -> int
     rules_to_explain = {rule_name: RuleRegistry.rule(rule_name) for rule_name in args.rules}
 
-    print(wrap(
+    print(
         '{title}\n{rules_detail}'.format(
             title=colored('Rules explanation', attrs=['bold']),
             count=len(rules_to_explain),
             rules_detail='\n\t'.join(
-                '{rule_name}:\n\t{rule_description}'.format(
+                '{rule_name}:\n{rule_description}'.format(
                     rule_name=colored(rule_name, color='cyan', attrs=['bold']),
-                    rule_description=rule_class.description(),
+                    rule_description=wrap(rule_class.description(), indent='\t'),
                 )
                 for rule_name, rule_class in rules_to_explain.items()
             ),
         ),
-    ))
+    )
 
     return 0
 

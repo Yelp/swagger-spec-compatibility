@@ -27,7 +27,14 @@ def uri(param):
     raise ArgumentTypeError('`{param}` is not an existing file and either a valid URI'.format(param=param))
 
 
-def wrap(text, width=120):
-    # type: (typing.Text, int) -> typing.Text
-    wrapper = TextWrapper(expand_tabs=False, replace_whitespace=False, break_long_words=False, width=width)
+def wrap(text, width=120, indent=''):
+    # type: (typing.Text, int, typing.Text) -> typing.Text
+    wrapper = TextWrapper(
+        expand_tabs=False,
+        replace_whitespace=False,
+        break_long_words=False,
+        width=width,
+        initial_indent=str(indent),
+        subsequent_indent=str(indent),
+    )
     return '\n'.join('\n'.join(wrapper.wrap(line)) for line in text.splitlines())
