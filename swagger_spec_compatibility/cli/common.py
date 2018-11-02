@@ -6,6 +6,8 @@ import typing  # noqa: F401
 from argparse import ArgumentTypeError
 from os.path import abspath
 from os.path import exists
+from os.path import expanduser
+from os.path import expandvars
 from textwrap import TextWrapper
 
 from six.moves.urllib.parse import urljoin
@@ -15,12 +17,14 @@ from six.moves.urllib.request import pathname2url
 
 def uri(param):
     # type: (str) -> str
-    if exists(param):
-        return urljoin('file:', pathname2url(abspath(param)))
-    elif urlsplit(param).scheme:
+    if urlsplit(param).scheme:
         return param
-    else:
-        raise ArgumentTypeError('`{param}` is not an existing file and either a valid URI'.format(param=param))
+
+    path = expanduser(expandvars(param))
+    if exists(path):
+        return urljoin('file:', pathname2url(abspath(path)))
+
+    raise ArgumentTypeError('`{param}` is not an existing file and either a valid URI'.format(param=param))
 
 
 def wrap(text, width=120):
