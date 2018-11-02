@@ -3,3 +3,4 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from swagger_spec_compatibility.rules.common import RuleRegistry  # noqa: F401
+from swagger_spec_compatibility.rules.deleted_endpoint import DeletedEndpoint  # noqa: F401
