@@ -6,6 +6,8 @@ import argparse  # noqa: F401
 import typing  # noqa: F401
 
 from swagger_spec_compatibility.cli.common import uri
+from swagger_spec_compatibility.rules import compatibility_status
+from swagger_spec_compatibility.rules import RuleRegistry
 
 
 _Namespace = typing.NamedTuple(
@@ -22,7 +24,25 @@ _Namespace = typing.NamedTuple(
 
 def execute(args):
     # type: (_Namespace) -> int
-    return 1  # TODO(maci) implement logic
+    rules_to_check = {RuleRegistry.rule(rule_name): rule_name for rule_name in args.rules}
+
+    rules_to_error_level_mapping = compatibility_status(
+        old_spec_uri=args.old_spec,
+        new_spec_uri=args.new_spec,
+        rules=rules_to_check.keys(),
+        strict=args.strict,
+    )
+
+    rules_to_error_level_mapping = {  # Remove rules that did not have errors
+        rule: error_level
+        for rule, error_level in rules_to_error_level_mapping.items()
+        if error_level
+    }
+
+    if rules_to_error_level_mapping:
+        print('Failed rules: {}'.format(', '.join(rules_to_check[r] for r in rules_to_error_level_mapping)))
+
+    return 1 if rules_to_error_level_mapping else 0
 
 
 def add_sub_parser(subparsers):

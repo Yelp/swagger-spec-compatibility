@@ -31,9 +31,14 @@ class RuleRegistry(ABCMeta):
         return new_cls
 
     @staticmethod
-    def rules():
+    def rule_names():
         # type: () -> typing.Iterable[typing.Text]
         return sorted(RuleRegistry._REGISTRY.keys())
+
+    @staticmethod
+    def rule_classes():
+        # type: () -> typing.Iterable['BaseRule']
+        return sorted(RuleRegistry._REGISTRY.values())
 
     @staticmethod
     def has_rule(rule_name):

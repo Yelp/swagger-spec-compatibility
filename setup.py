@@ -9,6 +9,7 @@ setup(
     author='Yelp, Inc.',
     author_email='opensource+swagger-spec-compatibility@yelp.com',
     install_requires=[
+        'bravado',
         'bravado-core',
         'six',
         'termcolor',

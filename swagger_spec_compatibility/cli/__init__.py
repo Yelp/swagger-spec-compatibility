@@ -35,8 +35,8 @@ def parser():
         '-r', '--rules',
         nargs='+',
         help='Rules to apply for compatibility detection. (default: %(default)s)',
-        default=RuleRegistry.rules(),
-        choices=RuleRegistry.rules(),
+        default=RuleRegistry.rule_names(),
+        choices=RuleRegistry.rule_names(),
     )
 
     subparsers = parser.add_subparsers(help='help for sub-command', dest='command')
@@ -44,7 +44,7 @@ def parser():
     for add_sub_command_parser, associated_function in _SUB_COMMAND_ASSOCIATED_FUNCTION_MAPPING.items():
         add_sub_command_parser(subparsers).set_defaults(func=associated_function)
 
-    if not RuleRegistry.rules():
+    if not RuleRegistry.rule_names():
         raise parser.error('No rules are defined.')
 
     return parser
