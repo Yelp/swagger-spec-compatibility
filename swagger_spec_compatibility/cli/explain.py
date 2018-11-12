@@ -7,7 +7,6 @@ import typing
 
 from termcolor import colored
 
-from swagger_spec_compatibility.cli.common import wrap
 from swagger_spec_compatibility.rules.common import RuleRegistry
 
 
@@ -27,12 +26,8 @@ def execute(args):
     print(
         '{title}\n{rules_detail}'.format(
             title=colored('Rules explanation', attrs=['bold']),
-            count=len(rules_to_explain),
             rules_detail='\n\t'.join(
-                '{rule_name}:\n{rule_description}'.format(
-                    rule_name=colored(rule_name, color='cyan', attrs=['bold']),
-                    rule_description=wrap(rule_class.description(), indent='\t'),
-                )
+                rule_class.explain()
                 for rule_name, rule_class in rules_to_explain.items()
             ),
         ),

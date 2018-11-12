@@ -11,7 +11,8 @@ from swagger_spec_compatibility.rules.common import RuleMessage   # noqa: F401
 
 
 class DeletedEndpoint(BaseRule):
-    def description(self):
+    @classmethod
+    def description(cls):
         # type: () -> typing.Text
         return 'An endpoint has been removed. This change is not backward compatible as holders of stale swagger ' \
                'specs (like old mobile Apps) could continue to call the removed endpoint and this will cause an ' \

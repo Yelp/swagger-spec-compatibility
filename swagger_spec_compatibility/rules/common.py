@@ -9,6 +9,9 @@ from enum import IntEnum
 
 from bravado_core.spec import Spec  # noqa: F401
 from six import with_metaclass
+from termcolor import colored
+
+from swagger_spec_compatibility.cli.common import wrap
 
 
 class RuleRegistry(ABCMeta):
@@ -57,8 +60,17 @@ RuleMessage = typing.NamedTuple(
 
 
 class BaseRule(with_metaclass(RuleRegistry)):
+    @classmethod
+    def explain(cls):
+        # type: () -> typing.Text
+        return '{rule_name}:\n{rule_description}'.format(
+            rule_name=colored(cls.__name__, color='cyan', attrs=['bold']),
+            rule_description=wrap(cls.description(), indent='\t'),
+        )
+
+    @classmethod
     @abstractmethod
-    def description(self):
+    def description(cls):
         # type: () -> typing.Text
         pass
 

@@ -11,7 +11,8 @@ from swagger_spec_compatibility.rules import RuleRegistry
 
 
 class DummyRule(BaseRule):
-    def description(self):
+    @classmethod
+    def description(cls):
         return 'Rule description'
 
     def validate(self, old_spec, new_spec):  # pragma: no cover
