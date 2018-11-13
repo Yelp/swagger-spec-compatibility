@@ -17,6 +17,7 @@ case "${TOXENV}" in
     py35) PYTHON=3.5 ;;
     py36) PYTHON=3.6 ;;
     py37) PYTHON=3.7 ;;
+    docs) PYTHON=3.6 ;;
     *) echo "${TOXENV} is not in the list of the known python versions, please fix .travis.yml file and/or update $0 content" > /dev/stderr; exit 1 ;;
 esac
 

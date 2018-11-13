@@ -6,7 +6,7 @@ minimal development: venv install-hooks
 install-hooks: venv
 	./venv/bin/pre-commit install -f --install-hooks
 
-venv: requirements-dev.txt setup.py tox.ini
+venv: requirements-dev.txt requirements-docs.txt setup.py tox.ini
 	-deactivate
 	rm -rf venv
 	tox -e venv
@@ -15,9 +15,12 @@ venv: requirements-dev.txt setup.py tox.ini
 test:
 	tox
 
+.PHONY: docs
+docs:
+	tox -e docs
+
 .PHONY: clean
 clean:
 	find -name '*.pyc' -delete
 	find -name '__pycache__' -delete
-	rm -rf .tox
-	rm -rf venv
+	rm -rf .tox venv docs/build
