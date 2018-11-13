@@ -11,17 +11,18 @@ from swagger_spec_compatibility.rules import RuleRegistry
 
 
 class DummyRule(BaseRule):
-    @classmethod
-    def description(cls):
-        return 'Rule description'
+    error_code = 'TEST_1'
+    short_name = 'DummyRule'
+    description = 'Rule description'
 
     def validate(self, old_spec, new_spec):  # pragma: no cover
-        return None
+        return []
 
 
 class DummyFailRule(BaseRule):
-    def description(self):
-        return 'Rule description'
+    error_code = 'TEST_2'
+    short_name = 'DummyFailRule'
+    description = 'Rule description'
 
     def validate(self, old_spec, new_spec):  # pragma: no cover
         return None
