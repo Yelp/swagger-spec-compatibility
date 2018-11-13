@@ -8,7 +8,7 @@ from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
-from swagger_spec_compatibility.rules.common import RuleMessage   # noqa: F401
+from swagger_spec_compatibility.rules.common import ValidationMessage   # noqa: F401
 from swagger_spec_compatibility.spec_utils import get_endpoints
 
 
@@ -21,14 +21,15 @@ class DeletedEndpoint(BaseRule):
         'HTTP error status code (usually an HTTP/400 or HTTP/404)'
 
     def validate(self, old_spec, new_spec):
-        # type: (Spec, Spec) -> typing.Iterable[RuleMessage]
+        # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
         endpoints_old_spec = get_endpoints(old_spec)
         endponts_new_spec = get_endpoints(new_spec)
 
         return (
-            RuleMessage(
+            ValidationMessage(
                 Level.ERROR,
-                self.description + str(removed_endpoint),
+                self.description,
+                reference=str(removed_endpoint),
             )
             for removed_endpoint in endpoints_old_spec - endponts_new_spec
         )

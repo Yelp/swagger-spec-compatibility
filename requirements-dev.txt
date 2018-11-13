@@ -1,4 +1,6 @@
 coverage
+ipdb
+ipython
 mock
 mypy; python_version >= "3.4"
 pre-commit>=1.12.0

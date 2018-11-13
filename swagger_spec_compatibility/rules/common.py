@@ -51,10 +51,11 @@ class Level(IntEnum):
     ERROR = 2
 
 
-RuleMessage = typing.NamedTuple(
-    'RuleMessage', (
+ValidationMessage = typing.NamedTuple(
+    'ValidationMessage', (
         ('level', Level),
         ('description', typing.Text),
+        ('reference', typing.Text),
     ),
 )
 
@@ -78,7 +79,7 @@ class BaseRule(with_metaclass(RuleRegistry, RequiredAttributeMixin)):
 
     @abstractmethod
     def validate(self, old_spec, new_spec):
-        # type: (Spec, Spec) -> typing.Iterable[RuleMessage]
+        # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
         pass
 
     def explain(self):
