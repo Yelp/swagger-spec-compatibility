@@ -7,8 +7,8 @@ from textwrap import dedent
 
 from swagger_spec_compatibility.cli import explain  # noqa: F401
 from swagger_spec_compatibility.cli import run  # noqa: F401
-from swagger_spec_compatibility.cli.common import wrap
 from swagger_spec_compatibility.rules import RuleRegistry
+from swagger_spec_compatibility.util import wrap
 
 
 _SUB_COMMAND_ASSOCIATED_FUNCTION_MAPPING = {

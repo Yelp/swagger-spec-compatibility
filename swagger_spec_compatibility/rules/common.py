@@ -12,7 +12,7 @@ from bravado_core.spec import Spec  # noqa: F401
 from six import with_metaclass
 from termcolor import colored
 
-from swagger_spec_compatibility.cli.common import wrap
+from swagger_spec_compatibility.util import wrap
 
 
 class RuleRegistry(ABCMeta):

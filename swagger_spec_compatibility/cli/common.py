@@ -8,7 +8,6 @@ from os.path import abspath
 from os.path import exists
 from os.path import expanduser
 from os.path import expandvars
-from textwrap import TextWrapper
 
 import typing_extensions
 from six.moves.urllib.parse import urljoin
@@ -31,16 +30,3 @@ def uri(param):
         return urljoin('file:', pathname2url(abspath(path)))
 
     raise ArgumentTypeError('`{param}` is not an existing file and either a valid URI'.format(param=param))
-
-
-def wrap(text, width=120, indent=''):
-    # type: (typing.Text, int, typing.Text) -> typing.Text
-    wrapper = TextWrapper(
-        expand_tabs=False,
-        replace_whitespace=False,
-        break_long_words=False,
-        width=width,
-        initial_indent=str(indent),
-        subsequent_indent=str(indent),
-    )
-    return '\n'.join('\n'.join(wrapper.wrap(line)) for line in text.splitlines())
