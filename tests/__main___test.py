@@ -6,38 +6,6 @@ import mock
 import pytest
 
 from swagger_spec_compatibility.__main__ import main
-from swagger_spec_compatibility.rules import BaseRule
-from swagger_spec_compatibility.rules import RuleRegistry
-
-
-class DummyRule(BaseRule):
-    error_code = 'TEST_1'
-    short_name = 'DummyRule'
-    description = 'Rule description'
-
-    def validate(self, old_spec, new_spec):  # pragma: no cover
-        return []
-
-
-class DummyFailRule(BaseRule):
-    error_code = 'TEST_2'
-    short_name = 'DummyFailRule'
-    description = 'Rule description'
-
-    def validate(self, old_spec, new_spec):  # pragma: no cover
-        return None
-
-
-@pytest.fixture
-def mock_RuleRegistry():
-    with mock.patch.object(RuleRegistry, '_REGISTRY', {'DummyRule': DummyRule()}) as m:
-        yield m
-
-
-@pytest.fixture
-def mock_RuleRegistry_empty():
-    with mock.patch.object(RuleRegistry, '_REGISTRY', {}) as m:
-        yield m
 
 
 def test_main_fails_with_no_command(capsys):
