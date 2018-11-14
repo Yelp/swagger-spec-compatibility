@@ -60,7 +60,7 @@ def test_main_explain_succeed(mock_RuleRegistry, capsys):
     assert 'Rule description' in out
 
 
-@mock.patch('swagger_spec_compatibility.rules.SwaggerClient', autospec=True)
+@mock.patch('swagger_spec_compatibility.spec_utils.SwaggerClient', autospec=True)
 def test_main_run_succeed(mock_SwaggerClient, mock_RuleRegistry, capsys):
     assert main(['run', __file__, __file__]) == 0
     capsys.readouterr()

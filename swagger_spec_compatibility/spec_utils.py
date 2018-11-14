@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import typing  # noqa: F401
 
+from bravado.client import SwaggerClient
 from bravado_core.operation import Operation  # noqa: F401
 from bravado_core.spec import Spec  # noqa: F401
 
@@ -40,6 +41,11 @@ class Endpoint(typing.NamedTuple(
             http_verb=HTTPVerb.from_swagger_operation(operation),
             path=operation.path_name,
         )
+
+
+def load_spec_from_uri(uri):
+    # type: (typing.Text) -> Spec
+    return SwaggerClient.from_url(uri, config={'internally_dereference_refs': True}).swagger_spec
 
 
 def get_operations(spec):
