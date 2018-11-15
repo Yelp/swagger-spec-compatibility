@@ -6,7 +6,9 @@ import mock
 import pytest
 
 from swagger_spec_compatibility.rules.common import BaseRule
+from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleRegistry
+from swagger_spec_compatibility.rules.common import ValidationMessage
 
 
 @pytest.fixture
@@ -37,30 +39,100 @@ def simple_operation_dict():
 
 
 class DummyRule(BaseRule):
-    error_code = 'TEST_1'
+    error_code = 'TEST_NO_MSG'
     short_name = 'DummyRule'
     description = 'Rule description'
 
-    def validate(self, old_spec, new_spec):  # pragma: no cover
-        return []
+    @classmethod
+    def validate(cls, old_spec, new_spec):  # pragma: no cover
+        return ()
 
 
-class DummyFailRule(BaseRule):
-    error_code = 'TEST_2'
-    short_name = 'DummyFailRule'
+class DummyInfoRule(BaseRule):
+    error_code = 'TEST_INFO_MSG'
+    short_name = 'DummyInfoRule'
     description = 'Rule description'
 
-    def validate(self, old_spec, new_spec):  # pragma: no cover
-        return None
+    @classmethod
+    def validate(cls, old_spec, new_spec):  # pragma: no cover
+        return (
+            ValidationMessage(
+                level=Level.INFO,
+                rule=cls,
+                reference='test',
+            ),
+        )
+
+
+class DummyWarningRule(BaseRule):
+    error_code = 'TEST_WARNING_MSG'
+    short_name = 'DummyWarningRule'
+    description = 'Rule description'
+
+    @classmethod
+    def validate(cls, old_spec, new_spec):  # pragma: no cover
+        return (
+            ValidationMessage(
+                level=Level.WARNING,
+                rule=cls,
+                reference='test',
+            ),
+        )
+
+
+class DummyRuleFailIfDifferent(BaseRule):
+    error_code = 'TEST_NO_MSG'
+    short_name = 'DummyRuleFailIfDifferent'
+    description = 'Rule description'
+
+    @classmethod
+    def validate(cls, old_spec, new_spec):  # pragma: no cover
+        return (
+            ValidationMessage(
+                level=Level.ERROR,
+                rule=cls,
+                reference='test',
+            ),
+        ) if old_spec != new_spec else ()
+
+
+class DummyErrorRule(BaseRule):
+    error_code = 'TEST_ERROR_MSG'
+    short_name = 'DummyErrorRule'
+    description = 'Rule description'
+
+    @classmethod
+    def validate(cls, old_spec, new_spec):  # pragma: no cover
+        return (
+            ValidationMessage(
+                level=Level.ERROR,
+                rule=cls,
+                reference='test',
+            ),
+        )
 
 
 @pytest.fixture
 def mock_RuleRegistry():
-    with mock.patch.object(RuleRegistry, '_REGISTRY', {'DummyRule': DummyRule()}) as m:
+    with mock.patch.object(
+            RuleRegistry, '_REGISTRY', {
+                'DummyRule': DummyRule,
+                'DummyInfoRule': DummyInfoRule,
+                'DummyWarningRule': DummyWarningRule,
+                'DummyErrorRule': DummyErrorRule,
+                'DummyRuleFailIfDifferent': DummyRuleFailIfDifferent,
+            },
+    ) as m:
         yield m
 
 
 @pytest.fixture
 def mock_RuleRegistry_empty():
     with mock.patch.object(RuleRegistry, '_REGISTRY', {}) as m:
+        yield m
+
+
+@pytest.fixture
+def mock_SwaggerClient():
+    with mock.patch('swagger_spec_compatibility.spec_utils.SwaggerClient', autospec=True) as m:
         yield m

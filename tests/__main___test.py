@@ -2,10 +2,10 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import mock
 import pytest
 
 from swagger_spec_compatibility.__main__ import main
+from tests.conftest import DummyRule
 
 
 def test_main_fails_with_no_command(capsys):
@@ -28,7 +28,7 @@ def test_main_explain_succeed(mock_RuleRegistry, capsys):
     assert 'Rule description' in out
 
 
-@mock.patch('swagger_spec_compatibility.spec_utils.SwaggerClient', autospec=True)
-def test_main_run_succeed(mock_SwaggerClient, mock_RuleRegistry, capsys):
+def test_main_run_succeed(mock_SwaggerClient, mock_RuleRegistry_empty, capsys):
+    mock_RuleRegistry_empty['DummyRule'] = DummyRule()
     assert main(['run', __file__, __file__]) == 0
     capsys.readouterr()

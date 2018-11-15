@@ -13,6 +13,7 @@ import typing_extensions
 from six.moves.urllib.parse import urljoin
 from six.moves.urllib.parse import urlsplit
 from six.moves.urllib.request import pathname2url
+from six.moves.urllib.request import url2pathname
 
 
 class CLIProtocol(typing_extensions.Protocol):
@@ -25,7 +26,7 @@ def uri(param):
     if urlsplit(param).scheme:
         return param
 
-    path = expanduser(expandvars(param))
+    path = expanduser(expandvars(url2pathname(param)))
     if exists(path):
         return urljoin('file:', pathname2url(abspath(path)))
 

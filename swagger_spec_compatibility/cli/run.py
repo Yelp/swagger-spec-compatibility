@@ -8,7 +8,7 @@ import typing  # noqa: F401
 from swagger_spec_compatibility.cli.common import CLIProtocol
 from swagger_spec_compatibility.cli.common import uri
 from swagger_spec_compatibility.rules import compatibility_status
-from swagger_spec_compatibility.rules import RuleRegistry
+from swagger_spec_compatibility.rules.common import RuleRegistry
 from swagger_spec_compatibility.spec_utils import load_spec_from_uri
 
 

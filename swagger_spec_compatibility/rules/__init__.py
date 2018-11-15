@@ -15,7 +15,7 @@ from swagger_spec_compatibility.rules.deleted_endpoint import DeletedEndpoint  #
 class _ALL_RULES(object):
     def __str__(self):
         # type: () -> str
-        return str('ALL_RULES')
+        return str('ALL_RULES')  # pragma: no cover  # This statement is present only to have a nicer REPL experience
 
 
 def compatibility_status(
