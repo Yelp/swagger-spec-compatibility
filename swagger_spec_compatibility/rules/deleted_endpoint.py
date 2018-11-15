@@ -14,6 +14,7 @@ from swagger_spec_compatibility.spec_utils import get_endpoints
 
 
 class DeletedEndpoint(BaseRule):
+    error_level = Level.ERROR
     error_code = 'E001'
     short_name = 'Delete Endpoint'
     description = \
@@ -28,10 +29,6 @@ class DeletedEndpoint(BaseRule):
         endponts_new_spec = get_endpoints(new_spec)
 
         return (
-            ValidationMessage(
-                level=Level.ERROR,
-                rule=cls,
-                reference=str(removed_endpoint),
-            )
+            cls.validation_message(str(removed_endpoint))
             for removed_endpoint in endpoints_old_spec - endponts_new_spec
         )
