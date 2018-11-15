@@ -13,6 +13,7 @@ setup(
         'bravado-core',
         'six',
         'termcolor',
+        'typing_extensions',
     ],
     extras_require={
         ':python_version<"3.5"': ['typing'],

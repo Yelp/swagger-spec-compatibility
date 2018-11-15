@@ -10,9 +10,15 @@ from os.path import expanduser
 from os.path import expandvars
 from textwrap import TextWrapper
 
+import typing_extensions
 from six.moves.urllib.parse import urljoin
 from six.moves.urllib.parse import urlsplit
 from six.moves.urllib.request import pathname2url
+
+
+class CLIProtocol(typing_extensions.Protocol):
+    command = None  # type: typing.Text
+    func = None  # type: typing.Callable[['CLIProtocol'], int]
 
 
 def uri(param):

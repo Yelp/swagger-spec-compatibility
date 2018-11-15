@@ -3,20 +3,16 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import argparse  # noqa: F401
-import typing
+import typing  # noqa: F401
 
 from termcolor import colored
 
+from swagger_spec_compatibility.cli.common import CLIProtocol
 from swagger_spec_compatibility.rules.common import RuleRegistry
 
 
-_Namespace = typing.NamedTuple(
-    '_Namespace', [
-        ('command', typing.Text),
-        ('func', typing.Callable[[typing.Iterable[typing.Any]], None]),
-        ('rules', typing.Iterable[typing.Text]),
-    ],
-)
+class _Namespace(CLIProtocol):
+    rules = None  # type: typing.Iterable[typing.Text]
 
 
 def execute(args):
