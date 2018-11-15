@@ -53,12 +53,12 @@ def load_spec_from_uri(uri):
 
 @typed_lru_cache
 def get_operations(spec):
-    # type: (Spec) -> typing.Set[Operation]
-    return {
+    # type: (Spec) -> typing.List[Operation]
+    return [
         operation
         for resource in spec.resources.values()
         for operation in resource.operations.values()
-    }
+    ]
 
 
 @typed_lru_cache
