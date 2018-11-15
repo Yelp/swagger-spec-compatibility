@@ -20,15 +20,16 @@ class DeletedEndpoint(BaseRule):
         'specs (like old mobile Apps) could continue to call the removed endpoint and this will cause an ' \
         'HTTP error status code (usually an HTTP/400 or HTTP/404)'
 
-    def validate(self, old_spec, new_spec):
+    @classmethod
+    def validate(cls, old_spec, new_spec):
         # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
         endpoints_old_spec = get_endpoints(old_spec)
         endponts_new_spec = get_endpoints(new_spec)
 
         return (
             ValidationMessage(
-                Level.ERROR,
-                self.description,
+                level=Level.ERROR,
+                rule=cls,
                 reference=str(removed_endpoint),
             )
             for removed_endpoint in endpoints_old_spec - endponts_new_spec

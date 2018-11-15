@@ -5,21 +5,17 @@ from __future__ import unicode_literals
 import argparse  # noqa: F401
 import typing  # noqa: F401
 
+from swagger_spec_compatibility.cli.common import CLIProtocol
 from swagger_spec_compatibility.cli.common import uri
 from swagger_spec_compatibility.rules import compatibility_status
 from swagger_spec_compatibility.rules import RuleRegistry
 
 
-_Namespace = typing.NamedTuple(
-    '_Namespace', [
-        ('command', typing.Text),
-        ('func', typing.Callable[[typing.Iterable[typing.Any]], None]),
-        ('rules', typing.Iterable[typing.Text]),
-        ('strict', bool),
-        ('old_spec', typing.Text),
-        ('new_spec', typing.Text),
-    ],
-)
+class _Namespace(CLIProtocol):
+    rules = None  # type: typing.Iterable[typing.Text]
+    strict = None  # type: bool
+    old_spec = None  # type: typing.Text
+    new_spec = None  # type: typing.Text
 
 
 def execute(args):
