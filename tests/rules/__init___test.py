@@ -19,8 +19,8 @@ from tests.conftest import DummyRuleFailIfDifferent
 def test_compatibility_status_returns_no_issues_if_same_specs_default_parameters(
     mock_RuleRegistry_empty, minimal_spec_dict,
 ):
-    mock_RuleRegistry_empty['DummyRule'] = DummyRule()
-    mock_RuleRegistry_empty['DummyRuleFailIfDifferent'] = DummyRuleFailIfDifferent()
+    mock_RuleRegistry_empty['DummyRule'] = DummyRule
+    mock_RuleRegistry_empty['DummyRuleFailIfDifferent'] = DummyRuleFailIfDifferent
     spec = Spec.from_dict(minimal_spec_dict)
     expected_result = {
         rule: []
