@@ -1,43 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+from __future__ import print_function
 from __future__ import unicode_literals
 
-import mock
 import pytest
 
 from swagger_spec_compatibility.__main__ import main
-from swagger_spec_compatibility.rules import BaseRule
-from swagger_spec_compatibility.rules import RuleRegistry
-
-
-class DummyRule(BaseRule):
-    error_code = 'TEST_1'
-    short_name = 'DummyRule'
-    description = 'Rule description'
-
-    def validate(self, old_spec, new_spec):  # pragma: no cover
-        return []
-
-
-class DummyFailRule(BaseRule):
-    error_code = 'TEST_2'
-    short_name = 'DummyFailRule'
-    description = 'Rule description'
-
-    def validate(self, old_spec, new_spec):  # pragma: no cover
-        return None
-
-
-@pytest.fixture
-def mock_RuleRegistry():
-    with mock.patch.object(RuleRegistry, '_REGISTRY', {'DummyRule': DummyRule()}) as m:
-        yield m
-
-
-@pytest.fixture
-def mock_RuleRegistry_empty():
-    with mock.patch.object(RuleRegistry, '_REGISTRY', {}) as m:
-        yield m
+from tests.conftest import DummyRule
 
 
 def test_main_fails_with_no_command(capsys):
@@ -60,7 +29,7 @@ def test_main_explain_succeed(mock_RuleRegistry, capsys):
     assert 'Rule description' in out
 
 
-@mock.patch('swagger_spec_compatibility.rules.SwaggerClient', autospec=True)
-def test_main_run_succeed(mock_SwaggerClient, mock_RuleRegistry, capsys):
+def test_main_run_succeed(mock_SwaggerClient, mock_RuleRegistry_empty, capsys):
+    mock_RuleRegistry_empty['DummyRule'] = DummyRule()
     assert main(['run', __file__, __file__]) == 0
     capsys.readouterr()

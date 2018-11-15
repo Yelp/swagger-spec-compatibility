@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse  # noqa: F401
 import typing  # noqa: F401
 
 from swagger_spec_compatibility.cli.common import CLIProtocol
+from swagger_spec_compatibility.cli.common import rules
 from swagger_spec_compatibility.cli.common import uri
 from swagger_spec_compatibility.rules import compatibility_status
-from swagger_spec_compatibility.rules import RuleRegistry
+from swagger_spec_compatibility.rules import ValidationMessage  # noqa: F401
+from swagger_spec_compatibility.rules.common import BaseRule  # noqa: F401
+from swagger_spec_compatibility.rules.common import Level
+from swagger_spec_compatibility.rules.common import RuleProtocol  # noqa: F401
+from swagger_spec_compatibility.spec_utils import load_spec_from_uri
 
 
 class _Namespace(CLIProtocol):
@@ -18,27 +24,65 @@ class _Namespace(CLIProtocol):
     new_spec = None  # type: typing.Text
 
 
-def execute(args):
-    # type: (_Namespace) -> int
-    rules_to_check = {RuleRegistry.rule(rule_name): rule_name for rule_name in args.rules}
-
-    rules_to_error_level_mapping = compatibility_status(
-        old_spec_uri=args.old_spec,
-        new_spec_uri=args.new_spec,
-        rules=rules_to_check.keys(),
-        strict=args.strict,
-    )
-
-    rules_to_error_level_mapping = {  # Remove rules that did not have errors
-        rule: error_level
-        for rule, error_level in rules_to_error_level_mapping.items()
-        if error_level
+def _extract_rules_with_given_message_level(
+    rules_to_messages_mapping,  # type: typing.Mapping[typing.Type[RuleProtocol], typing.Iterable[ValidationMessage]]
+    level,  # type: Level
+):
+    # type: (...) -> typing.Mapping[typing.Type[RuleProtocol], typing.Iterable[ValidationMessage]]
+    messages_in_level = {
+        rule: [
+            message
+            for message in messages
+            if message.level is level
+        ]
+        for rule, messages in rules_to_messages_mapping.items()
+    }
+    return {
+        rule: messages
+        for rule, messages in messages_in_level.items()
+        if messages
     }
 
-    if rules_to_error_level_mapping:
-        print('Failed rules: {}'.format(', '.join(rules_to_check[r] for r in rules_to_error_level_mapping)))
 
-    return 1 if rules_to_error_level_mapping else 0
+def _print_raw_messages(level, messages):
+    # type: (Level, typing.Iterable[ValidationMessage]) -> None
+    print(
+        '{} rules:\n\t{}'.format(
+            level.name,
+            '\n\t'.join(
+                message.string_representation()
+                for message in messages
+            ),
+        ),
+    )
+
+
+def _print_validation_messages(cli_args, messages_by_level):
+    # type: (_Namespace, typing.Mapping[Level, typing.Iterable[ValidationMessage]]) -> None
+    for level, messages in messages_by_level.items():
+        if not messages:
+            continue
+        # TODO(maci) add cli argument for output format (ie. JSON)
+        _print_raw_messages(level=level, messages=messages)
+
+
+def execute(cli_args):
+    # type: (_Namespace) -> int
+    rules_to_messages_mapping = compatibility_status(
+        old_spec=load_spec_from_uri(cli_args.old_spec),
+        new_spec=load_spec_from_uri(cli_args.new_spec),
+        rules=rules(cli_args),
+    )
+
+    messages_by_level = {
+        level: _extract_rules_with_given_message_level(rules_to_messages_mapping, level)
+        for level in Level
+    }
+
+    if cli_args.strict:
+        return 1 if any(messages_by_level.values()) else 0
+    else:
+        return 1 if any(messages_by_level[Level.ERROR]) else 0
 
 
 def add_sub_parser(subparsers):
