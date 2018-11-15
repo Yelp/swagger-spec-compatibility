@@ -9,7 +9,6 @@ import pytest
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleRegistry
-from swagger_spec_compatibility.rules.common import ValidationMessage
 
 
 @pytest.fixture
@@ -40,6 +39,7 @@ def simple_operation_dict():
 
 
 class DummyRule(BaseRule):
+    error_level = Level.ERROR
     error_code = 'TEST_NO_MSG'
     short_name = 'DummyRule'
     description = 'Rule description'
@@ -50,67 +50,47 @@ class DummyRule(BaseRule):
 
 
 class DummyInfoRule(BaseRule):
+    error_level = Level.INFO
     error_code = 'TEST_INFO_MSG'
     short_name = 'DummyInfoRule'
     description = 'Rule description'
 
     @classmethod
     def validate(cls, old_spec, new_spec):  # pragma: no cover
-        return (
-            ValidationMessage(
-                level=Level.INFO,
-                rule=cls,
-                reference='test',
-            ),
-        )
+        return (cls.validation_message('test'),)
 
 
 class DummyWarningRule(BaseRule):
+    error_level = Level.WARNING
     error_code = 'TEST_WARNING_MSG'
     short_name = 'DummyWarningRule'
     description = 'Rule description'
 
     @classmethod
     def validate(cls, old_spec, new_spec):  # pragma: no cover
-        return (
-            ValidationMessage(
-                level=Level.WARNING,
-                rule=cls,
-                reference='test',
-            ),
-        )
+        return (cls.validation_message('test'),)
 
 
 class DummyRuleFailIfDifferent(BaseRule):
+    error_level = Level.ERROR
     error_code = 'TEST_NO_MSG'
     short_name = 'DummyRuleFailIfDifferent'
     description = 'Rule description'
 
     @classmethod
     def validate(cls, old_spec, new_spec):  # pragma: no cover
-        return (
-            ValidationMessage(
-                level=Level.ERROR,
-                rule=cls,
-                reference='test',
-            ),
-        ) if old_spec != new_spec else ()
+        return (cls.validation_message('test'),) if old_spec != new_spec else ()
 
 
 class DummyErrorRule(BaseRule):
+    error_level = Level.ERROR
     error_code = 'TEST_ERROR_MSG'
     short_name = 'DummyErrorRule'
     description = 'Rule description'
 
     @classmethod
     def validate(cls, old_spec, new_spec):  # pragma: no cover
-        return (
-            ValidationMessage(
-                level=Level.ERROR,
-                rule=cls,
-                reference='test',
-            ),
-        )
+        return (cls.validation_message('test'),)
 
 
 @pytest.fixture

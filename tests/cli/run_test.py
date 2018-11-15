@@ -11,7 +11,6 @@ from swagger_spec_compatibility.cli.run import _print_raw_messages
 from swagger_spec_compatibility.cli.run import _print_validation_messages
 from swagger_spec_compatibility.cli.run import execute
 from swagger_spec_compatibility.rules.common import Level
-from swagger_spec_compatibility.rules.common import ValidationMessage
 from tests.conftest import DummyWarningRule
 
 
@@ -30,11 +29,7 @@ def cli_args():
 
 @pytest.fixture
 def warning_message():
-    return ValidationMessage(
-        level=Level.WARNING,
-        rule=DummyWarningRule,
-        reference='reference',
-    )
+    return DummyWarningRule.validation_message('reference')
 
 
 @pytest.mark.parametrize(

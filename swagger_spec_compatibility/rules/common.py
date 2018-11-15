@@ -59,6 +59,7 @@ class RequiredAttributeMixin(object):
         assert getattr(cls, 'error_code', None) is not None
         assert getattr(cls, 'short_name', None) is not None
         assert getattr(cls, 'description', None) is not None
+        assert getattr(cls, 'error_level', None) is not None
         return super(RequiredAttributeMixin, cls).__new__(cls)
 
 
@@ -69,6 +70,8 @@ class RuleProtocol(typing_extensions.Protocol):
     short_name = None  # type: typing.Text
     # Short description of the rationale of the rule. This will be visible on CLI only.
     description = None  # type: typing.Text
+    # Error level associated to the rule
+    error_level = None  # type: Level
 
     @classmethod
     def validate(cls, old_spec, new_spec):
@@ -99,6 +102,8 @@ class BaseRule(with_metaclass(RuleRegistry, RequiredAttributeMixin)):
     short_name = None  # type: typing.Text
     # Short description of the rationale of the rule. This will be visible on CLI only.
     description = None  # type: typing.Text
+    # Error level associated to the rule
+    error_level = None  # type: Level
 
     @classmethod
     @abstractmethod
@@ -113,4 +118,13 @@ class BaseRule(with_metaclass(RuleRegistry, RequiredAttributeMixin)):
             short_name=colored(cls.short_name, color='cyan', attrs=['bold']),
             error_code=cls.error_code,
             rule_description=wrap(cls.description, indent='\t'),
+        )
+
+    @classmethod
+    def validation_message(cls, reference):
+        # type: (typing.Text) -> ValidationMessage
+        return ValidationMessage(
+            level=cls.error_level,
+            rule=cls,
+            reference=reference,
         )
