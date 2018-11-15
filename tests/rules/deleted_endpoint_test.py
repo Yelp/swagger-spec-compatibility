@@ -33,7 +33,7 @@ def test_validate_return_an_error(minimal_spec_dict, simple_operation_dict):
     )) == [
         ValidationMessage(
             level=Level.ERROR,
-            description=DeletedEndpoint.description,
+            rule=DeletedEndpoint,
             reference=str(Endpoint(http_verb=HTTPVerb.GET, path='/endpoint')),
         ),
     ]
