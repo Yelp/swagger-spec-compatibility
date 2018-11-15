@@ -22,6 +22,7 @@ setup(
     packages=find_packages(exclude=('tests*', 'testing*')),
     package_data={
         'swagger_spec_compatibility': ['py.typed'],
+        ':python_version<"3.2"': ['functools32'],
     },
     classifiers=[
         'Development Status :: 1 - Planning',
