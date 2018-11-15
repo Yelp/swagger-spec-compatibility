@@ -9,6 +9,7 @@ from bravado.client import SwaggerClient
 from bravado_core.operation import Operation  # noqa: F401
 from bravado_core.spec import Spec  # noqa: F401
 
+from swagger_spec_compatibility.cache import typed_lru_cache
 from swagger_spec_compatibility.util import StringEnum
 
 
@@ -44,11 +45,13 @@ class Endpoint(typing.NamedTuple(
         )
 
 
+@typed_lru_cache
 def load_spec_from_uri(uri):
     # type: (typing.Text) -> Spec
     return SwaggerClient.from_url(uri, config={'internally_dereference_refs': True}).swagger_spec
 
 
+@typed_lru_cache
 def get_operations(spec):
     # type: (Spec) -> typing.Set[Operation]
     return {
@@ -58,6 +61,7 @@ def get_operations(spec):
     }
 
 
+@typed_lru_cache
 def get_endpoints(spec):
     # type: (Spec) -> typing.Set[Endpoint]
     return {
