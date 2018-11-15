@@ -1,3 +1,4 @@
+-r requirements-docs.txt
 coverage
 ipdb
 ipython

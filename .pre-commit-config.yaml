@@ -49,3 +49,4 @@ repos:
   hooks:
   - id: mypy
     language_version: python3.6
+    exclude: ^docs/.*\.py$

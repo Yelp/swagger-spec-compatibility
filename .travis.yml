@@ -14,7 +14,7 @@ matrix:
   - {env: TOXENV=py37, python: '3.7', os: linux, dist: xenial, language: python, sudo: required}  # NOTE: sudo: required is a workaround to https://github.com/travis-ci/travis-ci/issues/9815
   - {env: TOXENV=py37, python: '3.7', os: osx, osx_image: xcode10, language: generic}
   # TODO(maci): Add Windows tests
-  # TODO(maci): enable once documentation is present
+  - {env: TOXENV=docs, python: '3.6', os: linux, dist: xenial, language: python}
 
   fast_finish: true
   allow_failures:
@@ -31,6 +31,7 @@ script:
 after_success:
 # Upload coverage data only for Python 3.6 tests on Linux
 - if [ "${TRAVIS_OS_NAME}" == "linux" -a "${TOXENV}" = "py36" ]; then codecov; fi
+
 
 cache:
   directories:
