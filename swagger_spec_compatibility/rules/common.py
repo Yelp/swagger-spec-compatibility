@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+from __future__ import print_function
 from __future__ import unicode_literals
 
 import typing
@@ -75,13 +76,20 @@ class RuleProtocol(typing_extensions.Protocol):
         pass
 
 
-ValidationMessage = typing.NamedTuple(
-    'ValidationMessage', (
+class ValidationMessage(typing.NamedTuple(
+    '_ValidationMessage', (
         ('level', Level),
         ('rule', typing.Type[RuleProtocol]),
         ('reference', typing.Text),
     ),
-)
+)):
+    def string_representation(self):
+        # type: () -> typing.Text
+        return '[{error_code}] {short_name} : {reference}'.format(
+            error_code=self.rule.error_code,
+            reference=self.reference,
+            short_name=self.rule.short_name,
+        )
 
 
 class BaseRule(with_metaclass(RuleRegistry, RequiredAttributeMixin)):

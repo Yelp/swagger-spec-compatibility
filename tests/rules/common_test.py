@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+from __future__ import print_function
 from __future__ import unicode_literals
 
 import mock
 import pytest
 
+from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleRegistry
+from swagger_spec_compatibility.rules.common import ValidationMessage
+from tests.conftest import DummyRule
 
 
 def test_RuleRegistry_rule_names(mock_RuleRegistry):
@@ -31,3 +35,11 @@ def test_RuleRegistry_has_rule_with_not_existing_rule(mock_RuleRegistry):
 def test_RuleRegistry_rule_with_not_existing_rule(mock_RuleRegistry):
     with pytest.raises(KeyError):
         RuleRegistry.rule(mock.Mock())
+
+
+def test_ValidationMessage_string_representation():
+    assert ValidationMessage(
+        level=Level.ERROR,
+        rule=DummyRule,
+        reference='reference',
+    ).string_representation() == '[TEST_NO_MSG] DummyRule : reference'

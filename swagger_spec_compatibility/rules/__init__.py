@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+from __future__ import print_function
 from __future__ import unicode_literals
 
 import typing  # noqa: F401
 
 from bravado_core.spec import Spec  # noqa: F401
 
-from swagger_spec_compatibility.rules.common import BaseRule  # noqa: F401
+from swagger_spec_compatibility.rules.common import RuleProtocol  # noqa: F401
 from swagger_spec_compatibility.rules.common import RuleRegistry  # noqa: F401
 from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
 from swagger_spec_compatibility.rules.deleted_endpoint import DeletedEndpoint  # noqa: F401
@@ -21,10 +22,9 @@ class _ALL_RULES(object):
 def compatibility_status(
     old_spec,  # type: Spec
     new_spec,  # type: Spec
-    rules=_ALL_RULES(),  # type: typing.Union[_ALL_RULES, typing.Iterable[typing.Type[BaseRule]]]
-    strict=False,  # type: bool
+    rules=_ALL_RULES(),  # type: typing.Union[_ALL_RULES, typing.Iterable[typing.Type[RuleProtocol]]]
 ):
-    # type: (...) -> typing.Mapping[typing.Type[BaseRule], typing.Iterable[ValidationMessage]]
+    # type: (...) -> typing.Mapping[typing.Type[RuleProtocol], typing.Iterable[ValidationMessage]]
 
     if isinstance(rules, _ALL_RULES):
         rules = RuleRegistry.rules()

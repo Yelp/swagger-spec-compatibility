@@ -24,7 +24,7 @@ repos:
   rev: v1.3.2
   hooks:
   - id: reorder-python-imports
-    args: [--add-import, from __future__ import absolute_import, --add-import, from __future__ import unicode_literals]
+    args: [--add-import, from __future__ import absolute_import, --add-import, from __future__ import unicode_literals, --add-import, from __future__ import print_function]
     exclude: ^setup\.py$
 - repo: https://github.com/asottile/pyupgrade
   rev: v1.10.0
