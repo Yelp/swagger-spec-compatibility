@@ -9,6 +9,7 @@ import pytest
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleRegistry
+from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
 
 
 @pytest.fixture
@@ -25,6 +26,11 @@ def minimal_spec_dict():
         'paths': {},
         'definitions': {},
     }
+
+
+@pytest.fixture
+def minimal_spec(minimal_spec_dict):
+    return load_spec_from_spec_dict(minimal_spec_dict)
 
 
 @pytest.fixture

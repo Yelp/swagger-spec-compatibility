@@ -61,6 +61,11 @@ def load_spec_from_uri(uri):
     return SwaggerClient.from_url(uri, config={'internally_dereference_refs': True}).swagger_spec
 
 
+def load_spec_from_spec_dict(spec_dict):
+    # type: (typing.Mapping[typing.Text, typing.Any]) -> Spec
+    return SwaggerClient.from_spec(spec_dict, origin_url='', config={'internally_dereference_refs': True}).swagger_spec
+
+
 @typed_lru_cache(maxsize=2)
 def get_operations(spec):
     # type: (Spec) -> typing.List[Operation]
