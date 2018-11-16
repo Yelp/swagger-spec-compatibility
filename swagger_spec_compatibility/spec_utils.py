@@ -45,13 +45,13 @@ class Endpoint(typing.NamedTuple(
         )
 
 
-@typed_lru_cache
+@typed_lru_cache(maxsize=2)
 def load_spec_from_uri(uri):
     # type: (typing.Text) -> Spec
     return SwaggerClient.from_url(uri, config={'internally_dereference_refs': True}).swagger_spec
 
 
-@typed_lru_cache
+@typed_lru_cache(maxsize=2)
 def get_operations(spec):
     # type: (Spec) -> typing.List[Operation]
     return [
@@ -61,7 +61,7 @@ def get_operations(spec):
     ]
 
 
-@typed_lru_cache
+@typed_lru_cache(maxsize=2)
 def get_endpoints(spec):
     # type: (Spec) -> typing.Set[Endpoint]
     return {
