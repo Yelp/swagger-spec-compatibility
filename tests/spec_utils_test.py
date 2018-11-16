@@ -8,6 +8,7 @@ import os
 
 import mock
 import pytest
+import six
 from bravado_core.operation import Operation  # noqa: F401
 from bravado_core.spec import Spec  # noqa: F401
 
@@ -40,6 +41,10 @@ def spec_and_operation(minimal_spec_dict, simple_operation_dict):
         },
     ))
     return spec, spec.resources['endpoint'].operations['get_endpoint']
+
+
+def test_HTTPVerb_members_are_strings():
+    assert all(isinstance(http_verb.value, six.text_type) for http_verb in HTTPVerb)
 
 
 def test_HTTPVerb_from_operation(mock_operation):
