@@ -33,6 +33,7 @@ class Endpoint(typing.NamedTuple(
     '_Endpoint', (
         ('http_verb', HTTPVerb),
         ('path', typing.Text),
+        ('operation', Operation),
     ),
 )):
 
@@ -42,7 +43,16 @@ class Endpoint(typing.NamedTuple(
         return Endpoint(
             http_verb=HTTPVerb.from_swagger_operation(operation),
             path=operation.path_name,
+            operation=operation,
         )
+
+    def __hash__(self):
+        # type: () -> int
+        return hash((hash(self.http_verb), hash(self.path)))
+
+    def __eq__(self, other):
+        # type: (typing.Any) -> bool
+        return isinstance(other, self.__class__) and self.http_verb == other.http_verb and self.path == other.path
 
 
 @typed_lru_cache(maxsize=2)

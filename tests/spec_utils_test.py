@@ -55,7 +55,23 @@ def test_Endpoint_from_operation(mock_operation):
     assert Endpoint.from_swagger_operation(mock_operation) == Endpoint(
         http_verb=HTTPVerb.GET,
         path='/endpoint',
+        operation=mock_operation,
     )
+
+
+def test_Endpoint_equality_and_hash(mock_operation):
+    endpoint1 = Endpoint(
+        http_verb=HTTPVerb.GET,
+        path='/endpoint',
+        operation=mock_operation,
+    )
+    endpoint2 = Endpoint(
+        http_verb=HTTPVerb.GET,
+        path='/endpoint',
+        operation=mock_operation,
+    )
+    assert hash(endpoint1) == hash(endpoint2)
+    assert endpoint1 == endpoint2
 
 
 def test_load_spec_from_uri(tmpdir, minimal_spec_dict):

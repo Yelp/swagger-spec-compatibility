@@ -27,6 +27,7 @@ def test_validate_return_an_error(minimal_spec_dict, simple_operation_dict):
         },
     )
     old_spec = Spec.from_dict(old_spec_dict)
+    operation = old_spec.resources['endpoint'].operations['get_endpoint']
     assert list(DeletedEndpoint.validate(
         old_spec=old_spec,
         new_spec=Spec.from_dict(minimal_spec_dict),
@@ -36,6 +37,7 @@ def test_validate_return_an_error(minimal_spec_dict, simple_operation_dict):
                 Endpoint(
                     http_verb=HTTPVerb.GET,
                     path='/endpoint',
+                    operation=operation,
                 ),
             ),
         ),
