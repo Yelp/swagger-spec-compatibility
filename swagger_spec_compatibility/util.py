@@ -4,12 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import typing  # noqa: F401
-from enum import Enum
 from textwrap import TextWrapper
-
-
-class StringEnum(str, Enum):
-    """Enum where members are also (and must be) strings"""
 
 
 def wrap(text, width=120, indent=''):

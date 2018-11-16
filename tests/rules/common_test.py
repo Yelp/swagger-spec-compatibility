@@ -43,3 +43,10 @@ def test_ValidationMessage_string_representation():
         rule=DummyRule,
         reference='reference',
     ).string_representation() == '[TEST_NO_MSG] DummyRule : reference'
+
+
+def test_initializing_BaseRule_throws_an_exception():
+    with pytest.raises(RuntimeError) as excinfo:
+        DummyRule()
+
+    assert excinfo.value.args == ('This class should not be initialized. The assumed usage is via class methods.', )

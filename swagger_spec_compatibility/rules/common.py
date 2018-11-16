@@ -105,6 +105,10 @@ class BaseRule(with_metaclass(RuleRegistry, RequiredAttributeMixin)):
     # Error level associated to the rule
     error_level = None  # type: Level
 
+    def __init__(self):
+        # type: () -> None
+        raise RuntimeError('This class should not be initialized. The assumed usage is via class methods.')
+
     @classmethod
     @abstractmethod
     def validate(cls, old_spec, new_spec):

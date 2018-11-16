@@ -14,7 +14,25 @@ except ImportError:  # pragma: no cover
 T = typing.TypeVar('T')
 
 
-def typed_lru_cache(f, maxsize=2):
-    # type: (T, int) -> T
-    wrapper = _lru_cache(maxsize)(f)  # type: T
-    return wrapper
+class typed_lru_cache(object):
+
+    __slots__ = ('maxsize', 'uncached_function', 'cached_function')
+
+    def __init__(self, maxsize):
+        # type: (typing.Optional[int]) -> None
+        assert isinstance(maxsize, (int, type(None)))
+        self.maxsize = maxsize  # type: typing.Optional[int]
+        self.uncached_function = None  # type: typing.Optional[typing.Any]
+        self.cached_function = None  # type: typing.Optional[typing.Any]
+
+    def __call__(self, fn):
+        # type: (T) -> T
+        # assert (self.cached_function is not None) == (self.uncached_function is not None)
+
+        if self.cached_function is None:
+            self.uncached_function = fn  # type: T
+            self.cached_function = _lru_cache(maxsize=self.maxsize)(fn)
+        else:
+            assert self.uncached_function == fn  # pragma: no cover  # defensive approach, this should not happen
+
+        return typing.cast(T, self.cached_function)

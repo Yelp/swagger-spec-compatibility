@@ -7,9 +7,13 @@ import os
 import sys
 from argparse import ArgumentTypeError
 
+import mock
 import pytest
 
+from swagger_spec_compatibility.cli.common import CLIRulesProtocol
+from swagger_spec_compatibility.cli.common import rules
 from swagger_spec_compatibility.cli.common import uri
+from tests.conftest import DummyRule
 
 
 @pytest.mark.parametrize(
@@ -40,3 +44,12 @@ def test_uri(param, expected_result):
 def test_uri_raises_if_path_does_not_exists(tmpdir):
     with pytest.raises(ArgumentTypeError):
         uri(os.path.join(tmpdir.strpath, str('not-existing-file')))
+
+
+def test_rules(mock_RuleRegistry):
+    assert rules(
+        mock.Mock(
+            spec=CLIRulesProtocol,
+            rules=('DummyRule',),
+        ),
+    ) == {DummyRule}

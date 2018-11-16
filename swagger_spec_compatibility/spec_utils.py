@@ -4,16 +4,16 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import typing  # noqa: F401
+from enum import Enum
 
 from bravado.client import SwaggerClient
 from bravado_core.operation import Operation  # noqa: F401
 from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.cache import typed_lru_cache
-from swagger_spec_compatibility.util import StringEnum
 
 
-class HTTPVerb(StringEnum):
+class HTTPVerb(Enum):
     DELETE = 'delete'
     GET = 'get'
     HEAD = 'head'
@@ -45,23 +45,23 @@ class Endpoint(typing.NamedTuple(
         )
 
 
-@typed_lru_cache
+@typed_lru_cache(maxsize=2)
 def load_spec_from_uri(uri):
     # type: (typing.Text) -> Spec
     return SwaggerClient.from_url(uri, config={'internally_dereference_refs': True}).swagger_spec
 
 
-@typed_lru_cache
+@typed_lru_cache(maxsize=2)
 def get_operations(spec):
-    # type: (Spec) -> typing.Set[Operation]
-    return {
+    # type: (Spec) -> typing.List[Operation]
+    return [
         operation
         for resource in spec.resources.values()
         for operation in resource.operations.values()
-    }
+    ]
 
 
-@typed_lru_cache
+@typed_lru_cache(maxsize=2)
 def get_endpoints(spec):
     # type: (Spec) -> typing.Set[Endpoint]
     return {
