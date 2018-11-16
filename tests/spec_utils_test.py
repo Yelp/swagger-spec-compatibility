@@ -70,8 +70,16 @@ def test_Endpoint_equality_and_hash(mock_operation):
         path='/endpoint',
         operation=mock_operation,
     )
+    endpoint3 = Endpoint(
+        http_verb=HTTPVerb.POST,
+        path='/endpoint',
+        operation=mock_operation,
+    )
+
     assert hash(endpoint1) == hash(endpoint2)
     assert endpoint1 == endpoint2
+    assert hash(endpoint1) != hash(endpoint3)
+    assert endpoint1 != endpoint3
 
 
 def test_load_spec_from_uri(tmpdir, minimal_spec_dict):
