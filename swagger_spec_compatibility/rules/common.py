@@ -10,6 +10,8 @@ from enum import IntEnum
 
 import typing_extensions
 from bravado_core.spec import Spec  # noqa: F401
+from six import iterkeys
+from six import itervalues
 from six import with_metaclass
 from termcolor import colored
 
@@ -29,12 +31,12 @@ class RuleRegistry(ABCMeta):
     @staticmethod
     def rule_names():
         # type: () -> typing.Iterable[typing.Text]
-        return sorted(RuleRegistry._REGISTRY.keys())
+        return sorted(iterkeys(RuleRegistry._REGISTRY))
 
     @staticmethod
     def rules():
         # type: () -> typing.Iterable[typing.Type['BaseRule']]
-        return sorted(RuleRegistry._REGISTRY.values(), key=lambda rule: rule.error_code)
+        return sorted(itervalues(RuleRegistry._REGISTRY), key=lambda rule: rule.error_code)
 
     @staticmethod
     def has_rule(rule_name):
