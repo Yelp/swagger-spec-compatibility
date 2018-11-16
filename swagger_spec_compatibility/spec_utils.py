@@ -9,6 +9,8 @@ from enum import Enum
 from bravado.client import SwaggerClient
 from bravado_core.operation import Operation  # noqa: F401
 from bravado_core.spec import Spec  # noqa: F401
+from six import iterkeys
+from swagger_spec_validator.validator20 import get_collapsed_properties_type_mappings
 
 from swagger_spec_compatibility.cache import typed_lru_cache
 from swagger_spec_compatibility.util import EntityMapping
@@ -103,3 +105,11 @@ def get_operation_mappings(old_spec, new_spec):
         EntityMapping(old_endpoints_map[endpoint].operation, new_endpoints_map[endpoint].operation)
         for endpoint in old_endpoints.intersection(new_endpoints)
     }
+
+
+def get_required_properties(swagger_spec, schema):
+    # type: (Spec, typing.Optional[typing.Mapping[typing.Text, typing.Any]]) -> typing.Optional[typing.Set[typing.Text]]
+    if schema is None:
+        return None
+    required, _ = get_collapsed_properties_type_mappings(definition=schema, deref=swagger_spec.deref)
+    return set(iterkeys(required))

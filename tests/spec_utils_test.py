@@ -17,6 +17,7 @@ from swagger_spec_compatibility.spec_utils import Endpoint
 from swagger_spec_compatibility.spec_utils import get_endpoints
 from swagger_spec_compatibility.spec_utils import get_operation_mappings
 from swagger_spec_compatibility.spec_utils import get_operations
+from swagger_spec_compatibility.spec_utils import get_required_properties
 from swagger_spec_compatibility.spec_utils import HTTPVerb
 from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
 from swagger_spec_compatibility.spec_utils import load_spec_from_uri
@@ -116,3 +117,26 @@ def test_get_operation_mappings(minimal_spec, spec_and_operation):
     spec, operation = spec_and_operation
     assert get_operation_mappings(spec, minimal_spec) == set()
     assert get_operation_mappings(spec, spec) == {EntityMapping(operation, operation)}
+
+
+@pytest.mark.parametrize(
+    'scheme, expected_result',
+    [
+        (None, None),
+        ({}, set()),
+        (
+            {
+                'properties': {
+                    'property': {
+                        'type': 'string',
+                    },
+                },
+                'required': ['property'],
+                'type': 'object',
+            },
+            {'property'},
+        ),
+    ],
+)
+def test_get_required_properties(minimal_spec, scheme, expected_result):
+    assert get_required_properties(swagger_spec=minimal_spec, schema=scheme) == expected_result

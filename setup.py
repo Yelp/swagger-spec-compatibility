@@ -11,6 +11,7 @@ setup(
     install_requires=[
         'bravado',
         'bravado-core',
+        'swagger-spec-validator',
         'six',
         'termcolor',
         'typing_extensions',
