@@ -15,10 +15,12 @@ from bravado_core.spec import Spec  # noqa: F401
 from swagger_spec_compatibility.cli.common import uri
 from swagger_spec_compatibility.spec_utils import Endpoint
 from swagger_spec_compatibility.spec_utils import get_endpoints
+from swagger_spec_compatibility.spec_utils import get_operation_mappings
 from swagger_spec_compatibility.spec_utils import get_operations
 from swagger_spec_compatibility.spec_utils import HTTPVerb
 from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
 from swagger_spec_compatibility.spec_utils import load_spec_from_uri
+from swagger_spec_compatibility.util import EntityMapping
 
 
 @pytest.fixture
@@ -106,3 +108,11 @@ def test_get_endpoints(minimal_spec, spec_and_operation):
 
     spec, operation = spec_and_operation
     assert get_endpoints(spec) == {Endpoint.from_swagger_operation(operation)}
+
+
+def test_get_operation_mappings(minimal_spec, spec_and_operation):
+    assert get_operation_mappings(minimal_spec, minimal_spec) == set()
+
+    spec, operation = spec_and_operation
+    assert get_operation_mappings(spec, minimal_spec) == set()
+    assert get_operation_mappings(spec, spec) == {EntityMapping(operation, operation)}

@@ -11,6 +11,7 @@ from bravado_core.operation import Operation  # noqa: F401
 from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.cache import typed_lru_cache
+from swagger_spec_compatibility.util import EntityMapping
 
 
 class HTTPVerb(Enum):
@@ -82,4 +83,23 @@ def get_endpoints(spec):
     return {
         Endpoint.from_swagger_operation(operation)
         for operation in get_operations(spec)
+    }
+
+
+def get_operation_mappings(old_spec, new_spec):
+    # type: (Spec, Spec) -> typing.Set[EntityMapping[Operation]]
+    old_endpoints = get_endpoints(old_spec)
+    old_endpoints_map = {  # Small hack to make endpoint search easy
+        endpoint: endpoint
+        for endpoint in old_endpoints
+    }
+    new_endpoints = get_endpoints(new_spec)
+    new_endpoints_map = {  # Small hack to make endpoint search easy
+        endpoint: endpoint
+        for endpoint in new_endpoints
+    }
+
+    return {
+        EntityMapping(old_endpoints_map[endpoint].operation, new_endpoints_map[endpoint].operation)
+        for endpoint in old_endpoints.intersection(new_endpoints)
     }
