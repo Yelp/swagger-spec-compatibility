@@ -21,10 +21,20 @@ from swagger_spec_compatibility.util import wrap
 class RuleRegistry(ABCMeta):
     _REGISTRY = {}  # type: typing.MutableMapping[typing.Text, typing.Type['BaseRule']]
 
+    @classmethod
+    def _validate_class_attributes(mcs, cls):
+        # type: (typing.Type['RuleRegistry']) -> None
+        assert getattr(cls, 'error_code', None) is not None, 'error_code is a required class attribute for {}'.format(cls)
+        assert getattr(cls, 'short_name', None) is not None, 'short_name is a required class attribute for {}'.format(cls)
+        assert getattr(cls, 'description', None) is not None, 'description is a required class attribute for {}'.format(cls)
+        assert getattr(cls, 'error_level', None) is not None, 'error_level is a required class attribute for {}'.format(cls)
+
     def __new__(mcs, name, bases, namespace):
         # type: (typing.Type['RuleRegistry'], str, typing.Tuple[type, ...], typing.Dict[str, typing.Any]) -> type
         new_cls = ABCMeta.__new__(mcs, name, bases, namespace)
+
         if name != 'BaseRule':
+            mcs._validate_class_attributes(new_cls)
             RuleRegistry._REGISTRY[name] = new_cls
         return new_cls
 
@@ -53,16 +63,6 @@ class Level(IntEnum):
     INFO = 0
     WARNING = 1
     ERROR = 2
-
-
-class RequiredAttributeMixin(object):
-    def __new__(cls):
-        # type: (typing.Any) -> typing.Any
-        assert getattr(cls, 'error_code', None) is not None
-        assert getattr(cls, 'short_name', None) is not None
-        assert getattr(cls, 'description', None) is not None
-        assert getattr(cls, 'error_level', None) is not None
-        return super(RequiredAttributeMixin, cls).__new__(cls)
 
 
 class RuleProtocol(typing_extensions.Protocol):
@@ -97,7 +97,7 @@ class ValidationMessage(typing.NamedTuple(
         )
 
 
-class BaseRule(with_metaclass(RuleRegistry, RequiredAttributeMixin)):
+class BaseRule(with_metaclass(RuleRegistry)):
     # Unique identifier of the rule
     error_code = None  # type: typing.Text
     # Short name of the rule. This will be visible on CLI in case the rule is triggered

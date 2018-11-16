@@ -8,10 +8,12 @@ import typing  # noqa: F401
 from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.rules.common import BaseRule
-from swagger_spec_compatibility.rules.common import ValidationMessage   # noqa: F401
+from swagger_spec_compatibility.rules.common import Level
+from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
 
 
 class RemovedRequiredProperty(BaseRule):
+    error_level = Level.ERROR
     error_code = 'E002'
     short_name = 'Removed Required Property'
     description = \
