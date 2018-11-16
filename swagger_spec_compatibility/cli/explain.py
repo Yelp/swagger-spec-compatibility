@@ -9,23 +9,21 @@ import typing  # noqa: F401
 from termcolor import colored
 
 from swagger_spec_compatibility.cli.common import CLIProtocol
-from swagger_spec_compatibility.rules.common import RuleRegistry
+from swagger_spec_compatibility.cli.common import rules
 
 
 class _Namespace(CLIProtocol):
     rules = None  # type: typing.Iterable[typing.Text]
 
 
-def execute(args):
+def execute(cli_args):
     # type: (_Namespace) -> int
-    rules_to_explain = {rule_name: RuleRegistry.rule(rule_name) for rule_name in args.rules}
-
     print(
         '{title}\n{rules_detail}'.format(
             title=colored('Rules explanation', attrs=['bold']),
             rules_detail='\n\t'.join(
-                rule_class.explain()
-                for rule_name, rule_class in rules_to_explain.items()
+                rule.explain()
+                for rule in rules(cli_args)
             ),
         ),
     )
