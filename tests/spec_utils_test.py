@@ -19,8 +19,10 @@ from swagger_spec_compatibility.spec_utils import get_operation_mappings
 from swagger_spec_compatibility.spec_utils import get_operations
 from swagger_spec_compatibility.spec_utils import get_required_properties
 from swagger_spec_compatibility.spec_utils import HTTPVerb
+from swagger_spec_compatibility.spec_utils import iterate_on_responses_status_codes
 from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
 from swagger_spec_compatibility.spec_utils import load_spec_from_uri
+from swagger_spec_compatibility.spec_utils import StatusCodeSchema
 from swagger_spec_compatibility.util import EntityMapping
 
 
@@ -140,3 +142,40 @@ def test_get_operation_mappings(minimal_spec, spec_and_operation):
 )
 def test_get_required_properties(minimal_spec, scheme, expected_result):
     assert get_required_properties(swagger_spec=minimal_spec, schema=scheme) == expected_result
+
+
+@pytest.mark.parametrize(
+    'old_operation_dict, new_operation_dict, expected_result',
+    [
+        [
+            {'responses': {'200': {'schema': {}}}},
+            {'responses': {'200': {'schema': {}}}},
+            [StatusCodeSchema('200', EntityMapping({}, {}))],
+        ],
+        [
+            {'responses': {'200': {'schema': {}}, '300': {'schema': {}}}},
+            {'responses': {'200': {'schema': {}}}},
+            [StatusCodeSchema('200', EntityMapping({}, {}))],
+        ],
+        [
+            {'responses': {'200': {'schema': {}}, '300': {'schema': {'type': 'integer'}}}},
+            {'responses': {'200': {'schema': {}}, '300': {'schema': {'type': 'string'}}}},
+            [
+                StatusCodeSchema('200', EntityMapping({}, {})),
+                StatusCodeSchema('300', EntityMapping({'type': 'integer'}, {'type': 'string'})),
+            ],
+        ],
+        [
+            {'responses': {'200': {}}},
+            {'responses': {'300': {}}},
+            [],
+        ],
+    ],
+)
+def test_iterate_on_responses_status_codes(old_operation_dict, new_operation_dict, expected_result):
+    result = list(iterate_on_responses_status_codes(old_operation_dict, new_operation_dict))
+    if not expected_result:
+        assert not result
+    else:
+        expected_result = sorted(expected_result)
+        assert sorted(result) == expected_result

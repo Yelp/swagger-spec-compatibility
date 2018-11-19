@@ -113,3 +113,33 @@ def get_required_properties(swagger_spec, schema):
         return None
     required, _ = get_collapsed_properties_type_mappings(definition=schema, deref=swagger_spec.deref)
     return set(iterkeys(required))
+
+
+StatusCodeSchema = typing.NamedTuple(
+    'StatusCodeSchema', (
+        ('status_code', typing.Text),
+        ('mapping', EntityMapping[typing.Optional[typing.Mapping[typing.Text, typing.Any]]]),
+    ),
+)
+
+
+def iterate_on_responses_status_codes(
+    old_operation,  # type: typing.Mapping[typing.Text, typing.Any]
+    new_operation,  # type: typing.Mapping[typing.Text, typing.Any]
+):
+    # type: (...) -> typing.Generator[StatusCodeSchema, None, None]
+    old_status_code_schema_mapping = old_operation.get('responses') or {}
+    new_status_code_schema_mapping = new_operation.get('responses') or {}
+
+    common_response_codes = set(iterkeys(old_status_code_schema_mapping)).intersection(
+        set(iterkeys(new_status_code_schema_mapping)),
+    )
+    # Compare schemas for the same status code only (TODO: what to do for old=default and new=404?)
+    for status_code in common_response_codes:
+        yield StatusCodeSchema(
+            status_code=status_code,
+            mapping=EntityMapping(
+                old=old_status_code_schema_mapping[status_code].get('schema'),
+                new=new_status_code_schema_mapping[status_code].get('schema'),
+            ),
+        )

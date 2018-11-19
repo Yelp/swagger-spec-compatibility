@@ -53,3 +53,7 @@ class EntityMapping(typing.Generic[T]):
     def __eq__(self, other):
         # type: (typing.Any) -> bool
         return isinstance(other, self.__class__) and self._old == other._old and self._new == other._new
+
+    def __repr__(self):
+        # type: () -> str
+        return str('{}(old={}, new={})'.format(self.__class__.__name__, self.old, self.new))  # pragma: no cover  # This statement is present only to have a nicer REPL experience # noqa
