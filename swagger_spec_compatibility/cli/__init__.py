@@ -10,6 +10,7 @@ from six import iteritems
 
 from swagger_spec_compatibility.cli import explain  # noqa: F401
 from swagger_spec_compatibility.cli import run  # noqa: F401
+from swagger_spec_compatibility.cli.common import cli_rules
 from swagger_spec_compatibility.rules import RuleRegistry
 from swagger_spec_compatibility.util import wrap
 
@@ -34,12 +35,13 @@ def parser():
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
+    rules = cli_rules()
     parser.add_argument(
         '-r', '--rules',
         nargs='+',
         help='Rules to apply for compatibility detection. (default: %(default)s)',
-        default=RuleRegistry.rule_names(),
-        choices=RuleRegistry.rule_names(),
+        default=rules,
+        choices=rules,
     )
 
     subparsers = parser.add_subparsers(help='help for sub-command', dest='command')

@@ -41,6 +41,11 @@ def uri(param):
     raise ArgumentTypeError('`{param}` is not an existing file and either a valid URI'.format(param=param))
 
 
+def cli_rules():
+    # type: () -> typing.List[typing.Text]
+    return list(RuleRegistry.rule_names())
+
+
 def rules(cli_args):
     # type: (CLIRulesProtocol) -> typing.Set[typing.Type[BaseRule]]
     return {RuleRegistry.rule(rule_name) for rule_name in cli_args.rules}
