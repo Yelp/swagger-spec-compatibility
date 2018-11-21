@@ -8,13 +8,15 @@ import typing  # noqa: F401
 from bravado_core.spec import Spec  # noqa: F401
 from bravado_core.util import determine_object_type
 from bravado_core.util import ObjectType
+from six import text_type
 
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
 from swagger_spec_compatibility.spec_utils import get_required_properties
-from swagger_spec_compatibility.spec_utils import SchemaWalker
-from swagger_spec_compatibility.util import Walker
+from swagger_spec_compatibility.walkers import PathType  # noqa: F401
+from swagger_spec_compatibility.walkers import SchemaWalker
+from swagger_spec_compatibility.walkers import Walker
 
 
 def _are_removed_required_properties_top_level_only(
@@ -29,7 +31,7 @@ def _are_removed_required_properties_top_level_only(
     return bool(left_required and (not right_required or left_required - right_required))
 
 
-class RemovedRequiredPropertyWalker(Walker[typing.Tuple[typing.Text, ...]]):
+class RemovedRequiredPropertyWalker(Walker[PathType]):
     left_spec = None  # type: Spec
     right_spec = None  # type: Spec
 
@@ -47,11 +49,11 @@ class RemovedRequiredPropertyWalker(Walker[typing.Tuple[typing.Text, ...]]):
             left_spec=left_spec,
             right_spec=right_spec,
         )
-        self.incriminated_paths = []  # type: typing.List[typing.Tuple[typing.Text, ...]]
+        self.incriminated_paths = []  # type: typing.List[PathType]
 
     def dict_check(
         self,
-        path,  # type: typing.Tuple[typing.Text, ...]
+        path,  # type: PathType
         left_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
         right_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
     ):
@@ -66,7 +68,7 @@ class RemovedRequiredPropertyWalker(Walker[typing.Tuple[typing.Text, ...]]):
 
     def list_check(
         self,
-        path,  # type: typing.Tuple[typing.Text, ...]
+        path,  # type: PathType
         left_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
         right_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
     ):
@@ -75,7 +77,7 @@ class RemovedRequiredPropertyWalker(Walker[typing.Tuple[typing.Text, ...]]):
 
     def value_check(
         self,
-        path,  # type: typing.Tuple[typing.Text, ...]
+        path,  # type: PathType
         left_value,  # type: typing.Any
         right_value,  # type: typing.Any
     ):
@@ -83,11 +85,11 @@ class RemovedRequiredPropertyWalker(Walker[typing.Tuple[typing.Text, ...]]):
         pass
 
     def walk_response(self):
-        # type: () -> typing.List[typing.Tuple[typing.Text, ...]]
+        # type: () -> typing.List[PathType]
         return self.incriminated_paths
 
 
-class RemovedRequiredPropertyFromResponsesWalker(SchemaWalker[typing.Tuple[typing.Text, ...]]):
+class RemovedRequiredPropertyFromResponsesWalker(SchemaWalker[PathType]):
     left_spec = None  # type: Spec
     right_spec = None  # type: Spec
 
@@ -98,15 +100,15 @@ class RemovedRequiredPropertyFromResponsesWalker(SchemaWalker[typing.Tuple[typin
     ):
         # type: (...) -> None
         super(RemovedRequiredPropertyFromResponsesWalker, self).__init__(left_spec=left_spec, right_spec=right_spec)
-        self.incriminated_paths = []  # type: typing.List[typing.Tuple[typing.Text, ...]]
+        self.incriminated_paths = []  # type: typing.List[PathType]
 
     def walk_response(self):
-        # type: () -> typing.Iterable[typing.Tuple[typing.Text, ...]]
+        # type: () -> typing.Iterable[PathType]
         return self.incriminated_paths
 
     def dict_check(
         self,
-        path,  # type: typing.Tuple[typing.Text, ...]
+        path,  # type: PathType
         left_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
         right_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
     ):
@@ -125,7 +127,7 @@ class RemovedRequiredPropertyFromResponsesWalker(SchemaWalker[typing.Tuple[typin
 
     def list_check(
         self,
-        path,  # type: typing.Tuple[typing.Text, ...]
+        path,  # type: PathType
         left_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
         right_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
     ):
@@ -134,7 +136,7 @@ class RemovedRequiredPropertyFromResponsesWalker(SchemaWalker[typing.Tuple[typin
 
     def value_check(
         self,
-        path,  # type: typing.Tuple[typing.Text, ...]
+        path,  # type: PathType
         left_value,  # type: typing.Any
         right_value,  # type: typing.Any
     ):
@@ -157,5 +159,5 @@ class RemovedRequiredProperty(BaseRule):
         # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
         for incriminated_path in RemovedRequiredPropertyFromResponsesWalker(left_spec, right_spec).walk():
             yield cls.validation_message(
-                '#/{}'.format('/'.join(incriminated_path)),
+                '#/{}'.format('/'.join(text_type(path_item) for path_item in incriminated_path)),
             )

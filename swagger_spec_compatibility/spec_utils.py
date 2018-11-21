@@ -14,7 +14,6 @@ from swagger_spec_validator.validator20 import get_collapsed_properties_type_map
 
 from swagger_spec_compatibility.cache import typed_lru_cache
 from swagger_spec_compatibility.util import EntityMapping
-from swagger_spec_compatibility.util import Walker
 
 
 T = typing.TypeVar('T')
@@ -146,16 +145,4 @@ def iterate_on_responses_status_codes(
                 old=old_status_code_schema_mapping[status_code].get('schema'),
                 new=new_status_code_schema_mapping[status_code].get('schema'),
             ),
-        )
-
-
-class SchemaWalker(Walker[T]):
-    def __init__(self, left_spec, right_spec, **kwargs):
-        # type: (Spec, Spec, typing.Any) -> None
-        super(SchemaWalker, self).__init__(
-            left=left_spec.deref_flattened_spec,
-            right=right_spec.deref_flattened_spec,
-            left_spec=left_spec,
-            right_spec=right_spec,
-            **kwargs
         )
