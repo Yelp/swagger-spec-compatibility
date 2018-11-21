@@ -17,12 +17,12 @@ setup(
     ],
     extras_require={
         ':python_version<"3.5"': ['typing'],
+        ':python_version<"3.2"': ['functools32'],
     },
     license='Copyright Yelp, Inc. 2018',
     packages=find_packages(exclude=('tests*', 'testing*')),
     package_data={
         'swagger_spec_compatibility': ['py.typed'],
-        ':python_version<"3.2"': ['functools32'],
     },
     classifiers=[
         'Development Status :: 1 - Planning',
