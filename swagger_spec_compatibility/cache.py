@@ -18,7 +18,7 @@ class typed_lru_cache(object):
 
     __slots__ = ('maxsize', 'uncached_function', 'cached_function')
 
-    def __init__(self, maxsize):
+    def __init__(self, maxsize=None):
         # type: (typing.Optional[int]) -> None
         assert isinstance(maxsize, (int, type(None)))
         self.maxsize = maxsize  # type: typing.Optional[int]

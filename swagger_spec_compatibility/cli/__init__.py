@@ -6,6 +6,8 @@ from __future__ import unicode_literals
 import argparse
 from textwrap import dedent
 
+from six import iteritems
+
 from swagger_spec_compatibility.cli import explain  # noqa: F401
 from swagger_spec_compatibility.cli import run  # noqa: F401
 from swagger_spec_compatibility.rules import RuleRegistry
@@ -42,7 +44,7 @@ def parser():
 
     subparsers = parser.add_subparsers(help='help for sub-command', dest='command')
     subparsers.required = True
-    for add_sub_command_parser, associated_function in _SUB_COMMAND_ASSOCIATED_FUNCTION_MAPPING.items():
+    for add_sub_command_parser, associated_function in iteritems(_SUB_COMMAND_ASSOCIATED_FUNCTION_MAPPING):
         add_sub_command_parser(subparsers).set_defaults(func=associated_function)
 
     if not RuleRegistry.rule_names():

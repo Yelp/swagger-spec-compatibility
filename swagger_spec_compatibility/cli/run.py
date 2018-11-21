@@ -6,6 +6,8 @@ from __future__ import unicode_literals
 import argparse  # noqa: F401
 import typing  # noqa: F401
 
+from six import iteritems
+
 from swagger_spec_compatibility.cli.common import CLIProtocol
 from swagger_spec_compatibility.cli.common import rules
 from swagger_spec_compatibility.cli.common import uri
@@ -35,11 +37,11 @@ def _extract_rules_with_given_message_level(
             for message in messages
             if message.level is level
         ]
-        for rule, messages in rules_to_messages_mapping.items()
+        for rule, messages in iteritems(rules_to_messages_mapping)
     }
     return {
         rule: messages
-        for rule, messages in messages_in_level.items()
+        for rule, messages in iteritems(messages_in_level)
         if messages
     }
 
@@ -59,7 +61,7 @@ def _print_raw_messages(level, messages):
 
 def _print_validation_messages(cli_args, messages_by_level):
     # type: (_Namespace, typing.Mapping[Level, typing.Iterable[ValidationMessage]]) -> None
-    for level, messages in messages_by_level.items():
+    for level, messages in iteritems(messages_by_level):
         if not messages:
             continue
         # TODO(maci) add cli argument for output format (ie. JSON)
