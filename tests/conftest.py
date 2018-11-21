@@ -79,7 +79,7 @@ class DummyWarningRule(BaseRule):
 
 class DummyRuleFailIfDifferent(BaseRule):
     error_level = Level.ERROR
-    error_code = 'TEST_NO_MSG'
+    error_code = 'TEST_FAIL_IF_DIFFERENT'
     short_name = 'DummyRuleFailIfDifferent'
     description = 'Rule description'
 
