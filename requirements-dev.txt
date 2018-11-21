@@ -1,7 +1,7 @@
 -r requirements-docs.txt
 coverage
 ipdb
-ipython
+ipython<6  # iPython>=6 is Python 3.3+ only
 mock
 mypy; python_version >= "3.4"
 pre-commit>=1.12.0
