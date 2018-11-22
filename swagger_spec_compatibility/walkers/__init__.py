@@ -62,6 +62,7 @@ class Walker(typing.Generic[T]):
 
     def _inner_walk(self, path, left, right):
         # type: (PathType, typing.Any, typing.Any) -> None
+        # TODO: make better walking if the two objects have different type
         if isinstance(left, dict) and isinstance(right, dict):
             self.dict_check(path, left, right)
             for key in set(chain(iterkeys(left), iterkeys(right))):
