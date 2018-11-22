@@ -10,6 +10,7 @@ from itertools import chain
 from bravado_core.spec import Spec  # noqa: F401
 from six import iteritems
 from six import iterkeys
+from six import text_type
 from six.moves import zip_longest
 
 from swagger_spec_compatibility.cache import typed_lru_cache
@@ -19,6 +20,11 @@ T = typing.TypeVar('T')
 
 
 PathType = typing.Tuple[typing.Union[typing.Text, int], ...]
+
+
+def format_path(path):
+    # type: (PathType) -> typing.Text
+    return '#/{}'.format('/'.join(text_type(path_item) for path_item in path))
 
 
 class Walker(typing.Generic[T]):
