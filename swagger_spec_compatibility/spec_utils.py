@@ -9,12 +9,13 @@ from enum import Enum
 from bravado.client import SwaggerClient
 from bravado_core.operation import Operation  # noqa: F401
 from bravado_core.spec import Spec  # noqa: F401
+from bravado_core.util import determine_object_type
+from bravado_core.util import ObjectType
 from six import iterkeys
 from swagger_spec_validator.validator20 import get_collapsed_properties_type_mappings
 
 from swagger_spec_compatibility.cache import typed_lru_cache
 from swagger_spec_compatibility.util import EntityMapping
-from swagger_spec_compatibility.util import Walker
 
 
 T = typing.TypeVar('T')
@@ -113,7 +114,7 @@ def get_operation_mappings(old_spec, new_spec):
 
 def get_required_properties(swagger_spec, schema):
     # type: (Spec, typing.Optional[typing.Mapping[typing.Text, typing.Any]]) -> typing.Optional[typing.Set[typing.Text]]
-    if schema is None:
+    if schema is None or determine_object_type(schema) != ObjectType.SCHEMA:
         return None
     required, _ = get_collapsed_properties_type_mappings(definition=schema, deref=swagger_spec.deref)
     return set(iterkeys(required))
@@ -146,16 +147,4 @@ def iterate_on_responses_status_codes(
                 old=old_status_code_schema_mapping[status_code].get('schema'),
                 new=new_status_code_schema_mapping[status_code].get('schema'),
             ),
-        )
-
-
-class SchemaWalker(Walker[T]):
-    def __init__(self, left_spec, right_spec, **kwargs):
-        # type: (Spec, Spec, typing.Any) -> None
-        super(SchemaWalker, self).__init__(
-            left=left_spec.deref_flattened_spec,
-            right=right_spec.deref_flattened_spec,
-            left_spec=left_spec,
-            right_spec=right_spec,
-            **kwargs
         )

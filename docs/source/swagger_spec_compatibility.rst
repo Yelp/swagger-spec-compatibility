@@ -54,3 +54,11 @@ swagger_spec_compatibility Package
     :members:
     :undoc-members:
     :show-inheritance:
+
+:mod:`walkers` Module
+--------------------
+
+.. automodule:: swagger_spec_compatibility.walkers
+    :members:
+    :undoc-members:
+    :show-inheritance:

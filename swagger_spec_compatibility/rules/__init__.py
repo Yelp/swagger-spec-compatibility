@@ -11,7 +11,7 @@ from swagger_spec_compatibility.rules.common import RuleProtocol  # noqa: F401
 from swagger_spec_compatibility.rules.common import RuleRegistry  # noqa: F401
 from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
 from swagger_spec_compatibility.rules.deleted_endpoint import DeletedEndpoint  # noqa: F401
-from swagger_spec_compatibility.rules.removed_required_property import RemovedRequiredProperty  # noqa: F401
+from swagger_spec_compatibility.rules.removed_required_property_from_response import RemovedRequiredPropertyFromResponse  # noqa: F401
 
 
 class _ALL_RULES(object):
