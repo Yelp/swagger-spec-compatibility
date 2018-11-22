@@ -36,6 +36,10 @@ class Walker(typing.Generic[T]):
         for attr_name, attr_value in iteritems(kwargs):
             setattr(self, attr_name, attr_value)
 
+    def should_path_be_walked_through(self, path):
+        # type: (PathType) -> bool
+        return True
+
     @abstractmethod
     def dict_check(
         self,
@@ -68,6 +72,9 @@ class Walker(typing.Generic[T]):
 
     def _inner_walk(self, path, left, right):
         # type: (PathType, typing.Any, typing.Any) -> None
+        if not self.should_path_be_walked_through(path):
+            return
+
         # TODO: make better walking if the two objects have different type
         if isinstance(left, dict) and isinstance(right, dict):
             self.dict_check(path, left, right)
