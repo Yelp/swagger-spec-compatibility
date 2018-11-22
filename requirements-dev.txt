@@ -1,4 +1,5 @@
 -r requirements-docs.txt
+codecov
 coverage
 ipdb
 ipython<6  # iPython>=6 is Python 3.3+ only

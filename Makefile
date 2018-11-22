@@ -20,6 +20,10 @@ docs:
 	tox -e docs
 
 .PHONY: clean
+coverage:
+	tox -e coverage
+
+.PHONY: clean
 clean:
 	find -name '*.pyc' -delete
 	find -name '__pycache__' -delete
