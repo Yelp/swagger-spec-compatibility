@@ -16,7 +16,7 @@ from swagger_spec_compatibility.walkers.required_properties import RequiredPrope
 from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalker
 
 
-class RemovedRequiredProperty(BaseRule):
+class RemovedRequiredPropertyFromResponse(BaseRule):
     error_level = Level.ERROR
     error_code = 'E002'
     short_name = 'Removed Required Property'

@@ -7,12 +7,12 @@ from copy import deepcopy
 
 import pytest
 
-from swagger_spec_compatibility.rules.removed_required_property import RemovedRequiredProperty
+from swagger_spec_compatibility.rules.removed_required_property_from_response import RemovedRequiredPropertyFromResponse
 from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
 
 
 def test_validate_succeed(minimal_spec):
-    assert list(RemovedRequiredProperty.validate(
+    assert list(RemovedRequiredPropertyFromResponse.validate(
         left_spec=minimal_spec,
         right_spec=minimal_spec,
     )) == []
@@ -111,12 +111,12 @@ def test_validate_return_an_error(
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
     expected_results = [
-        RemovedRequiredProperty.validation_message(
+        RemovedRequiredPropertyFromResponse.validation_message(
             reference='#/paths//endpoint/get/responses/200/schema{}'.format(reference),
         )
         for reference in expected_references
     ]
-    assert list(RemovedRequiredProperty.validate(
+    assert list(RemovedRequiredPropertyFromResponse.validate(
         left_spec=old_spec,
         right_spec=new_spec,
     )) == expected_results
@@ -224,7 +224,7 @@ def test_validate_does_not_errors_if_changes_in_parameters_or_definitions(
     old_spec = load_spec_from_spec_dict(old_spec_dict)
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
-    assert list(RemovedRequiredProperty.validate(
+    assert list(RemovedRequiredPropertyFromResponse.validate(
         left_spec=old_spec,
         right_spec=new_spec,
     )) == []
