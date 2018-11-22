@@ -18,6 +18,17 @@ class ResponsePathsWalker(SchemaWalker[PathType]):
     right_spec = None  # type: Spec
     paths = None  # type: typing.Set[PathType]
 
+    def should_path_be_walked_through(self, path):
+        # type: (PathType) -> bool
+        if not path:
+            return True
+        if path[0] != 'paths':
+            return False
+        if len(path) >= 4:
+            # A valid path looks like ('paths', endpoint, http_verb, 'responses')
+            return path[3] == 'responses'
+        return True
+
     def __init__(
         self,
         left_spec,  # type: Spec

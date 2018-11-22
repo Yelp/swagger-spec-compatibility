@@ -14,9 +14,29 @@ from swagger_spec_compatibility.walkers import SchemaWalker
 
 
 class RequestParametersWalker(SchemaWalker[PathType]):
+    # TODO: update the name as it gets only the schemas of the parameters
     left_spec = None  # type: Spec
     right_spec = None  # type: Spec
     paths = None  # type: typing.Set[PathType]
+
+    def should_path_be_walked_through(self, path):
+        # type: (PathType) -> bool
+        if not path:
+            return True
+
+        # Request parameters could be defined in
+        # - ('paths', endpoint, 'parameters', idx, 'schema')
+        # - ('paths', endpoint, http_verb, 'parameters', idx, 'schema')
+        if path[0] != 'paths':
+            return False
+
+        if len(path) >= 4 and (path[2] != 'parameters' and path[3] != 'parameters'):
+            return False
+
+        if len(path) >= 6 and (path[4] != 'schema' and path[5] != 'schema'):
+            return False
+
+        return True
 
     def __init__(
         self,
