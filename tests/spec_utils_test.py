@@ -124,9 +124,53 @@ def test_get_operation_mappings(minimal_spec, spec_and_operation):
     'scheme, expected_result',
     [
         (None, None),
-        ({}, set()),
+        ({}, None),
         (
-            {
+            {  # Swagger Parameter Object
+                'in': 'body',
+                'name': 'body',
+                'required': True,
+                'schema': {
+                    'properties': {
+                        'property': {
+                            'type': 'string',
+                        },
+                    },
+                    'required': ['property'],
+                    'type': 'object',
+                },
+            },
+            None,
+        ),
+        (
+            {  # Swagger Responses Object
+                '200': {
+                    'description': '',
+                    'schema': {
+                        'properties': {
+                            'property': {
+                                'type': 'string',
+                            },
+                        },
+                        'required': ['property'],
+                        'type': 'object',
+                    },
+                },
+            },
+            None,
+        ),
+        (
+            {  # Swagger Path Item Object
+                'get': {
+                    'responses': {
+                        '200': {'description': ''},
+                    },
+                },
+            },
+            None,
+        ),
+        (
+            {  # Swagger Schema Object
                 'properties': {
                     'property': {
                         'type': 'string',
