@@ -16,8 +16,8 @@ from swagger_spec_compatibility.walkers.required_properties import RequiredPrope
 @pytest.mark.parametrize(
     'left_required_properties, right_required_properties, expected_value',
     [
-        (set(), set(), EntityMapping(set(), set())),
-        ({'property'}, {'property'}, EntityMapping(set(), set())),
+        (set(), set(), None),
+        ({'property'}, {'property'}, None),
         (set(), {'property'}, EntityMapping(set(), {'property'})),
         ({'property'}, set(), EntityMapping({'property'}, set())),
         ({'property', 'old'}, {'property'}, EntityMapping({'old'}, set())),

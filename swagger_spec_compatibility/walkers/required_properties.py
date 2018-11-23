@@ -19,14 +19,14 @@ def _different_properties_mapping(
     left_schema,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
     right_schema,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
 ):
-    # type: (...) -> EntityMapping[typing.Set[typing.Text]]
+    # type: (...) -> typing.Optional[EntityMapping[typing.Set[typing.Text]]]
     left_required = get_required_properties(swagger_spec=left_spec, schema=left_schema) or set()
     right_required = get_required_properties(swagger_spec=right_spec, schema=right_schema) or set()
 
     properties_appear_once = left_required.symmetric_difference(right_required)
     if not properties_appear_once:
         # The condition is true if left_required is empty and right_required is not empty or vice-versa
-        return EntityMapping(old=set(), new=set())
+        return None
     else:
         return EntityMapping(
             old=properties_appear_once.intersection(left_required),
@@ -72,7 +72,7 @@ class RequiredPropertiesDifferWalker(SchemaWalker[RequiredPropertiesDiff]):
             left_schema=left_dict,
             right_schema=right_dict,
         )
-        if different_properties_mapping.old or different_properties_mapping.new:
+        if different_properties_mapping:
             self.diffs.append(RequiredPropertiesDiff(
                 path=path,
                 mapping=different_properties_mapping,
