@@ -198,7 +198,6 @@ def test_validate_return_an_error(
 def test_validate_does_not_errors_if_changes_in_parameters_or_definitions(
     minimal_spec_dict, simple_operation_dict, schema_path, old_schema, new_schema,
 ):
-    # FIXME: note the second case does not get identified at all :(
     base_spec = dict(
         minimal_spec_dict,
         paths={

@@ -7,6 +7,7 @@ import typing  # noqa: F401
 
 from bravado_core.spec import Spec  # noqa: F401
 
+from swagger_spec_compatibility.rules.added_required_property_in_request import AddedRequiredPropertyInRequest  # noqa: F401
 from swagger_spec_compatibility.rules.common import RuleProtocol  # noqa: F401
 from swagger_spec_compatibility.rules.common import RuleRegistry  # noqa: F401
 from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401

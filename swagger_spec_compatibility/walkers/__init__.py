@@ -10,6 +10,7 @@ from itertools import chain
 from bravado_core.spec import Spec  # noqa: F401
 from six import iteritems
 from six import iterkeys
+from six import text_type
 from six.moves import zip_longest
 
 from swagger_spec_compatibility.cache import typed_lru_cache
@@ -21,6 +22,11 @@ T = typing.TypeVar('T')
 PathType = typing.Tuple[typing.Union[typing.Text, int], ...]
 
 
+def format_path(path):
+    # type: (PathType) -> typing.Text
+    return '#/{}'.format('/'.join(text_type(path_item) for path_item in path))
+
+
 class Walker(typing.Generic[T]):
     # TODO: add path blacklists to quickly cut descending
     def __init__(self, left, right, **kwargs):
@@ -29,6 +35,10 @@ class Walker(typing.Generic[T]):
         self.right = right
         for attr_name, attr_value in iteritems(kwargs):
             setattr(self, attr_name, attr_value)
+
+    def should_path_be_walked_through(self, path):
+        # type: (PathType) -> bool
+        return True
 
     @abstractmethod
     def dict_check(
@@ -62,6 +72,9 @@ class Walker(typing.Generic[T]):
 
     def _inner_walk(self, path, left, right):
         # type: (PathType, typing.Any, typing.Any) -> None
+        if not self.should_path_be_walked_through(path):
+            return
+
         # TODO: make better walking if the two objects have different type
         if isinstance(left, dict) and isinstance(right, dict):
             self.dict_check(path, left, right)
