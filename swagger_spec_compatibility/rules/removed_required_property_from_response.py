@@ -10,6 +10,7 @@ from bravado_core.spec import Spec  # noqa: F401
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
+from swagger_spec_compatibility.util import is_path_in_top_level_paths
 from swagger_spec_compatibility.walkers import format_path
 from swagger_spec_compatibility.walkers.required_properties import RequiredPropertiesDifferWalker
 from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalker
@@ -28,16 +29,10 @@ class RemovedRequiredPropertyFromResponse(BaseRule):
     @classmethod
     def validate(cls, left_spec, right_spec):
         # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
-        response_paths = [
-            format_path(path)
-            for path in ResponsePathsWalker(left_spec, right_spec).walk()
-        ]
+        response_paths = ResponsePathsWalker(left_spec, right_spec).walk()
         for required_property_diff in RequiredPropertiesDifferWalker(left_spec, right_spec).walk():
             if not required_property_diff.mapping.old:
                 continue
-            formatted_path = format_path(required_property_diff.path)
-            if any(  # TODO: this is ugly, we should improve it a bit
-                formatted_path.startswith(path)
-                for path in response_paths
-            ):
-                yield cls.validation_message(formatted_path)
+            if not is_path_in_top_level_paths(response_paths, required_property_diff.path):
+                continue
+            yield cls.validation_message(format_path(required_property_diff.path))

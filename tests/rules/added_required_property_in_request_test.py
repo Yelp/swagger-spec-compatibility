@@ -167,7 +167,7 @@ def test_validate_return_an_error(
     )) == expected_results
 
 
-def test_validate_does_not_errors_if_changes_in_response_schema(minimal_spec_dict):
+def test_validate_does_not_error_if_changes_in_response_schema(minimal_spec_dict):
     old_spec_dict = dict(
         minimal_spec_dict,
         paths={
@@ -180,7 +180,6 @@ def test_validate_does_not_errors_if_changes_in_response_schema(minimal_spec_dic
                                 'properties': {
                                     'property_1': {'type': 'string'},
                                 },
-                                'required': ['property_1'],
                                 'type': 'object',
                             },
                         },
@@ -190,7 +189,36 @@ def test_validate_does_not_errors_if_changes_in_response_schema(minimal_spec_dic
         },
     )
     new_spec_dict = deepcopy(old_spec_dict)
-    del new_spec_dict['paths']['/endpoint']['get']['responses']['200']['schema']['required']
+    new_spec_dict['paths']['/endpoint']['get']['responses']['200']['schema']['required'] = ['property_1']
+
+    old_spec = load_spec_from_spec_dict(old_spec_dict)
+    new_spec = load_spec_from_spec_dict(new_spec_dict)
+
+    assert list(AddedRequiredPropertyInRequest.validate(
+        left_spec=old_spec,
+        right_spec=new_spec,
+    )) == []
+
+
+def test_validate_does_not_error_if_changes_in_top_level_parameters(minimal_spec_dict):
+    old_spec_dict = dict(
+        minimal_spec_dict,
+        parameters={
+            'param': {
+                'in': 'body',
+                'name': 'body',
+                'required': True,
+                'schema': {
+                    'properties': {
+                        'property_1': {'type': 'string'},
+                    },
+                    'type': 'object',
+                },
+            },
+        },
+    )
+    new_spec_dict = deepcopy(old_spec_dict)
+    new_spec_dict['parameters']['param']['schema']['required'] = ['property_1']
 
     old_spec = load_spec_from_spec_dict(old_spec_dict)
     new_spec = load_spec_from_spec_dict(new_spec_dict)

@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import typing
 from textwrap import TextWrapper
 
+from swagger_spec_compatibility.walkers import PathType  # noqa: F401
 
 T = typing.TypeVar('T')
 
@@ -57,3 +58,11 @@ class EntityMapping(typing.Generic[T]):
     def __repr__(self):
         # type: () -> str
         return str('{}(old={}, new={})'.format(self.__class__.__name__, self.old, self.new))  # pragma: no cover  # This statement is present only to have a nicer REPL experience # noqa
+
+
+def is_path_in_top_level_paths(top_level_paths, path):
+    # type: (typing.Iterable[PathType], PathType) -> bool
+    return any(
+        path[:len(acceptable_path)] == acceptable_path
+        for acceptable_path in top_level_paths
+    )
