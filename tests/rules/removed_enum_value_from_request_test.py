@@ -7,12 +7,12 @@ from copy import deepcopy
 
 import pytest
 
-from swagger_spec_compatibility.rules.added_required_property_in_request import AddedRequiredPropertyInRequest
+from swagger_spec_compatibility.rules.removed_enum_value_from_request import RemovedEnumValueFromRequest
 from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
 
 
 def test_validate_succeed(minimal_spec):
-    assert list(AddedRequiredPropertyInRequest.validate(
+    assert list(RemovedEnumValueFromRequest.validate(
         left_spec=minimal_spec,
         right_spec=minimal_spec,
     )) == []
@@ -23,13 +23,7 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
         'in': 'body',
         'name': 'body',
         'required': True,
-        'schema': {
-            'properties': {
-                'property_1': {'type': 'string'},
-            },
-            'required': ['property_1'],
-            'type': 'object',
-        },
+        'schema': {'type': 'string', 'enum': ['v1']},
     }
     old_spec = load_spec_from_spec_dict(dict(
         minimal_spec_dict,
@@ -52,7 +46,7 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
         },
     ))
 
-    assert list(AddedRequiredPropertyInRequest.validate(
+    assert list(RemovedEnumValueFromRequest.validate(
         left_spec=old_spec,
         right_spec=new_spec,
     )) == []
@@ -62,36 +56,24 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
     'old_parameter_schema, new_parameter_schema, expected_references',
     [
         (
-            {
-                'properties': {
-                    'property_1': {'type': 'string'},
-                },
-                'type': 'object',
-            },
-            {
-                'properties': {
-                    'property_1': {'type': 'string'},
-                },
-                'required': ['property_1'],
-                'type': 'object',
-            },
+            {'type': 'string', 'enum': ['v1', 'v2']},
+            {'type': 'string', 'enum': ['v1']},
             [''],
         ),
         (
             {
                 'properties': {
-                    'property_1': {'type': 'string'},
+                    'property_1': {'type': 'string', 'enum': ['v1', 'v2']},
                 },
                 'type': 'object',
             },
             {
                 'properties': {
                     'property_1': {
-                        'type': 'object',
                         'properties': {
-                            'inner_1': {'type': 'string'},
+                            'inner_1': {'type': 'string', 'enum': ['v1']},
                         },
-                        'required': ['inner_1'],
+                        'type': 'object',
                     },
                 },
                 'type': 'object',
@@ -101,31 +83,26 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
         (
             {
                 'properties': {
-                    'common': {'type': 'string'},
-                    'property_1': {
+                    'common': {'type': 'string', 'enum': ['v1', 'v2']},
+                    'property': {
                         'type': 'object',
                         'properties': {
-                            'inner_1': {'type': 'string'},
-                            'inner_new': {'type': 'string'},
+                            'inner': {'type': 'string', 'enum': ['v1', 'v2']},
                         },
-                        'required': ['inner_1', 'inner_new'],
                     },
                 },
-                'required': ['common'],
                 'type': 'object',
             },
             {
                 'properties': {
-                    'common': {'type': 'object'},
+                    'common': {'type': 'string', 'enum': ['v1', 'v2', 'v3']},
                     'property_1': {
                         'type': 'object',
                         'properties': {
-                            'inner_1': {'type': 'string'},
+                            'inner': {'type': 'string', 'enum': ['v1', 'v2', 'v3']},
                         },
-                        'required': ['inner_1'],
                     },
                 },
-                'required': ['common'],
                 'type': 'object',
             },
             [],
@@ -156,12 +133,12 @@ def test_validate_return_an_error(
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
     expected_results = [
-        AddedRequiredPropertyInRequest.validation_message(
+        RemovedEnumValueFromRequest.validation_message(
             reference='#/paths//endpoint/get/parameters/0/schema{}'.format(reference),
         )
         for reference in expected_references
     ]
-    assert list(AddedRequiredPropertyInRequest.validate(
+    assert list(RemovedEnumValueFromRequest.validate(
         left_spec=old_spec,
         right_spec=new_spec,
     )) == expected_results
@@ -194,7 +171,7 @@ def test_validate_does_not_error_if_changes_in_response_schema(minimal_spec_dict
     old_spec = load_spec_from_spec_dict(old_spec_dict)
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
-    assert list(AddedRequiredPropertyInRequest.validate(
+    assert list(RemovedEnumValueFromRequest.validate(
         left_spec=old_spec,
         right_spec=new_spec,
     )) == []
@@ -210,7 +187,7 @@ def test_validate_does_not_error_if_changes_in_top_level_parameters(minimal_spec
                 'required': True,
                 'schema': {
                     'properties': {
-                        'property_1': {'type': 'string'},
+                        'property_1': {'type': 'string', 'enum': ['v1', 'v2']},
                     },
                     'type': 'object',
                 },
@@ -218,12 +195,12 @@ def test_validate_does_not_error_if_changes_in_top_level_parameters(minimal_spec
         },
     )
     new_spec_dict = deepcopy(old_spec_dict)
-    new_spec_dict['parameters']['param']['schema']['required'] = ['property_1']
+    del new_spec_dict['parameters']['param']['schema']['properties']['property_1']['enum'][0]
 
     old_spec = load_spec_from_spec_dict(old_spec_dict)
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
-    assert list(AddedRequiredPropertyInRequest.validate(
+    assert list(RemovedEnumValueFromRequest.validate(
         left_spec=old_spec,
         right_spec=new_spec,
     )) == []
@@ -240,7 +217,7 @@ def test_validate_fails_if_parameters_are_defined_in_different_locations_with_di
         'required': True,
         'schema': {
             'properties': {
-                'property_1': {'type': 'string'},
+                'property': {'type': 'string', 'enum': ['v1', 'v2']},
             },
             'type': 'object',
         },
@@ -265,12 +242,12 @@ def test_validate_fails_if_parameters_are_defined_in_different_locations_with_di
             },
         },
     )
-    new_spec_dict['paths']['/endpoint']['get']['parameters'][0]['schema']['required'] = ['property_1']
+    del new_spec_dict['paths']['/endpoint']['get']['parameters'][0]['schema']['properties']['property']['enum'][0]
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
-    assert list(AddedRequiredPropertyInRequest.validate(
+    assert list(RemovedEnumValueFromRequest.validate(
         left_spec=old_spec,
         right_spec=new_spec,
     )) == [
-        AddedRequiredPropertyInRequest.validation_message(reference='#/paths//endpoint/get/parameters/0/schema'),
+        RemovedEnumValueFromRequest.validation_message(reference='#/paths//endpoint/get/parameters/0/schema'),
     ]

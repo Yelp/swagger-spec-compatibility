@@ -12,17 +12,15 @@ from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
 from swagger_spec_compatibility.walkers import format_path  # noqa: F401
+from swagger_spec_compatibility.walkers.enum_values import EnumValuesDifferWalker
 from swagger_spec_compatibility.walkers.request_parameters import RequestParametersWalker
-from swagger_spec_compatibility.walkers.required_properties import RequiredPropertiesDifferWalker
 
 
-class AddedRequiredPropertyInRequest(BaseRule):
+class RemovedEnumValueFromRequest(BaseRule):
     error_level = Level.ERROR
-    error_code = 'E003'
-    short_name = 'Added Required Property in Request contract'
-    description = \
-        'Adding a required property to an object used in requests leads ' \
-        'client request to fail if the property is not present.'
+    error_code = 'E004'
+    short_name = 'Removed Enum value from Request contract'
+    description = 'TODO'  # TODO: maci
 
     @classmethod
     def validate(cls, left_spec, right_spec):
@@ -30,9 +28,9 @@ class AddedRequiredPropertyInRequest(BaseRule):
         request_parameters_paths = RequestParametersWalker(left_spec, right_spec).walk()
 
         # FIXME: the used walker is not able to merge together parameters defined in different locations
-        for required_property_diff in RequiredPropertiesDifferWalker(left_spec, right_spec).walk():
-            if not required_property_diff.mapping.new:
+        for enum_values_diff in EnumValuesDifferWalker(left_spec, right_spec).walk():
+            if not enum_values_diff.mapping.old:
                 continue
-            if not is_path_in_top_level_paths(request_parameters_paths, required_property_diff.path):
+            if not is_path_in_top_level_paths(request_parameters_paths, enum_values_diff.path):
                 continue
-            yield cls.validation_message(format_path(required_property_diff.path))
+            yield cls.validation_message(format_path(enum_values_diff.path))

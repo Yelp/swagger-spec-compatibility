@@ -7,45 +7,52 @@ import typing
 
 from bravado_core.spec import Spec  # noqa: F401
 
-from swagger_spec_compatibility.spec_utils import get_required_properties
 from swagger_spec_compatibility.util import EntityMapping
 from swagger_spec_compatibility.walkers import PathType
 from swagger_spec_compatibility.walkers import SchemaWalker
 
 
-def _different_properties_mapping(
+def _different_enum_values_mapping(
     left_spec,  # type: Spec
     right_spec,  # type: Spec
     left_schema,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
     right_schema,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
 ):
     # type: (...) -> typing.Optional[EntityMapping[typing.Set[typing.Text]]]
-    left_required = get_required_properties(swagger_spec=left_spec, schema=left_schema) or set()
-    right_required = get_required_properties(swagger_spec=right_spec, schema=right_schema) or set()
+    left_enum_values = (
+        set(left_schema['enum'])
+        if (left_schema and left_schema.get('type') == 'string' and 'enum' in left_schema)
+        else set()
+    )
+    right_enum_values = (
+        set(right_schema['enum'])
+        if (right_schema and right_schema.get('type') == 'string' and 'enum' in right_schema)
+        else set()
+    )
 
-    properties_appear_once = left_required.symmetric_difference(right_required)
-    if not properties_appear_once:
+    enum_values_appear_once = left_enum_values.symmetric_difference(right_enum_values)
+    if not enum_values_appear_once:
         # The condition is true if left_required is empty and right_required is not empty or vice-versa
         return None
     else:
         return EntityMapping(
-            old=properties_appear_once.intersection(left_required),
-            new=properties_appear_once.intersection(right_required),
+            old=enum_values_appear_once.intersection(left_enum_values),
+            new=enum_values_appear_once.intersection(right_enum_values),
         )
 
 
-RequiredPropertiesDiff = typing.NamedTuple(
-    'RequiredPropertiesDiff', (
+EnumValuesDiff = typing.NamedTuple(
+    'EnumValuesDiff', (
         ('path', PathType),
-        ('mapping', EntityMapping[typing.Set[typing.Text]]),
+        ('mapping', EntityMapping[typing.Any]),
     ),
 )
 
 
-class RequiredPropertiesDifferWalker(SchemaWalker[RequiredPropertiesDiff]):
+class EnumValuesDifferWalker(SchemaWalker[EnumValuesDiff]):
     left_spec = None  # type: Spec
     right_spec = None  # type: Spec
-    diffs = None  # type: typing.List[RequiredPropertiesDiff]
+    diffs = None  # type: typing.List[EnumValuesDiff]
 
     def __init__(
         self,
@@ -53,7 +60,7 @@ class RequiredPropertiesDifferWalker(SchemaWalker[RequiredPropertiesDiff]):
         right_spec,  # type: Spec
     ):
         # type: (...) -> None
-        super(RequiredPropertiesDifferWalker, self).__init__(
+        super(EnumValuesDifferWalker, self).__init__(
             left_spec=left_spec,
             right_spec=right_spec,
         )
@@ -66,16 +73,16 @@ class RequiredPropertiesDifferWalker(SchemaWalker[RequiredPropertiesDiff]):
         right_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
     ):
         # type: (...) -> None  # noqa
-        different_properties_mapping = _different_properties_mapping(
+        different_enum_values_mapping = _different_enum_values_mapping(
             left_spec=self.left_spec,
             right_spec=self.right_spec,
             left_schema=left_dict,
             right_schema=right_dict,
         )
-        if different_properties_mapping:
-            self.diffs.append(RequiredPropertiesDiff(
+        if different_enum_values_mapping is not None:
+            self.diffs.append(EnumValuesDiff(
                 path=path,
-                mapping=different_properties_mapping,
+                mapping=different_enum_values_mapping,
             ))
 
     def list_check(
@@ -97,5 +104,5 @@ class RequiredPropertiesDifferWalker(SchemaWalker[RequiredPropertiesDiff]):
         pass
 
     def walk_response(self):
-        # type: () -> typing.List[RequiredPropertiesDiff]
+        # type: () -> typing.List[EnumValuesDiff]
         return self.diffs
