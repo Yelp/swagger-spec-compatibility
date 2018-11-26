@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 import typing
 from enum import Enum
+from itertools import chain
 
 from bravado.client import SwaggerClient
 from bravado_core.operation import Operation  # noqa: F401
@@ -118,6 +119,14 @@ def get_required_properties(swagger_spec, schema):
         return None
     required, _ = get_collapsed_properties_type_mappings(definition=schema, deref=swagger_spec.deref)
     return set(iterkeys(required))
+
+
+def get_properties(swagger_spec, schema):
+    # type: (Spec, typing.Optional[typing.Mapping[typing.Text, typing.Any]]) -> typing.Optional[typing.Set[typing.Text]]
+    if schema is None or determine_object_type(schema) != ObjectType.SCHEMA:
+        return None
+    required, not_required = get_collapsed_properties_type_mappings(definition=schema, deref=swagger_spec.deref)
+    return set(chain(iterkeys(required), iterkeys(not_required)))
 
 
 StatusCodeSchema = typing.NamedTuple(

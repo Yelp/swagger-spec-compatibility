@@ -16,6 +16,7 @@ from swagger_spec_compatibility.spec_utils import Endpoint
 from swagger_spec_compatibility.spec_utils import get_endpoints
 from swagger_spec_compatibility.spec_utils import get_operation_mappings
 from swagger_spec_compatibility.spec_utils import get_operations
+from swagger_spec_compatibility.spec_utils import get_properties
 from swagger_spec_compatibility.spec_utils import get_required_properties
 from swagger_spec_compatibility.spec_utils import HTTPVerb
 from swagger_spec_compatibility.spec_utils import iterate_on_responses_status_codes
@@ -185,6 +186,82 @@ def test_get_operation_mappings(minimal_spec, spec_and_operation):
 )
 def test_get_required_properties(minimal_spec, scheme, expected_result):
     assert get_required_properties(swagger_spec=minimal_spec, schema=scheme) == expected_result
+
+
+@pytest.mark.parametrize(
+    'scheme, expected_result',
+    [
+        (None, None),
+        ({}, None),
+        (
+            {  # Swagger Parameter Object
+                'in': 'body',
+                'name': 'body',
+                'required': True,
+                'schema': {
+                    'properties': {
+                        'property': {
+                            'type': 'string',
+                        },
+                        'not_required_property': {
+                            'type': 'string',
+                        },
+                    },
+                    'required': ['property'],
+                    'type': 'object',
+                },
+            },
+            None,
+        ),
+        (
+            {  # Swagger Responses Object
+                '200': {
+                    'description': '',
+                    'schema': {
+                        'properties': {
+                            'property': {
+                                'type': 'string',
+                            },
+                            'not_required_property': {
+                                'type': 'string',
+                            },
+                        },
+                        'required': ['property'],
+                        'type': 'object',
+                    },
+                },
+            },
+            None,
+        ),
+        (
+            {  # Swagger Path Item Object
+                'get': {
+                    'responses': {
+                        '200': {'description': ''},
+                    },
+                },
+            },
+            None,
+        ),
+        (
+            {  # Swagger Schema Object
+                'properties': {
+                    'property': {
+                        'type': 'string',
+                    },
+                    'not_required_property': {
+                        'type': 'string',
+                    },
+                },
+                'required': ['property'],
+                'type': 'object',
+            },
+            {'property', 'not_required_property'},
+        ),
+    ],
+)
+def test_get_properties(minimal_spec, scheme, expected_result):
+    assert get_properties(swagger_spec=minimal_spec, schema=scheme) == expected_result
 
 
 @pytest.mark.parametrize(
