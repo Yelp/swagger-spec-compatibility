@@ -118,6 +118,14 @@ class ValidationMessage(typing.NamedTuple(
             short_name=self.rule.short_name,
         )
 
+    def json_representation(self):
+        # type: () -> typing.Mapping[typing.Text, typing.Any]
+        return {
+            'error_code': self.rule.error_code,
+            'reference': self.reference,
+            'short_name': self.rule.short_name,
+        }
+
 
 class BaseRule(with_metaclass(RuleRegistry)):
     # Unique identifier of the rule
