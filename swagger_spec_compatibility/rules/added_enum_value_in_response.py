@@ -13,26 +13,24 @@ from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
 from swagger_spec_compatibility.walkers import format_path  # noqa: F401
 from swagger_spec_compatibility.walkers.enum_values import EnumValuesDifferWalker
-from swagger_spec_compatibility.walkers.request_parameters import RequestParametersWalker
+from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalker
 
 
-class RemovedEnumValueFromRequest(BaseRule):
+class AddedEnumValueInRequest(BaseRule):
     error_level = Level.ERROR
-    error_code = 'E004'
-    short_name = 'Removed Enum value from Request contract'
-    description = 'Removing an enum value from a request parameter is backward incompatible as a previously valid ' \
-                  'request will not be valid. This happens because a request containing the removed enum value, ' \
-                  'valid according to the "old" Swagger spec, is not valid according to the new specs.'
+    error_code = 'E005'
+    short_name = 'Added Enum value in Response contract'
+    description = 'Adding an enum value to a response parameter is backward incompatible as clients, using the ' \
+                  '"old" version of the Swagger specs, will not be able to properly validate the response.'
 
     @classmethod
     def validate(cls, left_spec, right_spec):
         # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
-        request_parameters_paths = RequestParametersWalker(left_spec, right_spec).walk()
+        response_paths = ResponsePathsWalker(left_spec, right_spec).walk()
 
-        # FIXME: the used walker is not able to merge together parameters defined in different locations
         for enum_values_diff in EnumValuesDifferWalker(left_spec, right_spec).walk():
-            if not enum_values_diff.mapping.old:
+            if not enum_values_diff.mapping.new:
                 continue
-            if not is_path_in_top_level_paths(request_parameters_paths, enum_values_diff.path):
+            if not is_path_in_top_level_paths(response_paths, enum_values_diff.path):
                 continue
             yield cls.validation_message(format_path(enum_values_diff.path))
