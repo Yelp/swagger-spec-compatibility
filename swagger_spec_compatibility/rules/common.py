@@ -98,7 +98,7 @@ class RuleProtocol(typing_extensions.Protocol):
     error_level = None  # type: Level
 
     @classmethod
-    def validate(cls, old_spec, new_spec):
+    def validate(cls, left_spec, right_spec):
         # type: (Spec, Spec) -> typing.Iterable['ValidationMessage']
         pass
 
@@ -135,7 +135,7 @@ class BaseRule(with_metaclass(RuleRegistry)):
 
     @classmethod
     @abstractmethod
-    def validate(cls, old_spec, new_spec):
+    def validate(cls, left_spec, right_spec):
         # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
         pass
 

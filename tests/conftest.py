@@ -51,7 +51,7 @@ class DummyRule(BaseRule):
     description = 'Rule description'
 
     @classmethod
-    def validate(cls, old_spec, new_spec):  # pragma: no cover
+    def validate(cls, left_spec, right_spec):  # pragma: no cover
         return ()
 
 
@@ -62,7 +62,7 @@ class DummyInfoRule(BaseRule):
     description = 'Rule description'
 
     @classmethod
-    def validate(cls, old_spec, new_spec):  # pragma: no cover
+    def validate(cls, left_spec, right_spec):  # pragma: no cover
         return (cls.validation_message('test'),)
 
 
@@ -73,7 +73,7 @@ class DummyWarningRule(BaseRule):
     description = 'Rule description'
 
     @classmethod
-    def validate(cls, old_spec, new_spec):  # pragma: no cover
+    def validate(cls, left_spec, right_spec):  # pragma: no cover
         return (cls.validation_message('test'),)
 
 
@@ -84,8 +84,8 @@ class DummyRuleFailIfDifferent(BaseRule):
     description = 'Rule description'
 
     @classmethod
-    def validate(cls, old_spec, new_spec):  # pragma: no cover
-        return (cls.validation_message('test'),) if old_spec != new_spec else ()
+    def validate(cls, left_spec, right_spec):  # pragma: no cover
+        return (cls.validation_message('test'),) if left_spec != right_spec else ()
 
 
 class DummyErrorRule(BaseRule):
@@ -95,7 +95,7 @@ class DummyErrorRule(BaseRule):
     description = 'Rule description'
 
     @classmethod
-    def validate(cls, old_spec, new_spec):  # pragma: no cover
+    def validate(cls, left_spec, right_spec):  # pragma: no cover
         return (cls.validation_message('test'),)
 
 

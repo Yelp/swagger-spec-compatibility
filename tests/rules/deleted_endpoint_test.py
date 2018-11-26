@@ -11,8 +11,8 @@ from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
 
 def test_validate_succeed(minimal_spec):
     assert list(DeletedEndpoint.validate(
-        old_spec=minimal_spec,
-        new_spec=minimal_spec,
+        left_spec=minimal_spec,
+        right_spec=minimal_spec,
     )) == []
 
 
@@ -28,8 +28,8 @@ def test_validate_return_an_error(minimal_spec_dict, simple_operation_dict, mini
     old_spec = load_spec_from_spec_dict(old_spec_dict)
     operation = old_spec.resources['endpoint'].operations['get_endpoint']
     assert list(DeletedEndpoint.validate(
-        old_spec=old_spec,
-        new_spec=minimal_spec,
+        left_spec=old_spec,
+        right_spec=minimal_spec,
     )) == [
         DeletedEndpoint.validation_message(
             reference=str(
