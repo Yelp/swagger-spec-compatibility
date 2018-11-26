@@ -4,6 +4,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse  # noqa: F401
+import json
+import sys
 import typing  # noqa: F401
 
 from six import iteritems
@@ -22,6 +24,7 @@ from swagger_spec_compatibility.spec_utils import load_spec_from_uri
 class _Namespace(CLIProtocol):
     rules = None  # type: typing.Iterable[typing.Text]
     strict = None  # type: bool
+    json_output = None  # type: bool
     old_spec = None  # type: typing.Text
     new_spec = None  # type: typing.Text
 
@@ -30,42 +33,42 @@ def _extract_rules_with_given_message_level(
     rules_to_messages_mapping,  # type: typing.Mapping[typing.Type[RuleProtocol], typing.Iterable[ValidationMessage]]
     level,  # type: Level
 ):
-    # type: (...) -> typing.Mapping[typing.Type[RuleProtocol], typing.Iterable[ValidationMessage]]
-    messages_in_level = {
-        rule: [
-            message
-            for message in messages
-            if message.level is level
-        ]
+    # type: (...) -> typing.Iterable[ValidationMessage]
+    return (
+        message
         for rule, messages in iteritems(rules_to_messages_mapping)
-    }
-    return {
-        rule: messages
-        for rule, messages in iteritems(messages_in_level)
-        if messages
-    }
-
-
-def _print_raw_messages(level, messages):
-    # type: (Level, typing.Iterable[ValidationMessage]) -> None
-    print(
-        '{} rules:\n\t{}'.format(
-            level.name,
-            '\n\t'.join(
-                message.string_representation()
-                for message in messages
-            ),
-        ),
+        for message in messages
+        if message.level is level
     )
 
 
-def _print_validation_messages(cli_args, messages_by_level):
-    # type: (_Namespace, typing.Mapping[Level, typing.Iterable[ValidationMessage]]) -> None
+def _print_raw_messages(messages_by_level):
+    # type: (typing.Mapping[Level, typing.Iterable[ValidationMessage]]) -> None
     for level, messages in iteritems(messages_by_level):
-        if not messages:
-            continue
-        # TODO(maci) add cli argument for output format (ie. JSON)
-        _print_raw_messages(level=level, messages=messages)
+        messages = list(messages)
+        if messages:
+            print(
+                '{} rules:\n\t{}'.format(
+                    level.name,
+                    '\n\t'.join(
+                        message.string_representation()
+                        for message in messages
+                    ),
+                ),
+            )
+
+
+def _print_json_messages(messages_by_level):
+    # type: (typing.Mapping[Level, typing.Iterable[ValidationMessage]]) -> None
+    json_output = {}
+    for level, messages in iteritems(messages_by_level):
+        level_output = [
+            message.json_representation()
+            for message in messages
+        ]
+        if level_output:
+            json_output[level.name] = level_output
+    json.dump(json_output, sys.stdout)
 
 
 def execute(cli_args):
@@ -81,6 +84,11 @@ def execute(cli_args):
         for level in Level
     }
 
+    if cli_args.json_output:
+        _print_json_messages(messages_by_level)
+    else:
+        _print_raw_messages(messages_by_level)
+
     if cli_args.strict:
         return 1 if any(messages_by_level.values()) else 0
     else:
@@ -94,6 +102,11 @@ def add_sub_parser(subparsers):
         '--strict',
         action='store_true',
         help='Convert warnings to errors',
+    )
+    run_detection_parser.add_argument(
+        '--json-output',
+        action='store_true',
+        help='Return machine readable json output',
     )
     run_detection_parser.add_argument(
         'old_spec',

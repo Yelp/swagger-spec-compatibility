@@ -36,7 +36,7 @@ def compatibility_status(
         rules = RuleRegistry.rules()
 
     rules_to_error_level_mapping = {
-        rule: list(rule.validate(old_spec=old_spec, new_spec=new_spec))
+        rule: list(rule.validate(left_spec=old_spec, right_spec=new_spec))
         for rule in rules
     }
 

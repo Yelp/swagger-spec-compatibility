@@ -98,7 +98,7 @@ class RuleProtocol(typing_extensions.Protocol):
     error_level = None  # type: Level
 
     @classmethod
-    def validate(cls, old_spec, new_spec):
+    def validate(cls, left_spec, right_spec):
         # type: (Spec, Spec) -> typing.Iterable['ValidationMessage']
         pass
 
@@ -118,6 +118,14 @@ class ValidationMessage(typing.NamedTuple(
             short_name=self.rule.short_name,
         )
 
+    def json_representation(self):
+        # type: () -> typing.Mapping[typing.Text, typing.Any]
+        return {
+            'error_code': self.rule.error_code,
+            'reference': self.reference,
+            'short_name': self.rule.short_name,
+        }
+
 
 class BaseRule(with_metaclass(RuleRegistry)):
     # Unique identifier of the rule
@@ -135,7 +143,7 @@ class BaseRule(with_metaclass(RuleRegistry)):
 
     @classmethod
     @abstractmethod
-    def validate(cls, old_spec, new_spec):
+    def validate(cls, left_spec, right_spec):
         # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
         pass
 

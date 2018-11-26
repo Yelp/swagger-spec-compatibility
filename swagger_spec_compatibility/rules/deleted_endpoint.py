@@ -23,12 +23,12 @@ class DeletedEndpoint(BaseRule):
         'HTTP error status code (usually an HTTP/400 or HTTP/404)'
 
     @classmethod
-    def validate(cls, old_spec, new_spec):
+    def validate(cls, left_spec, right_spec):
         # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
-        endpoints_old_spec = get_endpoints(old_spec)
-        endponts_new_spec = get_endpoints(new_spec)
+        endpoints_left_spec = get_endpoints(left_spec)
+        endponts_right_spec = get_endpoints(right_spec)
 
         return (
             cls.validation_message(str(removed_endpoint))
-            for removed_endpoint in endpoints_old_spec - endponts_new_spec
+            for removed_endpoint in endpoints_left_spec - endponts_right_spec
         )
