@@ -20,7 +20,8 @@ class AddedEnumValueInRequest(BaseRule):
     error_level = Level.ERROR
     error_code = 'E005'
     short_name = 'Added Enum value in Response contract'
-    description = 'TODO'  # TODO: maci
+    description = 'Adding an enum value to a response parameter is backward incompatible as clients, using the ' \
+                  '"old" version of the Swagger specs, will not be able to properly validate the response.'
 
     @classmethod
     def validate(cls, left_spec, right_spec):

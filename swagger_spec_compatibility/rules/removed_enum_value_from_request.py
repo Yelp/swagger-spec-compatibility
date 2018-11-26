@@ -20,7 +20,9 @@ class RemovedEnumValueFromRequest(BaseRule):
     error_level = Level.ERROR
     error_code = 'E004'
     short_name = 'Removed Enum value from Request contract'
-    description = 'TODO'  # TODO: maci
+    description = 'Removing an enum value from a request parameter is backward incompatible as a previously valid ' \
+                  'request will not be valid. This happens because a request containing the removed enum value, ' \
+                  'valid according to the "old" Swagger spec, is not valid according to the new specs.'
 
     @classmethod
     def validate(cls, left_spec, right_spec):
