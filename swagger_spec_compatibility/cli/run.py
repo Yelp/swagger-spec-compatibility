@@ -30,20 +30,13 @@ def _extract_rules_with_given_message_level(
     rules_to_messages_mapping,  # type: typing.Mapping[typing.Type[RuleProtocol], typing.Iterable[ValidationMessage]]
     level,  # type: Level
 ):
-    # type: (...) -> typing.Mapping[typing.Type[RuleProtocol], typing.Iterable[ValidationMessage]]
-    messages_in_level = {
-        rule: [
-            message
-            for message in messages
-            if message.level is level
-        ]
+    # type: (...) -> typing.Iterable[ValidationMessage]
+    return (
+        message
         for rule, messages in iteritems(rules_to_messages_mapping)
-    }
-    return {
-        rule: messages
-        for rule, messages in iteritems(messages_in_level)
-        if messages
-    }
+        for message in messages
+        if message.level is level
+    )
 
 
 def _print_raw_messages(level, messages):
@@ -80,6 +73,8 @@ def execute(cli_args):
         level: _extract_rules_with_given_message_level(rules_to_messages_mapping, level)
         for level in Level
     }
+
+    _print_validation_messages(cli_args=cli_args, messages_by_level=messages_by_level)
 
     if cli_args.strict:
         return 1 if any(messages_by_level.values()) else 0
