@@ -6,3 +6,4 @@ Errors description
 
    E001
    E002
+   E003
