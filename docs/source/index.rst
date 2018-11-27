@@ -5,6 +5,7 @@ Welcome to Swagger Spec Compatibility's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   rules/index
    modules
    changelog
 
