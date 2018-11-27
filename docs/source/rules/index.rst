@@ -5,3 +5,4 @@ Errors description
    :maxdepth: 3
 
    E001
+   E002
