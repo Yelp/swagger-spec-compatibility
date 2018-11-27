@@ -21,9 +21,9 @@ def execute(cli_args):
     print(
         '{title}\n{rules_detail}'.format(
             title=colored('Rules explanation', attrs=['bold']),
-            rules_detail='\n\t'.join(
+            rules_detail='\n'.join(
                 rule.explain()
-                for rule in rules(cli_args)
+                for rule in sorted(rules(cli_args), key=lambda rule: rule.error_code)
             ),
         ),
     )
