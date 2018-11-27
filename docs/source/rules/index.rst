@@ -11,3 +11,4 @@ Errors description
    E005
    E006
    E007
+   E008
