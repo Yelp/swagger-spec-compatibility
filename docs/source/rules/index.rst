@@ -7,3 +7,4 @@ Errors description
    E001
    E002
    E003
+   E004
