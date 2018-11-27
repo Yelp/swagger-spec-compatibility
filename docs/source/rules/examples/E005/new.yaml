@@ -1,0 +1,19 @@
+swagger: '2.0'
+info:
+  title: Minimal Case of E005 Rule
+  version: '1.0'
+paths:
+  /endpoint:
+    get:
+      responses:
+        default:
+          description: ''
+          schema:
+            properties:
+              property:
+                type: string
+                enum:
+                - v1
+                - v2
+            type: object
+            x-model: get_endpoint_response

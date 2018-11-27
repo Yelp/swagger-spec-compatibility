@@ -8,3 +8,4 @@ Errors description
    E002
    E003
    E004
+   E005
