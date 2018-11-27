@@ -20,7 +20,7 @@ from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalke
 class AddedPropertiesInResponseObjectsWithAdditionalPropertiesSetToFalse(BaseRule):
     error_level = Level.ERROR
     error_code = 'E007'
-    short_name = 'Removing properties from an object with additionalProperties set to False used as request parameter'
+    short_name = 'Added properties in an object with additionalProperties set to False used in response'
     description = \
         'If the object is defined with additionalProperties set to False then the object will not allow presence of ' \
         'properties not defined on the properties section of the object definition. Adding a definition of a new ' \

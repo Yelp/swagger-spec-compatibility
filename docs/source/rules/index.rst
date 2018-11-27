@@ -10,3 +10,4 @@ Errors description
    E004
    E005
    E006
+   E007
