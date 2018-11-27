@@ -150,9 +150,9 @@ class BaseRule(with_metaclass(RuleRegistry)):
     @classmethod
     def explain(cls):
         # type: () -> typing.Text
-        return '{short_name} [{error_code}]:\n{rule_description}'.format(
+        return '[{error_code}] {short_name}:\n{rule_description}'.format(
+            error_code=colored(cls.error_code, attrs=['bold']),
             short_name=colored(cls.short_name, color='cyan', attrs=['bold']),
-            error_code=cls.error_code,
             rule_description=wrap(cls.description, indent='\t'),
         )
 
