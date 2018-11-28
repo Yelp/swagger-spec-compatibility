@@ -22,7 +22,8 @@ exclude_lines =
     ^\s*raise NotImplementedError\b
     ^\s*return NotImplemented\b
     ^\s*raise$
-
+    ^\s*raise RuntimeError\('An error was expected'\)$
+    ^\s*pytest\.fail\b
     pass
 
     # Don't complain if non-runnable code isn't run:

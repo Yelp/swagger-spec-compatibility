@@ -1,0 +1,19 @@
+swagger: '2.0'
+info:
+  title: Minimal Case of E002 Rule
+  version: '1.0'
+paths:
+  /endpoint:
+    post:
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          properties:
+            property:
+              type: string
+          type: object
+      responses:
+        default:
+          description: ''
