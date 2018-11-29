@@ -9,6 +9,7 @@ from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
+from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.rules.common import ValidationMessage   # noqa: F401
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
 from swagger_spec_compatibility.walkers import format_path
@@ -18,14 +19,15 @@ from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalke
 
 
 class ChangedType(BaseRule):
-    error_level = Level.ERROR
-    error_code = 'E008'
-    short_name = 'Changed type'
     description = 'Changing the type of a field is not backward compatible as a client using "old" Swagger specs will ' \
                   'send the field with a different type leading the service to fail to validate the request. ' \
                   'On the other end, if the object containing the updated field is used in the response, ' \
                   'it will lead to unexpected client errors when parsing the response and/or using ' \
                   'the updated property.'
+    error_code = 'MIS-E002'
+    error_level = Level.ERROR
+    rule_type = RuleType.MISCELLANEOUS
+    short_name = 'Changed type'
 
     @classmethod
     def validate(cls, left_spec, right_spec):

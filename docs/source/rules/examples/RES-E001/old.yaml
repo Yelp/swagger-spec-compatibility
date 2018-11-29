@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: Minimal Case of E005 Rule
+  title: Minimal Case of RES-E001 Rule
   version: '1.0'
 paths:
   /endpoint:
@@ -9,10 +9,9 @@ paths:
         default:
           description: ''
           schema:
+            additionalProperties: false
             properties:
-              property:
+              property_1:
                 type: string
-                enum:
-                - v1
             type: object
             x-model: get_endpoint_response

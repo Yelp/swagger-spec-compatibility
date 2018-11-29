@@ -9,6 +9,7 @@ import pytest
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleRegistry
+from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
 
 
@@ -45,10 +46,11 @@ def simple_operation_dict():
 
 
 class DummyRule(BaseRule):
-    error_level = Level.ERROR
     error_code = 'TEST_NO_MSG'
-    short_name = 'DummyRule'
+    error_level = Level.ERROR
     description = 'Rule description'
+    rule_type = RuleType.MISCELLANEOUS
+    short_name = 'DummyRule'
 
     @classmethod
     def validate(cls, left_spec, right_spec):  # pragma: no cover
@@ -56,10 +58,11 @@ class DummyRule(BaseRule):
 
 
 class DummyInfoRule(BaseRule):
-    error_level = Level.INFO
     error_code = 'TEST_INFO_MSG'
-    short_name = 'DummyInfoRule'
+    error_level = Level.INFO
     description = 'Rule description'
+    rule_type = RuleType.MISCELLANEOUS
+    short_name = 'DummyInfoRule'
 
     @classmethod
     def validate(cls, left_spec, right_spec):  # pragma: no cover
@@ -67,10 +70,11 @@ class DummyInfoRule(BaseRule):
 
 
 class DummyWarningRule(BaseRule):
-    error_level = Level.WARNING
     error_code = 'TEST_WARNING_MSG'
-    short_name = 'DummyWarningRule'
+    error_level = Level.WARNING
     description = 'Rule description'
+    rule_type = RuleType.MISCELLANEOUS
+    short_name = 'DummyWarningRule'
 
     @classmethod
     def validate(cls, left_spec, right_spec):  # pragma: no cover
@@ -78,10 +82,11 @@ class DummyWarningRule(BaseRule):
 
 
 class DummyRuleFailIfDifferent(BaseRule):
-    error_level = Level.ERROR
     error_code = 'TEST_FAIL_IF_DIFFERENT'
-    short_name = 'DummyRuleFailIfDifferent'
+    error_level = Level.ERROR
     description = 'Rule description'
+    rule_type = RuleType.MISCELLANEOUS
+    short_name = 'DummyRuleFailIfDifferent'
 
     @classmethod
     def validate(cls, left_spec, right_spec):  # pragma: no cover
@@ -89,10 +94,11 @@ class DummyRuleFailIfDifferent(BaseRule):
 
 
 class DummyErrorRule(BaseRule):
-    error_level = Level.ERROR
     error_code = 'TEST_ERROR_MSG'
-    short_name = 'DummyErrorRule'
+    error_level = Level.ERROR
     description = 'Rule description'
+    rule_type = RuleType.MISCELLANEOUS
+    short_name = 'DummyErrorRule'
 
     @classmethod
     def validate(cls, left_spec, right_spec):  # pragma: no cover

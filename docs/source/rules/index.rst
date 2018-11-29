@@ -1,14 +1,31 @@
 Errors description
 ==================
 
-.. toctree::
-   :maxdepth: 3
+Request Contract Changes
+------------------------
 
-   E001
-   E002
-   E003
-   E004
-   E005
-   E006
-   E007
-   E008
+.. toctree::
+   :maxdepth: 2
+
+   REQ-E001
+   REQ-E002
+   REQ-E003
+   REQ-E004
+
+Response Contract Changes
+-------------------------
+
+.. toctree::
+   :maxdepth: 2
+
+   RES-E001
+   RES-E002
+
+Miscellaneous Changes
+---------------------
+
+.. toctree::
+   :maxdepth: 2
+
+   MIS-E001
+   MIS-E002

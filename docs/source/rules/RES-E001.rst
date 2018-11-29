@@ -1,5 +1,5 @@
-[E007] - Added properties in an object with additionalProperties set to False used in response
-==============================================================================================
+[RES-E001] - Added properties in an object with additionalProperties set to False used in response
+==================================================================================================
 
 Rationale
 ---------
@@ -21,7 +21,7 @@ Example
 Old Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E007/old.yaml
+.. literalinclude:: examples/RES-E001/old.yaml
    :name: Old Swagger Spec
    :language: yaml
    :linenos:
@@ -29,7 +29,7 @@ Old Swagger Specs
 New Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E007/new.yaml
+.. literalinclude:: examples/RES-E001/new.yaml
    :name: New Swagger Spec
    :language: yaml
    :emphasize-lines: 17-18
@@ -40,7 +40,7 @@ Backward Incompatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~
 The following snippet triggers the incompatibility error.
 
-.. literalinclude:: examples/E007/tester.py
+.. literalinclude:: examples/RES-E001/tester.py
    :language: py
    :linenos:
 

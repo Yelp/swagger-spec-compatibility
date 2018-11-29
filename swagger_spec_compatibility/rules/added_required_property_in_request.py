@@ -9,6 +9,7 @@ from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
+from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
 from swagger_spec_compatibility.walkers import format_path  # noqa: F401
@@ -17,12 +18,13 @@ from swagger_spec_compatibility.walkers.required_properties import RequiredPrope
 
 
 class AddedRequiredPropertyInRequest(BaseRule):
-    error_level = Level.ERROR
-    error_code = 'E003'
-    short_name = 'Added Required Property in Request contract'
     description = \
         'Adding a required property to an object used in requests leads ' \
         'client request to fail if the property is not present.'
+    error_code = 'REQ-E002'
+    error_level = Level.ERROR
+    rule_type = RuleType.REQUEST_CONTRACT
+    short_name = 'Added Required Property in Request contract'
 
     @classmethod
     def validate(cls, left_spec, right_spec):

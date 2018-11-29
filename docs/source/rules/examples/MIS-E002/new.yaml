@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: Minimal Case of E008 Rule
+  title: Minimal Case of MIS-E002 Rule
   version: '1.0'
 paths:
   /endpoint:
@@ -11,7 +11,7 @@ paths:
           schema:
             properties:
               property:
-                type: string
+                type: boolean
             type: object
             x-model: get_endpoint_response
     post:
@@ -22,7 +22,7 @@ paths:
         schema:
           properties:
             property:
-              type: string
+              type: boolean
           type: object
       responses:
         default:

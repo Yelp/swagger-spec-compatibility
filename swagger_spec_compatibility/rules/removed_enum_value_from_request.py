@@ -9,6 +9,7 @@ from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
+from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
 from swagger_spec_compatibility.walkers import format_path  # noqa: F401
@@ -17,12 +18,13 @@ from swagger_spec_compatibility.walkers.request_parameters import RequestParamet
 
 
 class RemovedEnumValueFromRequest(BaseRule):
-    error_level = Level.ERROR
-    error_code = 'E004'
-    short_name = 'Removed Enum value from Request contract'
     description = 'Removing an enum value from a request parameter is backward incompatible as a previously valid ' \
                   'request will not be valid. This happens because a request containing the removed enum value, ' \
                   'valid according to the "old" Swagger spec, is not valid according to the new specs.'
+    error_code = 'REQ-E003'
+    error_level = Level.ERROR
+    rule_type = RuleType.REQUEST_CONTRACT
+    short_name = 'Removed Enum value from Request contract'
 
     @classmethod
     def validate(cls, left_spec, right_spec):

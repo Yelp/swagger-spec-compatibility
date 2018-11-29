@@ -1,5 +1,5 @@
-[E005] - Added Enum value in Response contract
-==============================================
+[REQ-E001] - Added Enum value in Response contract
+==================================================
 
 Rationale
 ---------
@@ -17,7 +17,7 @@ Example
 Old Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E005/old.yaml
+.. literalinclude:: examples/REQ-E001/old.yaml
    :name: Old Swagger Spec
    :language: yaml
    :linenos:
@@ -25,7 +25,7 @@ Old Swagger Specs
 New Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E005/new.yaml
+.. literalinclude:: examples/REQ-E001/new.yaml
    :name: New Swagger Spec
    :language: yaml
    :emphasize-lines: 17
@@ -36,7 +36,7 @@ Backward Incompatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~
 The following snippet triggers the incompatibility error.
 
-.. literalinclude:: examples/E005/tester.py
+.. literalinclude:: examples/REQ-E001/tester.py
    :language: py
    :linenos:
 
