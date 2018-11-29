@@ -20,7 +20,7 @@ from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalke
 class AddedEnumValueInRequest(BaseRule):
     description = 'Adding an enum value to a response parameter is backward incompatible as clients, using the ' \
                   '"old" version of the Swagger specs, will not be able to properly validate the response.'
-    error_code = 'E005'
+    error_code = 'REQ-E001'
     error_level = Level.ERROR
     rule_type = RuleType.REQUEST_CONTRACT
     short_name = 'Added Enum value in Response contract'

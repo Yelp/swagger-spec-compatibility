@@ -24,7 +24,7 @@ class RemovedRequiredPropertyFromResponse(BaseRule):
         'could throw errors. It could be valid to assume that the client won\'t perform response validation and this ' \
         'to unexpected errors while parsing the response and/or using the missing property.'
     error_level = Level.ERROR
-    error_code = 'E002'
+    error_code = 'RES-E002'
     rule_type = RuleType.RESPONSE_CONTRACT
     short_name = 'Removed Required Property from Response contract'
 

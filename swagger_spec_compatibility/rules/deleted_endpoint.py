@@ -19,7 +19,7 @@ class DeletedEndpoint(BaseRule):
         'An endpoint has been removed. This change is not backward compatible as holders of stale swagger ' \
         'specs (like old mobile Apps) could continue to call the removed endpoint and this will cause an ' \
         'HTTP error status code (usually an HTTP/400 or HTTP/404)'
-    error_code = 'E001'
+    error_code = 'MIS-E001'
     error_level = Level.ERROR
     rule_type = RuleType.MISCELLANEOUS
     short_name = 'Delete Endpoint'

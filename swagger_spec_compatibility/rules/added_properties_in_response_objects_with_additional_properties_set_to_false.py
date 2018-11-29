@@ -24,7 +24,7 @@ class AddedPropertiesInResponseObjectsWithAdditionalPropertiesSetToFalse(BaseRul
         'properties not defined on the properties section of the object definition. Adding a definition of a new ' \
         'property makes object sent from the server to the client be considered invalid by a client that is using ' \
         '"old" Swagger specs.'
-    error_code = 'E007'
+    error_code = 'RES-E001'
     error_level = Level.ERROR
     rule_type = RuleType.RESPONSE_CONTRACT
     short_name = 'Added properties in an object with additionalProperties set to False used in response'

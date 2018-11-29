@@ -24,7 +24,7 @@ class ChangedType(BaseRule):
                   'On the other end, if the object containing the updated field is used in the response, ' \
                   'it will lead to unexpected client errors when parsing the response and/or using ' \
                   'the updated property.'
-    error_code = 'E008'
+    error_code = 'MIS-E002'
     error_level = Level.ERROR
     rule_type = RuleType.MISCELLANEOUS
     short_name = 'Changed type'
