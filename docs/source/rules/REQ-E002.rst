@@ -1,5 +1,5 @@
-[E003] - Added Required Property in Request contract
-====================================================================
+[REQ-E002] - Added Required Property in Request contract
+========================================================
 
 Rationale
 ---------
@@ -16,7 +16,7 @@ Example
 Old Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E003/old.yaml
+.. literalinclude:: examples/REQ-E002/old.yaml
    :name: Old Swagger Spec
    :language: yaml
    :linenos:
@@ -24,7 +24,7 @@ Old Swagger Specs
 New Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E003/new.yaml
+.. literalinclude:: examples/REQ-E002/new.yaml
    :name: New Swagger Spec
    :language: yaml
    :emphasize-lines: 16-17
@@ -35,7 +35,7 @@ Backward Incompatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~
 The following snippet triggers the incompatibility error.
 
-.. literalinclude:: examples/E003/tester.py
+.. literalinclude:: examples/REQ-E002/tester.py
    :language: py
    :linenos:
 

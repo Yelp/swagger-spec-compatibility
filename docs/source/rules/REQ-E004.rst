@@ -1,5 +1,5 @@
-[E006] - Removing properties from an object with additionalProperties set to False used as request parameter
-============================================================================================================
+[REQ-E004] - Removing properties from an object with additionalProperties set to False used as request parameter
+================================================================================================================
 
 Rationale
 ---------
@@ -17,7 +17,7 @@ Example
 Old Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E006/old.yaml
+.. literalinclude:: examples/REQ-E004/old.yaml
    :name: Old Swagger Spec
    :language: yaml
    :emphasize-lines: 17-18
@@ -26,7 +26,7 @@ Old Swagger Specs
 New Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E006/new.yaml
+.. literalinclude:: examples/REQ-E004/new.yaml
    :name: New Swagger Spec
    :language: yaml
    :linenos:
@@ -36,7 +36,7 @@ Backward Incompatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~
 The following snippet triggers the incompatibility error.
 
-.. literalinclude:: examples/E006/tester.py
+.. literalinclude:: examples/REQ-E004/tester.py
    :language: py
    :linenos:
 

@@ -1,5 +1,5 @@
-[E008] - Changed type
-=====================
+[MIS-E002] - Changed type
+=========================
 
 Rationale
 ---------
@@ -18,7 +18,7 @@ Example
 Old Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E008/old.yaml
+.. literalinclude:: examples/MIS-E002/old.yaml
    :name: Old Swagger Spec
    :language: yaml
    :emphasize-lines: 14,25
@@ -27,7 +27,7 @@ Old Swagger Specs
 New Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E008/new.yaml
+.. literalinclude:: examples/MIS-E002/new.yaml
    :name: New Swagger Spec
    :language: yaml
    :emphasize-lines: 14,25
@@ -38,7 +38,7 @@ Backward Incompatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~
 The following snippet triggers the incompatibility error.
 
-.. literalinclude:: examples/E008/tester.py
+.. literalinclude:: examples/MIS-E002/tester.py
    :language: py
    :linenos:
 

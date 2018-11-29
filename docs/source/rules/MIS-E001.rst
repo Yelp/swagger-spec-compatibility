@@ -1,5 +1,5 @@
-[E001] - Delete an endpoint
-===========================
+[MIS-E001] - Delete an endpoint
+===============================
 
 Rationale
 ---------
@@ -25,7 +25,7 @@ Example
 Old Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E001/old.yaml
+.. literalinclude:: examples/MIS-E001/old.yaml
    :name: Old Swagger Spec
    :language: yaml
    :emphasize-lines: 11-14
@@ -34,7 +34,7 @@ Old Swagger Specs
 New Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E001/new.yaml
+.. literalinclude:: examples/MIS-E001/new.yaml
    :name: New Swagger Spec
    :language: yaml
    :linenos:
@@ -43,7 +43,7 @@ Backward Incompatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~
 The following snippet triggers the incompatibility error.
 
-.. literalinclude:: examples/E001/tester.py
+.. literalinclude:: examples/MIS-E001/tester.py
    :language: py
    :linenos:
 

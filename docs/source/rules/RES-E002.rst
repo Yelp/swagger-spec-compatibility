@@ -1,5 +1,5 @@
-[E002] - Remove a required property from an object used in responses
-====================================================================
+[RES-E002] - Remove a required property from an object used in responses
+========================================================================
 
 Rationale
 ---------
@@ -18,7 +18,7 @@ Example
 Old Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E002/old.yaml
+.. literalinclude:: examples/RES-E002/old.yaml
    :name: Old Swagger Spec
    :language: yaml
    :emphasize-lines: 15-16
@@ -27,7 +27,7 @@ Old Swagger Specs
 New Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E002/new.yaml
+.. literalinclude:: examples/RES-E002/new.yaml
    :name: New Swagger Spec
    :language: yaml
    :linenos:
@@ -37,7 +37,7 @@ Backward Incompatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~
 The following snippet triggers the incompatibility error.
 
-.. literalinclude:: examples/E002/tester.py
+.. literalinclude:: examples/RES-E002/tester.py
    :language: py
    :linenos:
 

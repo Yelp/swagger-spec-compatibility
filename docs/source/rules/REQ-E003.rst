@@ -1,5 +1,5 @@
-[E004] - Removed Enum value from Request contract
-=================================================
+[REQ-E003] - Removed Enum value from Request contract
+=====================================================
 
 Rationale
 ---------
@@ -17,7 +17,7 @@ Example
 Old Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E004/old.yaml
+.. literalinclude:: examples/REQ-E003/old.yaml
    :name: Old Swagger Spec
    :language: yaml
    :emphasize-lines: 18
@@ -26,7 +26,7 @@ Old Swagger Specs
 New Swagger Specs
 ~~~~~~~~~~~~~~~~~
 
-.. literalinclude:: examples/E004/new.yaml
+.. literalinclude:: examples/REQ-E003/new.yaml
    :name: New Swagger Spec
    :language: yaml
    :linenos:
@@ -36,7 +36,7 @@ Backward Incompatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~
 The following snippet triggers the incompatibility error.
 
-.. literalinclude:: examples/E004/tester.py
+.. literalinclude:: examples/REQ-E003/tester.py
    :language: py
    :linenos:
 
