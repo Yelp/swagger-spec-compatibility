@@ -9,6 +9,7 @@ from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
+from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
 from swagger_spec_compatibility.walkers import format_path
@@ -18,14 +19,15 @@ from swagger_spec_compatibility.walkers.request_parameters import RequestParamet
 
 
 class RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse(BaseRule):
-    error_level = Level.ERROR
-    error_code = 'E006'
-    short_name = 'Removing properties from an object with additionalProperties set to False used as request parameter'
     description = \
         'If the object is defined with additionalProperties set to False then the object will not allow presence of ' \
         'properties not defined on the properties section of the object definition. Removing a definition of an ' \
         'existing property makes objects sent from a client, that is using "old" Swagger specs, to the server be ' \
         'considered invalid by the backend.'
+    error_code = 'E006'
+    error_level = Level.ERROR
+    rule_type = RuleType.REQUEST_CONTRACT
+    short_name = 'Removing properties from an object with additionalProperties set to False used as request parameter'
 
     @classmethod
     def validate(cls, left_spec, right_spec):

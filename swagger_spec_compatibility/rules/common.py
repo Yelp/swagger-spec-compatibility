@@ -28,6 +28,7 @@ class RuleRegistry(ABCMeta):
         assert getattr(cls, 'short_name', None) is not None, 'short_name is a required class attribute for {}'.format(cls)
         assert getattr(cls, 'description', None) is not None, 'description is a required class attribute for {}'.format(cls)
         assert getattr(cls, 'error_level', None) is not None, 'error_level is a required class attribute for {}'.format(cls)
+        assert getattr(cls, 'rule_type', None) is not None, 'rule_type is a required class attribute for {}'.format(cls)
 
     @classmethod
     def _prevent_rule_duplication(mcs, cls):
@@ -81,6 +82,12 @@ class RuleRegistry(ABCMeta):
         return RuleRegistry._REGISTRY[rule_name]
 
 
+class RuleType(IntEnum):
+    REQUEST_CONTRACT = 0
+    RESPONSE_CONTRACT = 1
+    MISCELLANEOUS = 2
+
+
 class Level(IntEnum):
     INFO = 0
     WARNING = 1
@@ -96,6 +103,8 @@ class RuleProtocol(typing_extensions.Protocol):
     description = None  # type: typing.Text
     # Error level associated to the rule
     error_level = None  # type: Level
+    # Type of the rule associated
+    rule_type = None  # type: RuleType
 
     @classmethod
     def validate(cls, left_spec, right_spec):
@@ -136,6 +145,8 @@ class BaseRule(with_metaclass(RuleRegistry)):
     description = None  # type: typing.Text
     # Error level associated to the rule
     error_level = None  # type: Level
+    # Type of the rule associated
+    rule_type = None  # type: RuleType
 
     def __init__(self):
         # type: () -> None

@@ -9,6 +9,7 @@ from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
+from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
 from swagger_spec_compatibility.walkers import format_path  # noqa: F401
@@ -17,11 +18,12 @@ from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalke
 
 
 class AddedEnumValueInRequest(BaseRule):
-    error_level = Level.ERROR
-    error_code = 'E005'
-    short_name = 'Added Enum value in Response contract'
     description = 'Adding an enum value to a response parameter is backward incompatible as clients, using the ' \
                   '"old" version of the Swagger specs, will not be able to properly validate the response.'
+    error_code = 'E005'
+    error_level = Level.ERROR
+    rule_type = RuleType.REQUEST_CONTRACT
+    short_name = 'Added Enum value in Response contract'
 
     @classmethod
     def validate(cls, left_spec, right_spec):

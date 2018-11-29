@@ -9,6 +9,7 @@ from bravado_core.spec import Spec  # noqa: F401
 
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
+from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
 from swagger_spec_compatibility.walkers import format_path
@@ -17,14 +18,15 @@ from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalke
 
 
 class RemovedRequiredPropertyFromResponse(BaseRule):
-    error_level = Level.ERROR
-    error_code = 'E002'
-    short_name = 'Removed Required Property from Response contract'
     description = \
         'Removing a required property from an object leads to false expectation on the client receiving the object. ' \
-        'If the client is using "old" service\'s Swagger spec it will expect the property to be present and so it could throw errors. ' \
-        'It could be valid to assume that the client won\'t perform response validation and this leads to ' \
-        'unexpected errors while parsing the response and/or using the missing property.'
+        'If the client is using "old" service\'s Swagger spec it will expect the property to be present and so it ' \
+        'could throw errors. It could be valid to assume that the client won\'t perform response validation and this ' \
+        'to unexpected errors while parsing the response and/or using the missing property.'
+    error_level = Level.ERROR
+    error_code = 'E002'
+    rule_type = RuleType.RESPONSE_CONTRACT
+    short_name = 'Removed Required Property from Response contract'
 
     @classmethod
     def validate(cls, left_spec, right_spec):
