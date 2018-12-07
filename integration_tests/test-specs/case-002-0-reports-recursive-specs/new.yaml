@@ -1,0 +1,23 @@
+swagger: '2.0'
+info:
+  title: Test
+  version: '1.0'
+paths:
+  /endpoint:
+    get:
+      responses:
+        default:
+          description: ''
+          schema:
+            $ref: '#/definitions/recursinve_model'
+definitions:
+  recursinve_model:
+    properties:
+      property:
+        type: string
+      recursive_property:
+        $ref: '#/definitions/recursinve_model'
+    required:
+    - property
+    type: object
+    x-model: recursinve_model
