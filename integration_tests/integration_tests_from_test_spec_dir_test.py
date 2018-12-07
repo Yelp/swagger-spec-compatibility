@@ -35,7 +35,7 @@ def _test_specification_id(test_specification):  # pragma: no cover # this is us
 
 def get_test_specifications():  # pragma: no cover # this is used internally by pytest and it won't appear on coverage
     # type: () -> Generator[Specification, None, None]
-    test_specs_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'test-specs'))
+    test_specs_dir = os.path.join(os.path.dirname(__file__), 'test-specs')
     for case_dir in glob.iglob(os.path.join(test_specs_dir, 'case-*-*-reports*')):
         match = re.match(r'^.*/case-\d+-(?P<number_of_reports>\d+)-reports.*$', case_dir)
         if not match:

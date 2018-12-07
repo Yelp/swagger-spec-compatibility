@@ -67,11 +67,7 @@ DOC_FILES = set(chain(
     iglob(os.path.join(DOC_DIR, '*.rst')),
     iglob(os.path.join(DOC_DIR, '**', '**.rst')),
 ))
-DOCUMENTED_MODULES = {
-    documented_module
-    for file in DOC_FILES
-    for documented_module in _extract_documented_models(file)
-}
+DOCUMENTED_MODULES = set(_extract_documented_models(os.path.join(DOC_DIR, 'swagger_spec_compatibility.rst')))
 BACKWARD_INCOMPATIBILITY_TESTERS = sorted(
     iglob(os.path.join(DOC_DIR, 'rules', 'examples', '*', 'tester.py')),
 )
