@@ -57,7 +57,10 @@ class EntityMapping(typing.Generic[T]):
 
     def __repr__(self):
         # type: () -> str
-        return str('{}(old={}, new={})'.format(self.__class__.__name__, self.old, self.new))  # pragma: no cover  # This statement is present only to have a nicer REPL experience # noqa
+        return str('{}(old={}, new={})'.format(
+            self.__class__.__name__, self.old,
+            self.new,
+        ))  # pragma: no cover  # This statement is present only to have a nicer REPL experience # noqa
 
 
 def is_path_in_top_level_paths(top_level_paths, path):

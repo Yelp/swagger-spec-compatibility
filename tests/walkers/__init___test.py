@@ -167,3 +167,65 @@ def test_SchemaWalker_skips_defined_paths():
             ('value',),
         },
     }
+
+
+def test_SchemaWalker_deals_with_recursive_objects():
+    spec = mock.Mock(
+        spec=Spec,
+        deref_flattened_spec={
+            'dict': {
+                'dict_dict': {},
+                'dict_list': [],
+                'dict_value': None,
+            },
+            'list': [
+                {
+                    'inner_dict': {
+                        'inner_dict_dict': {},
+                        'inner_dict_list': [],
+                        'inner_dict_value': None,
+                    },
+                },
+                [
+                    {},
+                    [],
+                    None,
+                ],
+                None,
+            ],
+            'value': None,
+        },
+    )
+    # Add recursion in deref_flattened_spec, this will not be present into the walked paths as
+    # the object has already been traversed
+    spec.deref_flattened_spec['level_recursive_schema'] = spec.deref_flattened_spec
+
+    walker = DummySchemaWalker(spec, spec, additional=True)
+    assert walker.left_spec == spec
+    assert walker.right_spec == spec
+    assert walker.additional is True
+    assert walker.walk() == {
+        'dict_check_paths': {
+            ('dict', 'dict_dict'),
+            ('dict',),
+            ('list', 0),
+            ('list', 0, 'inner_dict'),
+            ('list', 0, 'inner_dict', 'inner_dict_dict'),
+            ('list', 1, 0),
+            (),
+        },
+        'list_check_paths': {
+            ('dict', 'dict_list'),
+            ('list', 0, 'inner_dict', 'inner_dict_list'),
+            ('list', 1),
+            ('list', 1, 1),
+            ('list',),
+        },
+        'value_check_paths': {
+            ('dict', 'dict_value'),
+            ('list', 0, 'inner_dict', 'inner_dict_value'),
+            ('list', 1, 2),
+            ('list', 2),
+            ('value',),
+        },
+    }

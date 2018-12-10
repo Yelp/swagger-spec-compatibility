@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 import typing
 from abc import abstractmethod
+from collections import defaultdict
 from itertools import chain
 
 from bravado_core.spec import Spec  # noqa: F401
@@ -33,6 +34,7 @@ class Walker(typing.Generic[T]):
         # type: (typing.Any, typing.Any, typing.Any) -> None
         self.left = left
         self.right = right
+        self._inner_walk_calls = defaultdict(list)  # type: typing.DefaultDict[typing.Tuple[int, ...], typing.List[PathType]]
         for attr_name, attr_value in iteritems(kwargs):
             setattr(self, attr_name, attr_value)
 
@@ -70,9 +72,23 @@ class Walker(typing.Generic[T]):
         # type: (...) -> None
         pass
 
+    def _is_recursive_call(self, path, left, right):
+        # type: (PathType, typing.Any, typing.Any) -> bool
+        cache_key = (id(left), id(right))
+
+        if cache_key in self._inner_walk_calls and any(
+            path[:len(known_path)] == known_path for known_path in self._inner_walk_calls[cache_key]
+        ):
+            # Deal with recursive objects
+            return True
+
+        self._inner_walk_calls[cache_key].append(path)
+        return False
+
     def _inner_walk(self, path, left, right):
         # type: (PathType, typing.Any, typing.Any) -> None
-        if not self.should_path_be_walked_through(path):
+
+        if not self.should_path_be_walked_through(path) or self._is_recursive_call(path, left, right):
             return
 
         # TODO: make better walking if the two objects have different type

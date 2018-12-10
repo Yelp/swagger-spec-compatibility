@@ -130,3 +130,46 @@ def test_RequiredPropertiesDifferWalker(minimal_spec_dict, left_schema, right_sc
         left_spec=left_spec,
         right_spec=right_spec,
     ).walk() == expected_diffs
+
+
+def test_RequiredPropertiesDifferWalker_recursive_definition(minimal_spec_dict):
+
+    minimal_spec_dict['definitions'] = {
+        'recursive_object': {
+            'type': 'object',
+            'properties': {
+                'property': {'$ref': '#/definitions/model'},
+                'recursive_property': {'$ref': '#/definitions/recursive_object'},
+            },
+        },
+    }
+    left_spec_dict = dict(
+        minimal_spec_dict,
+        definitions={
+            'model': {
+                'properties': {
+                    'old_only': {'type': 'string'},
+                },
+                'required': ['old_only'],
+                'type': 'object',
+            },
+        },
+    )
+    right_spec_dict = dict(
+        minimal_spec_dict,
+        definitions={
+            'model': {
+                'properties': {
+                    'old_only': {'type': 'string'},
+                },
+                'type': 'object',
+            },
+        },
+    )
+    left_spec = load_spec_from_spec_dict(spec_dict=left_spec_dict)
+    right_spec = load_spec_from_spec_dict(spec_dict=right_spec_dict)
+
+    assert RequiredPropertiesDifferWalker(
+        left_spec=left_spec,
+        right_spec=right_spec,
+    ).walk() == [RequiredPropertiesDiff(path=('definitions', 'model'), mapping=EntityMapping(old={'old_only'}, new=set()))]
