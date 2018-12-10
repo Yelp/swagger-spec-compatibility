@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.2.0 (2018-12-10)
+------------------
+* Support recursive specs
+
 0.1.0 (2018-11-29)
 ------------------
 * Initial library implementation with definition of the following rules:
