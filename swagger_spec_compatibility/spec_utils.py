@@ -19,9 +19,6 @@ from swagger_spec_compatibility.cache import typed_lru_cache
 from swagger_spec_compatibility.util import EntityMapping
 
 
-T = typing.TypeVar('T')
-
-
 class HTTPVerb(Enum):
     DELETE = 'delete'
     GET = 'get'
