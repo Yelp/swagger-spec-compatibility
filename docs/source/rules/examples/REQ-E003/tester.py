@@ -17,12 +17,12 @@ new_client = SwaggerClient.from_url(
     spec_url=urljoin('file:', pathname2url(abspath('new.yaml'))),
 )
 
-object_to_send = {'property': 'v2'}
+object_to_send = {'property_1': 'v1', 'property_2': 'v2'}
 
 print('Calling the post endpoint with the old client: Succeeded')
 old_client.endpoint.post_endpoint(body=object_to_send)
 
-print('Calling the post endpoint with the new client: Failed')
+print('Calling the post endpoint with the old client: Failed')
 try:
     new_client.endpoint.post_endpoint(body=object_to_send)
     raise RuntimeError('An error was expected')

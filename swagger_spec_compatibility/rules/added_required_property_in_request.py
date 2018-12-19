@@ -21,7 +21,7 @@ class AddedRequiredPropertyInRequest(BaseRule):
     description = \
         'Adding a required property to an object used in requests leads ' \
         'client request to fail if the property is not present.'
-    error_code = 'REQ-E002'
+    error_code = 'REQ-E001'
     error_level = Level.ERROR
     rule_type = RuleType.REQUEST_CONTRACT
     short_name = 'Added Required Property in Request contract'

@@ -24,7 +24,7 @@ class RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse(Base
         'properties not defined on the properties section of the object definition. Removing a definition of an ' \
         'existing property makes objects sent from a client, that is using "old" Swagger specs, to the server be ' \
         'considered invalid by the backend.'
-    error_code = 'REQ-E004'
+    error_code = 'REQ-E003'
     error_level = Level.ERROR
     rule_type = RuleType.REQUEST_CONTRACT
     short_name = 'Removing properties from an object with additionalProperties set to False used as request parameter'
