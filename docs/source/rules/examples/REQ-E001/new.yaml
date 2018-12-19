@@ -4,16 +4,18 @@ info:
   version: '1.0'
 paths:
   /endpoint:
-    get:
+    post:
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          properties:
+            property:
+              type: string
+          required:
+          - property
+          type: object
       responses:
         default:
           description: ''
-          schema:
-            properties:
-              property:
-                type: string
-                enum:
-                - v1
-                - v2
-            type: object
-            x-model: get_endpoint_response

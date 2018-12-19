@@ -17,7 +17,7 @@ new_client = SwaggerClient.from_url(
     spec_url=urljoin('file:', pathname2url(abspath('new.yaml'))),
 )
 
-object_to_send = {}
+object_to_send = {'property': 'v2'}
 
 print('Calling the post endpoint with the old client: Succeeded')
 old_client.endpoint.post_endpoint(body=object_to_send)

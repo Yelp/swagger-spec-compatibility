@@ -1,15 +1,16 @@
-[REQ-E002] - Added Required Property in Request contract
-========================================================
+[REQ-E002] - Removed Enum value from Request contract
+=====================================================
 
 Rationale
 ---------
-Adding a required property to an object used in requests leads client request to fail if the property is not present.
-
+Removing an enum value from a request parameter is backward incompatible as a previously valid request will not be valid.
+This happens because a request containing the removed enum value, valid according to the "old" Swagger spec, is not valid
+according to the new specs.
 
 Mitigation
 ----------
-A possible mitigation consists of adding the property as optional with an associated default value.
-In this case, the client requests don’t fail to validate and the service can assume that the property is always set.
+There are no best practices for this type of issue.
+The general recommendation would be to avoid as much as possible this type of change.
 
 Example
 -------
@@ -19,6 +20,7 @@ Old Swagger Specs
 .. literalinclude:: examples/REQ-E002/old.yaml
    :name: Old Swagger Spec
    :language: yaml
+   :emphasize-lines: 18
    :linenos:
 
 New Swagger Specs
@@ -27,7 +29,6 @@ New Swagger Specs
 .. literalinclude:: examples/REQ-E002/new.yaml
    :name: New Swagger Spec
    :language: yaml
-   :emphasize-lines: 16-17
    :linenos:
 
 

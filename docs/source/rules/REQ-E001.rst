@@ -1,16 +1,15 @@
-[REQ-E001] - Added Enum value in Response contract
-==================================================
+[REQ-E001] - Added Required Property in Request contract
+========================================================
 
 Rationale
 ---------
-Adding an enum value to a response parameter is backward incompatible as clients, using the "old" version of the
-Swagger specs, will not be able to properly validate the response.
+Adding a required property to an object used in requests leads client request to fail if the property is not present.
+
 
 Mitigation
 ----------
-A possible mitigation consists of modifying the endpoint to get the list of enum values supported for the specific request.
-This way we can ensure (at the business logic level, not on Swagger) that the response will not contain enum values that
-are not manageable by clients using "old" Swagger spec version.
+A possible mitigation consists of adding the property as optional with an associated default value.
+In this case, the client requests don’t fail to validate and the service can assume that the property is always set.
 
 Example
 -------
@@ -28,7 +27,7 @@ New Swagger Specs
 .. literalinclude:: examples/REQ-E001/new.yaml
    :name: New Swagger Spec
    :language: yaml
-   :emphasize-lines: 17
+   :emphasize-lines: 16-17
    :linenos:
 
 

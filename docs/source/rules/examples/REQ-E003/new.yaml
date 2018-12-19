@@ -10,11 +10,10 @@ paths:
         name: body
         required: true
         schema:
+          additionalProperties: false
           properties:
-            property:
+            property_1:
               type: string
-              enum:
-              - v1
           type: object
       responses:
         default:

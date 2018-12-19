@@ -1,16 +1,16 @@
-[REQ-E003] - Removed Enum value from Request contract
-=====================================================
+[REQ-E003] - Removing properties from an object with additionalProperties set to False used as request parameter
+================================================================================================================
 
 Rationale
 ---------
-Removing an enum value from a request parameter is backward incompatible as a previously valid request will not be valid.
-This happens because a request containing the removed enum value, valid according to the "old" Swagger spec, is not valid
-according to the new specs.
+If the object is defined with additionalProperties set to False then the object will not allow presence of properties
+not defined on the properties section of the object definition. Removing a definition of an existing property makes
+objects sent from a client, that is using "old" Swagger specs, to the server be considered invalid by the backend.
 
 Mitigation
 ----------
-There are no best practices for this type of issue.
-The general recommendation would be to avoid as much as possible this type of change.
+A possible mitigation could be to not remove the property from the object schema, mark it as deprecated (mostly for
+documentation purposes) and make sure that your business logic fills the field with a placeholder.
 
 Example
 -------
@@ -20,7 +20,7 @@ Old Swagger Specs
 .. literalinclude:: examples/REQ-E003/old.yaml
    :name: Old Swagger Spec
    :language: yaml
-   :emphasize-lines: 18
+   :emphasize-lines: 17-18
    :linenos:
 
 New Swagger Specs

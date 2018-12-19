@@ -21,7 +21,7 @@ class RemovedEnumValueFromRequest(BaseRule):
     description = 'Removing an enum value from a request parameter is backward incompatible as a previously valid ' \
                   'request will not be valid. This happens because a request containing the removed enum value, ' \
                   'valid according to the "old" Swagger spec, is not valid according to the new specs.'
-    error_code = 'REQ-E003'
+    error_code = 'REQ-E002'
     error_level = Level.ERROR
     rule_type = RuleType.REQUEST_CONTRACT
     short_name = 'Removed Enum value from Request contract'
