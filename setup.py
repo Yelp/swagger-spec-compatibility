@@ -25,6 +25,11 @@ setup(
     package_data={
         'swagger_spec_compatibility': ['py.typed'],
     },
+    entry_points={
+        'console_scripts': [
+            'swagger_spec_compatibility = swagger_spec_compatibility.__main__:main',
+        ],
+    },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
