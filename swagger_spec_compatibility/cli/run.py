@@ -33,13 +33,13 @@ def _extract_rules_with_given_message_level(
     rules_to_messages_mapping,  # type: typing.Mapping[typing.Type[RuleProtocol], typing.Iterable[ValidationMessage]]
     level,  # type: Level
 ):
-    # type: (...) -> typing.Iterable[ValidationMessage]
-    return (
+    # type: (...) -> typing.List[ValidationMessage]
+    return [
         message
         for rule, messages in iteritems(rules_to_messages_mapping)
         for message in messages
         if message.level is level
-    )
+    ]
 
 
 def _print_raw_messages(messages_by_level):
