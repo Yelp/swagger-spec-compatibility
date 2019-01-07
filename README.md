@@ -1,3 +1,0 @@
-# Swagger Spec Compatibility
-
-**TODO**
