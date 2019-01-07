@@ -1,8 +1,8 @@
 .. image:: https://img.shields.io/travis/Yelp/swagger-spec-compatibility.svg
-  :target: https://travis-ci.org/Yelp/swagger-spec-compatibility?branch=master
+    :target: https://travis-ci.org/Yelp/swagger-spec-compatibility?branch=master
 
 .. image:: https://img.shields.io/codecov/c/gh/Yelp/swagger-spec-compatibility.svg
-  :target: https://codecov.io/gh/Yelp/swagger-spec-compatibility
+    :target: https://codecov.io/gh/Yelp/swagger-spec-compatibility
 
 .. image:: https://img.shields.io/pypi/v/swagger-spec-compatibility.svg
     :target: https://pypi.python.org/pypi/swagger-spec-compatibility/
@@ -12,32 +12,35 @@
     :target: https://pypi.python.org/pypi/swagger-spec-compatibility/
     :alt: Supported Python versions
 
-Swagger Spec Compatibility
+swagger-spec-compatibility
 ==========================
 
 About
 -----
 
-Swagger Spec Compatibility is a Yelp maintained library that aims to support developers that are interacting with swagger specs.
 
-The main purpose of this library is to provide tools to automatically detect safety of Swagger changes with respect to backward compatibility.
+``swagger-spec-compatibility`` is a Yelp maintained library that provides tools to automatically detect
+the safety of `Swagger/OpenAPI 2.0 specification <https://swagger.io/docs/specification/2-0/basic-structure/>`_ changes
+with respect to **backwards compatibility**.
 
-The basic idea is that developers could rely on the tool to build confidence about spec changes that could break compatibility with clients built on top of previous versions of the Swagger spec.
+
+``swagger-spec-compatibility`` aims to give developers confidence that their spec changes are safe and that clients
+built with previous versions of the Swagger spec can continue to communicate correctly.
 
 Documentation
 -------------
 
-More documentation is available at http://swagger-spec-compatibility.readthedocs.org
+More documentation is available at `swagger-spec-compatibility.readthedocs.org <http://swagger-spec-compatibility.readthedocs.org/>`__.
 
 How to Install
 --------------
 
 .. code-block:: bash
 
-    # for the latest released version
+    # to install the latest released version
     $ pip install swagger-spec-compatiblity
 
-    # to install the latest version on master
+    # to install the latest master [from Github]
     $ pip install git+https://github.com/Yelp/swagger-spec-compatibility
 
 Example Usage
@@ -117,14 +120,15 @@ Setup
     # Ensure that you have activated the virtualenvironment
     $ source ./venv/bin/activate
 
-Tip: If you have `aactivator <https://github.com/Yelp/aactivator>`__ installed the virtual environment will be automatically activated
+Tip: If you have `aactivator <https://github.com/Yelp/aactivator>`__ installed the virtual environment will
+be automatically activated
 
 How to define a new compatibility rule
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The definition of a new rule requires to respect the following steps:
+Use the following steps to define a new rule:
 
-1. Define a new rule in ``swagger_spec_compatibility/rules/``
+1. Define a new rule class in ``swagger_spec_compatibility/rules/``
 
 .. code-block:: python
 
@@ -146,7 +150,7 @@ The definition of a new rule requires to respect the following steps:
      #  * `description` and `short_name` are reasonably explicative to support `swagger_spec_compatibility explain` command
      #  * `error_code` has REQ- prefix for `RuleType.REQUEST_CONTRACT`, RES- for `RuleType.RESPONSE_CONTRACT` and MIS- for `RuleType.MISCELLANEOUS`
 
-2. Add import into ``swagger_spec_compatibllity/rules/__init__.py`` to allow automatic rule discovery
+2. Add import into ``swagger_spec_compatibllity/rules/__init__.py`` to allow rule discovery
 
 .. code-block:: python
 
@@ -154,11 +158,14 @@ The definition of a new rule requires to respect the following steps:
 
 3. Add tests to ensure that your rule behaves as expected (tests in ``tests/rules/FILE_test.py``)
 
-4. Add documentation for the defined rule in ``docs/source/rules/ERROR_CODE.rst``. Try to be consistent with the style of the others documentation pages
+4. Add documentation for the defined rule in ``docs/source/rules/ERROR_CODE.rst``. Try to be consistent with the style
+   of the others documentation pages
 
-5. Add example of Swagger spec change that triggers the rule in ``docs/source/rules/examples/ERROR_CODE.rst``.
-   Ensure to define a `tester.py` file that will make explicit the backard incompatible change through the usage of a bravado client (check the other testers for examples).
-   **NOTE**: The testers are executed by automated tests, this is intended to ensure that documentation is in sync with the codebase
+5. Add example of a Swagger spec change that triggers the rule in ``docs/source/rules/examples/ERROR_CODE.rst``.
+   Ensure to define a `tester.py` file that will make explicit the backward incompatible change through the usage of a
+   `bravado <https://github.com/Yelp/bravado>`_ client (check the other testers for examples).
+   **NOTE**: The testers are executed by automated tests, this is intended to ensure that documentation is in sync with
+   the codebase.
 
 
 Contributing
@@ -174,6 +181,6 @@ Contributing
 License
 -------
 
-Copyright (c) 2018-2019, Yelp, Inc. All rights reserved.
+Copyright 2019 Yelp, Inc.
 
 Swagger Spec Compatibility is licensed with a `Apache License 2.0 <https://opensource.org/licenses/Apache-2.0>`__.
