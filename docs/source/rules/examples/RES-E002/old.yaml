@@ -1,0 +1,18 @@
+swagger: '2.0'
+info:
+  title: Minimal Case of RES-E002 Rule
+  version: '1.0'
+paths:
+  /endpoint:
+    get:
+      responses:
+        default:
+          description: ''
+          schema:
+            properties:
+              property:
+                type: string
+            required:
+            - property
+            type: object
+            x-model: get_endpoint_response

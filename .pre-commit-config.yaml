@@ -1,0 +1,52 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v2.1.0
+  hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: check-docstring-first
+  - id: check-executables-have-shebangs
+  - id: check-merge-conflict
+  - id: check-yaml
+  - id: debug-statements
+  - id: double-quote-string-fixer
+  - id: name-tests-test
+  - id: flake8
+  - id: check-added-large-files
+  - id: check-byte-order-marker
+  - id: requirements-txt-fixer
+  - id: fix-encoding-pragma
+- repo: https://github.com/pre-commit/mirrors-autopep8
+  rev: v1.4.3
+  hooks:
+  - id: autopep8
+- repo: https://github.com/asottile/reorder_python_imports
+  rev: v1.3.5
+  hooks:
+  - id: reorder-python-imports
+    args: [--add-import, from __future__ import absolute_import, --add-import, from __future__ import unicode_literals, --add-import, from __future__ import print_function]
+    exclude: ^setup\.py$
+- repo: https://github.com/asottile/pyupgrade
+  rev: v1.11.2
+  hooks:
+  - id: pyupgrade
+- repo: https://github.com/asottile/add-trailing-comma
+  rev: v0.7.2
+  hooks:
+  - id: add-trailing-comma
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: v1.2.2
+  hooks:
+  - id: pretty-format-yaml
+    args: [--autofix, --indent, '2']
+- repo: https://github.com/Yelp/detect-secrets
+  rev: v0.12.0
+  hooks:
+  - id: detect-secrets
+    args: [--baseline, .secrets.baseline]
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v0.670
+  hooks:
+  - id: mypy
+    language_version: python3.6
+    exclude: ^docs/.*\.py$

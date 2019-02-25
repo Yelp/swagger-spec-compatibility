@@ -1,0 +1,36 @@
+[run]
+branch = True
+source =
+    .
+omit =
+    .tox/*
+    venv/*
+    /usr/*
+    setup.py
+    ./integration_tests/*
+
+[report]
+show_missing = True
+skip_covered = True
+fail_under = 100
+
+exclude_lines =
+    # Have to re-enable the standard pragma
+    \#\s*pragma: no cover
+
+    # Don't complain if tests don't hit defensive assertion code:
+    ^\s*raise AssertionError\b
+    ^\s*raise NotImplementedError\b
+    ^\s*return NotImplemented\b
+    ^\s*raise$
+    ^\s*raise RuntimeError\('An error was expected'\)$
+    ^\s*pytest\.fail\b
+    pass
+
+    # Don't complain if non-runnable code isn't run:
+    ^if __name__ == ['"]__main__['"]:$
+
+[html]
+directory = coverage-html
+
+# vim:ft=dosini

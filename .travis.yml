@@ -1,0 +1,54 @@
+sudo: false
+
+matrix:
+  include:
+  # Please remember to keep TOXENV environment variable and python attribute in sync.
+  # This is a workaround to make sure that we can run tests on OSX and Windows (that have no "native" support for python)
+  - {env: TOXENV=pre-commit, python: '3.6', os: linux, dist: xenial, language: python}
+  - {env: TOXENV=py27, python: '2.7', os: linux, dist: xenial, language: python}
+  - {env: TOXENV=py27, python: '2.7', os: osx, osx_image: xcode10, language: generic}
+  - {env: TOXENV=py35, python: '3.5', os: linux, dist: xenial, language: python}
+  - {env: TOXENV=py35, python: '3.5', os: osx, osx_image: xcode10, language: generic}
+  - {env: TOXENV=py36, python: '3.6', os: linux, dist: xenial, language: python}
+  - {env: TOXENV=py36, python: '3.6', os: osx, osx_image: xcode10, language: generic}
+  - {env: TOXENV=py37, python: '3.7', os: linux, dist: xenial, language: python, sudo: required}  # NOTE: sudo: required is a workaround to https://github.com/travis-ci/travis-ci/issues/9815
+  - {env: TOXENV=py37, python: '3.7', os: osx, osx_image: xcode10, language: generic}
+  # TODO(maci): Add Windows tests
+  - {env: TOXENV=docs, python: '3.6', os: linux, dist: xenial, language: python}
+
+  fast_finish: true
+  allow_failures:
+  # Windows is available in early release, we should not block ourselves if travis has some issues with Windows for now # TODO(maci) remove this
+  - os: windows
+
+install:
+- ./.travis/install.sh
+- source ${HOME}/generated-environment.sh  # NOTE: The file is generated from ./.travis/install.sh
+
+script:
+- tox
+
+after_success:
+# Upload coverage data only for Python 3.6 tests on Linux
+- if [ "${TRAVIS_OS_NAME}" == "linux" -a "${TOXENV}" = "py36" ]; then codecov; fi
+
+
+cache:
+  directories:
+  - ${HOME}/.cache/pip
+  - ${HOME}/.cache/pip-faster
+  - ${HOME}/.cache/pre-commit
+  - ${HOME}/.pyenv/
+  # TODO(maci): Add cache support for chocolatey on windows. NOTE: windows is in early release and have no cache support yet
+
+deploy:
+- provider: pypi
+  distributions: sdist bdist_wheel
+  on:
+    branch: master
+    repo: Yelp/swagger-spec-compatibility
+    tags: true
+  skip_existing: true
+  user: yelplabs
+  password:
+    secure: PSGeno2nQBq5FyBJMr6nJE/KiS3cvWnLflJ0UKMjq2P9XjWuWhiyEWdY8zNB7L96/97WG/Pnd8aADzogwIjthSNqzM4PJZLNELEt/daMU/+6PrKBXa0Q1a5Teeq2jx3VIQcWFRf1wGxoA3a4rqISHLV3uq3kE34mslohpPNnEdlyguSJB/VCuD4HA0wrdZeBDc+JSfXlFLPJgm0+D2oqO+S6eqZIgNmHeWniaPwAP5mjxpvrAb+kj5vCEFsHHdtTQmkVPuHEmnCMrhtXb11OFUlAZTN74oLSlsYR8wdJwyPxofwXSzg2YioMLjCYdJZzZXqPCLnbJphwyhD6rcRqtLkGgOWd+90jaCkeXgNZ4C2PxS7iCtrBzn1BKt6K58ZuXtNEQfxht54NvwYWws2FtPid/THa6env5ayTm9M5aUsdrGqRiPXocM1+f721oOmqpvPqg4ghd7WIQwnum79DE3FgiPonYpEEUvlDRWwAkO2uLJafWUnQvgKxwWS6FL/UjeL2usA3agXVh8jz3e+wLg8O9uNO8hJbiMz5WCEhJWPyXTuR0g540pGsF+UvydWdszz2S29OsCU/ewhIf2/LDsi4Py8BLkyGVWcj3j130vt2jRSXss8g5RwCWg8CsgpSC6ksqM7tanuUQqdKKxVE3F9T+CSo85Aw4obcAi+ddKE=

@@ -1,0 +1,22 @@
+swagger: '2.0'
+info:
+  title: Minimal Case of REQ-E003 Rule
+  version: '1.0'
+paths:
+  /endpoint:
+    post:
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          additionalProperties: false
+          properties:
+            property_1:
+              type: string
+            property_2:
+              type: string
+          type: object
+      responses:
+        default:
+          description: ''

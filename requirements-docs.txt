@@ -1,0 +1,4 @@
+recommonmark
+Sphinx
+sphinx-autodoc-annotation
+sphinx-rtd-theme
