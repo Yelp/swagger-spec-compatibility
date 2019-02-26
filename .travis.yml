@@ -46,6 +46,7 @@ deploy:
   distributions: sdist bdist_wheel
   on:
     branch: master
+    condition: $TRAVIS_OS_NAME = linux
     repo: Yelp/swagger-spec-compatibility
     tags: true
   skip_existing: true

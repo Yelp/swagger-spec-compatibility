@@ -5,7 +5,8 @@ from setuptools import setup
 
 setup(
     name='swagger-spec-compatibility',
-    version='0.0.1',
+    version='1.0.0',
+    url='https://github.com/Yelp/swagger-spec-compatibility',
     author='Yelp, Inc.',
     author_email='opensource+swagger-spec-compatibility@yelp.com',
     install_requires=[
