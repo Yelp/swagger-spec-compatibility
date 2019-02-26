@@ -2,13 +2,17 @@
 from setuptools import find_packages
 from setuptools import setup
 
+with open('README.rst') as readme:
+    long_description = readme.read()
 
 setup(
     name='swagger-spec-compatibility',
     version='1.0.0',
-    url='https://github.com/Yelp/swagger-spec-compatibility',
     author='Yelp, Inc.',
     author_email='opensource+swagger-spec-compatibility@yelp.com',
+    description='Python library to check Swagger Spec backward compatibility',
+    long_description=long_description,
+    url='https://github.com/Yelp/swagger-spec-compatibility',
     install_requires=[
         'bravado',
         'bravado-core',
