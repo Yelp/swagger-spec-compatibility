@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.0.1 (2018-02-26)
+------------------
+* Updated package metadata
+
 1.0.0 (2018-02-26)
 ------------------
 * Initial library implementation with definition of the following rules:

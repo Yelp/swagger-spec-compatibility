@@ -6,6 +6,7 @@
 /.mypy_cache/
 /.pytest_cache
 /.tox
+/build
 /coverage-html
 /dist
 /venv
