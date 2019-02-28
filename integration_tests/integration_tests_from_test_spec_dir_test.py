@@ -65,9 +65,14 @@ def test_spec_from_test_specs_directory(test_specification):
         old_spec=load_spec_from_uri(test_specification.old_spec_uri),
         new_spec=load_spec_from_uri(test_specification.new_spec_uri),
     )
-    number_of_reports = len([
+    reports = [
         report
         for reports in itervalues(result)
         for report in reports
-    ])
-    assert number_of_reports == test_specification.number_of_reports
+    ]
+    assert len(reports) == test_specification.number_of_reports, \
+        '{} reports were expected but {} reports received\n{}'.format(
+            test_specification.number_of_reports,
+            len(reports),
+            '\n'.join(report.string_representation() for report in reports)
+        )

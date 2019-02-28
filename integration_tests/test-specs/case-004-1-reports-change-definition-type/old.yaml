@@ -1,0 +1,17 @@
+swagger: '2.0'
+info:
+  title: Test
+  version: '1.0'
+definitions:
+  model:
+    properties:
+      property1:
+        type: boolean
+paths:
+  /endpoint:
+    get:
+      responses:
+        default:
+          description: ''
+          schema:
+            $ref: '#/definitions/model'
