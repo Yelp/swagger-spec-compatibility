@@ -13,6 +13,7 @@ from swagger_spec_compatibility.cli.common import rules
 
 
 class _Namespace(CLIProtocol):
+    blacklist_rules = None  # type: typing.Iterable[typing.Text]
     rules = None  # type: typing.Iterable[typing.Text]
 
 

@@ -27,6 +27,7 @@ class CLIProtocol(typing_extensions.Protocol):
 
 class CLIRulesProtocol(typing_extensions.Protocol):
     rules = None  # type: typing.Iterable[typing.Text]
+    blacklist_rules = None  # type: typing.Iterable[typing.Text]
 
 
 def uri(param):
@@ -48,4 +49,10 @@ def cli_rules():
 
 def rules(cli_args):
     # type: (CLIRulesProtocol) -> typing.Set[typing.Type[BaseRule]]
-    return {RuleRegistry.rule(rule_name) for rule_name in cli_args.rules}
+    return {
+        RuleRegistry.rule(rule_name)
+        for rule_name in cli_args.rules
+        # The parser defines rules and blacklist_rules as mutual exclusive
+        # so we're guaranteed to have at least one set to it's default value
+        if rule_name not in cli_args.blacklist_rules
+    }
