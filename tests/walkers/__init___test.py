@@ -12,31 +12,20 @@ from swagger_spec_compatibility.walkers import PathType  # noqa: F401
 from swagger_spec_compatibility.walkers import SchemaWalker
 
 
-class DummySchemaWalker(SchemaWalker):
+class DummySchemaWalker(SchemaWalker[typing.Tuple[str, PathType]]):
     left_spec = None  # type: Spec
     right_spec = None  # type: Spec
     additional = None  # type: bool
     recorded_calls = None  # type: typing.MutableMapping[typing.Text, typing.Set[typing.Tuple[typing.Text, ...]]]
 
-    def __init__(self, *args, **kwargs):
-        super(DummySchemaWalker, self).__init__(*args, **kwargs)
-        self.recorded_calls = {
-            'dict_check_paths': set(),
-            'list_check_paths': set(),
-            'value_check_paths': set(),
-        }
-
     def dict_check(self, path, old_dict, new_dict):
-        self.recorded_calls['dict_check_paths'].add(path)
+        return (('dict_check_paths', path),)
 
     def list_check(self, path, old_list, new_list):
-        self.recorded_calls['list_check_paths'].add(path)
+        return (('list_check_paths', path),)
 
     def value_check(self, path, old_value, new_value):
-        self.recorded_calls['value_check_paths'].add(path)
-
-    def walk_response(self):
-        return self.recorded_calls
+        return (('value_check_paths', path),)
 
 
 class SkipDummySchemaWalker(DummySchemaWalker):
@@ -91,30 +80,24 @@ def test_SchemaWalker_pass_through_all_the_items():
     assert walker.left_spec == spec
     assert walker.right_spec == spec
     assert walker.additional is True
-    assert walker.walk() == {
-        'dict_check_paths': {
-            ('dict', 'dict_dict'),
-            ('dict',),
-            ('list', 0),
-            ('list', 0, 'inner_dict'),
-            ('list', 0, 'inner_dict', 'inner_dict_dict'),
-            ('list', 1, 0),
-            (),
-        },
-        'list_check_paths': {
-            ('dict', 'dict_list'),
-            ('list', 0, 'inner_dict', 'inner_dict_list'),
-            ('list', 1),
-            ('list', 1, 1),
-            ('list',),
-        },
-        'value_check_paths': {
-            ('dict', 'dict_value'),
-            ('list', 0, 'inner_dict', 'inner_dict_value'),
-            ('list', 1, 2),
-            ('list', 2),
-            ('value',),
-        },
+    assert set(walker.walk()) == {
+        ('dict_check_paths', ('dict', 'dict_dict')),
+        ('dict_check_paths', ('dict',)),
+        ('dict_check_paths', ('list', 0)),
+        ('dict_check_paths', ('list', 0, 'inner_dict')),
+        ('dict_check_paths', ('list', 0, 'inner_dict', 'inner_dict_dict')),
+        ('dict_check_paths', ('list', 1, 0)),
+        ('dict_check_paths', ()),
+        ('list_check_paths', ('dict', 'dict_list')),
+        ('list_check_paths', ('list', 0, 'inner_dict', 'inner_dict_list')),
+        ('list_check_paths', ('list', 1)),
+        ('list_check_paths', ('list', 1, 1)),
+        ('list_check_paths', ('list',)),
+        ('value_check_paths', ('dict', 'dict_value')),
+        ('value_check_paths', ('list', 0, 'inner_dict', 'inner_dict_value')),
+        ('value_check_paths', ('list', 1, 2)),
+        ('value_check_paths', ('list', 2)),
+        ('value_check_paths', ('value',)),
     }
 
 
@@ -150,22 +133,17 @@ def test_SchemaWalker_skips_defined_paths():
     assert walker.left_spec == spec
     assert walker.right_spec == spec
     assert walker.additional is True
-    assert walker.walk() == {
-        'dict_check_paths': {
-            ('list', 0),
-            ('list', 1, 0),
-            (),
-        },
-        'list_check_paths': {
-            ('list', 1),
-            ('list', 1, 1),
-            ('list',),
-        },
-        'value_check_paths': {
-            ('list', 1, 2),
-            ('list', 2),
-            ('value',),
-        },
+
+    assert set(walker.walk()) == {
+        ('dict_check_paths', ('list', 0)),
+        ('dict_check_paths', ('list', 1, 0)),
+        ('dict_check_paths', ()),
+        ('list_check_paths', ('list', 1)),
+        ('list_check_paths', ('list', 1, 1)),
+        ('list_check_paths', ('list',)),
+        ('value_check_paths', ('list', 1, 2)),
+        ('value_check_paths', ('list', 2)),
+        ('value_check_paths', ('value',)),
     }
 
 
@@ -204,28 +182,23 @@ def test_SchemaWalker_deals_with_recursive_objects():
     assert walker.left_spec == spec
     assert walker.right_spec == spec
     assert walker.additional is True
-    assert walker.walk() == {
-        'dict_check_paths': {
-            ('dict', 'dict_dict'),
-            ('dict',),
-            ('list', 0),
-            ('list', 0, 'inner_dict'),
-            ('list', 0, 'inner_dict', 'inner_dict_dict'),
-            ('list', 1, 0),
-            (),
-        },
-        'list_check_paths': {
-            ('dict', 'dict_list'),
-            ('list', 0, 'inner_dict', 'inner_dict_list'),
-            ('list', 1),
-            ('list', 1, 1),
-            ('list',),
-        },
-        'value_check_paths': {
-            ('dict', 'dict_value'),
-            ('list', 0, 'inner_dict', 'inner_dict_value'),
-            ('list', 1, 2),
-            ('list', 2),
-            ('value',),
-        },
+    assert set(walker.walk()) == {
+        ('dict_check_paths', ('dict', 'dict_dict')),
+        ('dict_check_paths', ('dict',)),
+        ('dict_check_paths', ('dict',)),
+        ('dict_check_paths', ('list', 0)),
+        ('dict_check_paths', ('list', 0, 'inner_dict')),
+        ('dict_check_paths', ('list', 0, 'inner_dict', 'inner_dict_dict')),
+        ('dict_check_paths', ('list', 1, 0)),
+        ('dict_check_paths', ()),
+        ('list_check_paths', ('dict', 'dict_list')),
+        ('list_check_paths', ('list', 0, 'inner_dict', 'inner_dict_list')),
+        ('list_check_paths', ('list', 1)),
+        ('list_check_paths', ('list', 1, 1)),
+        ('list_check_paths', ('list',)),
+        ('value_check_paths', ('dict', 'dict_value')),
+        ('value_check_paths', ('list', 0, 'inner_dict', 'inner_dict_value')),
+        ('value_check_paths', ('list', 1, 2)),
+        ('value_check_paths', ('list', 2)),
+        ('value_check_paths', ('value',)),
     }

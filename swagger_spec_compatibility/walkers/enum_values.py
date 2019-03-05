@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import typing
+from itertools import chain
 
 from bravado_core.spec import Spec
 
@@ -42,29 +43,23 @@ def _different_enum_values_mapping(
         )
 
 
-EnumValuesDiff = typing.NamedTuple(
+class EnumValuesDiff(typing.NamedTuple(
     'EnumValuesDiff', (
         ('path', PathType),
         ('mapping', EntityMapping[typing.Any]),
     ),
-)
+)):
+    def fix_parameter_path(self, path, original_path):
+        # type: (PathType, PathType) -> 'EnumValuesDiff'
+        return EnumValuesDiff(
+            path=tuple(chain(original_path, self.path[len(original_path):])),
+            mapping=self.mapping,
+        )
 
 
 class EnumValuesDifferWalker(SchemaWalker[EnumValuesDiff]):
     left_spec = None  # type: Spec
     right_spec = None  # type: Spec
-    diffs = None  # type: typing.List[EnumValuesDiff]
-
-    def __init__(
-        self,
-        left_spec,  # type: Spec
-        right_spec,  # type: Spec
-    ):
-        # type: (...) -> None
-        super(EnumValuesDifferWalker, self).__init__(
-            left_spec=left_spec,
-            right_spec=right_spec,
-        )
 
     def dict_check(
         self,

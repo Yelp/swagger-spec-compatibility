@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import typing
+from itertools import chain
 
 from bravado_core.spec import Spec
 
@@ -35,12 +36,18 @@ def _different_properties_mapping(
         )
 
 
-RequiredPropertiesDiff = typing.NamedTuple(
+class RequiredPropertiesDiff(typing.NamedTuple(
     'RequiredPropertiesDiff', (
         ('path', PathType),
         ('mapping', EntityMapping[typing.Set[typing.Text]]),
     ),
-)
+)):
+    def fix_parameter_path(self, path, original_path):
+        # type: (PathType, PathType) -> 'RequiredPropertiesDiff'
+        return RequiredPropertiesDiff(
+            path=tuple(chain(original_path, self.path[len(original_path):])),
+            mapping=self.mapping,
+        )
 
 
 class RequiredPropertiesDifferWalker(SchemaWalker[RequiredPropertiesDiff]):

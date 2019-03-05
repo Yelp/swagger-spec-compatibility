@@ -8,7 +8,7 @@ from swagger_spec_compatibility.walkers.request_parameters import RequestParamet
 
 
 def test_RequestParametersWalker_returns_no_paths_if_no_endpoints_defined(minimal_spec):
-    assert RequestParametersWalker(minimal_spec, minimal_spec).walk() == set()
+    assert set(RequestParametersWalker(minimal_spec, minimal_spec).walk()) == set()
 
 
 def test_RequestParametersWalker_returns_paths_of_endpoints_parameters(minimal_spec, minimal_spec_dict):
@@ -38,6 +38,6 @@ def test_RequestParametersWalker_returns_paths_of_endpoints_parameters(minimal_s
     }
     spec = load_spec_from_spec_dict(minimal_spec_dict)
 
-    assert RequestParametersWalker(spec, spec).walk() == {
+    assert set(RequestParametersWalker(spec, spec).walk()) == {
         ('paths', '/endpoint', 'get', 'parameters', 0),
     }

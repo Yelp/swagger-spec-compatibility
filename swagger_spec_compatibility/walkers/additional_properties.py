@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 import typing
 from enum import Enum
+from itertools import chain
 
 from bravado_core.spec import Spec
 
@@ -20,14 +21,22 @@ class DiffType(Enum):
     VALUE = 1
 
 
-AdditionalPropertiesDiff = typing.NamedTuple(
+class AdditionalPropertiesDiff(typing.NamedTuple(
     'AdditionalPropertiesDiff', (
         ('path', PathType),
         ('diff_type', DiffType),
         ('additionalProperties', typing.Optional[EntityMapping[typing.Union[bool, typing.Mapping[typing.Text, typing.Any]]]]),
         ('properties', typing.Optional[EntityMapping[typing.Set[typing.Text]]]),
     ),
-)
+)):
+    def fix_parameter_path(self, path, original_path):
+        # type: (PathType, PathType) -> 'AdditionalPropertiesDiff'
+        return AdditionalPropertiesDiff(
+            path=tuple(chain(original_path, self.path[len(original_path):])),
+            diff_type=self.diff_type,
+            additionalProperties=self.additionalProperties,
+            properties=self.properties,
+        )
 
 
 def _evaluate_additional_properties_diffs(

@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import typing
+from itertools import chain
 
 from bravado_core.spec import Spec
 
@@ -37,12 +38,18 @@ def _different_types_mapping(
         )
 
 
-ChangedTypesDiff = typing.NamedTuple(
+class ChangedTypesDiff(typing.NamedTuple(
     'ChangedTypesDiff', (
         ('path', PathType),
         ('mapping', EntityMapping[typing.Optional[typing.Text]]),
     ),
-)
+)):
+    def fix_parameter_path(self, path, original_path):
+        # type: (PathType, PathType) -> 'ChangedTypesDiff'
+        return ChangedTypesDiff(
+            path=tuple(chain(original_path, self.path[len(original_path):])),
+            mapping=self.mapping,
+        )
 
 
 class ChangedTypesDifferWalker(SchemaWalker[ChangedTypesDiff]):

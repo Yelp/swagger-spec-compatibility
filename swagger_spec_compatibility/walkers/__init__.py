@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import typing
+import warnings
 from abc import abstractmethod
 from collections import defaultdict
 from itertools import chain
@@ -19,6 +20,8 @@ class NoValue(object):
     pass
 
 
+# HTTP verbs as described by https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject
+_HTTP_OPERATIONS = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch'}
 T = typing.TypeVar('T')
 PathType = typing.Tuple[typing.Union[typing.Text, int], ...]
 NO_VALUE = NoValue()
@@ -134,7 +137,7 @@ class Walker(typing.Generic[T]):
                 (
                     value
                     for key in set(chain(iterkeys(left), iterkeys(right)))
-                        for value in self._inner_walk(
+                    for value in self._inner_walk(
                         path=tuple(chain(path, [key])),
                         left=left.get(key, NO_VALUE),
                         right=right.get(key, NO_VALUE),
@@ -174,6 +177,16 @@ class Walker(typing.Generic[T]):
 
 
 class SchemaWalker(Walker[T]):
+    """
+    Walker aware of how a Swagger schema looks like.
+
+    The main difference between this walker and Walker is that this walker
+    keeps in consideration some peculiarity of the swagger specs.
+
+    The walker implementation should never worry about dereferencing as the traversing
+    is performed on the fully flattened and dereferenced specs
+    """
+
     def __init__(self, left_spec, right_spec, **kwargs):
         # type: (Spec, Spec, typing.Any) -> None
         super(SchemaWalker, self).__init__(
@@ -183,3 +196,83 @@ class SchemaWalker(Walker[T]):
             right_spec=right_spec,
             **kwargs
         )
+
+    def _is_path_a_parameter_list_location(self, path):
+        # type: (PathType) -> bool
+        """
+        Check if the given path is compatible with a path that contains the list of
+        parameters of an operation object.
+
+        The possible locations are:
+        1) /paths/<endpoint path>/parameters
+            https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#path-item-object
+        2) /paths/<endpoint path>/<http verb>/parameters
+            https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operation-object
+        """
+        if len(path) == 3 and path[0] == 'paths' and path[2] == 'parameters':
+            return True
+        elif len(path) == 4 and path[0] == 'paths' and path[2] in _HTTP_OPERATIONS and path[3] == 'parameters':
+            return True
+
+        return False
+
+    def _get_original_parameter_path(self, path, parameters_index):
+        # type: (PathType, typing.Mapping[typing.Text, int]) -> PathType
+        if isinstance(path[-1], int):
+            # Weird that we got up to this point, this should never happen
+            # but let's do it so mypy is happy too
+            return path
+        else:
+            try:
+                return tuple(chain(path[:-1], [parameters_index[path[-1]]]))
+            except AttributeError:
+                return path
+
+    def fix_parameter_path(self, path, original_path, value):
+        # type: (PathType, PathType, T) -> T
+        """
+        Fix an eventual path present on the value returned by the walker.
+
+        The SwaggerAwareWalker modifies the indexing approach used for parameters due to the fact
+        that parameters are defined as arrays and modifying their order would not change the semantic.
+        """
+        try:
+            # ignoring type as we're exploiting duck typing and is not easy to validate the protocol at run time
+            return value.fix_parameter_path(path=path, original_path=original_path)  # type: ignore
+        except TypeError as type_error:
+            warnings.warn(
+                str('Unexpected {}.fix_parameter_path signature. {}'.format(
+                    value.__class__.__name__,
+                    type_error,
+                )),
+                category=RuntimeWarning,
+            )
+        except AttributeError:
+            # Ignore such exception as it means that value does not implement fix_parameter_path method
+            pass
+
+        return value
+
+    def _inner_walk(self, path, left, right):
+        # type: (PathType, typing.Any, typing.Any) -> typing.Iterable[T]
+
+        if self._is_path_a_parameter_list_location(path):
+            left_parameters_map = {} if left is NO_VALUE else {parameter['name']: parameter for parameter in left}
+            right_parameters_map = {} if right is NO_VALUE else {parameter['name']: parameter for parameter in right}
+            parameters_index = {} if right is NO_VALUE else {parameter['name']: index for index, parameter in enumerate(right)}
+            return (
+                self.fix_parameter_path(
+                    path=new_path,
+                    original_path=self._get_original_parameter_path(new_path, parameters_index),
+                    value=value,
+                )
+                for key in set(chain(iterkeys(left_parameters_map), iterkeys(right_parameters_map)))
+                for new_path in (tuple(chain(path, [key])), )  # Small trick to allow variable definition in generator-comprehension
+                for value in self._inner_walk(
+                    path=tuple(chain(path, [key])),
+                    left=left_parameters_map.get(key, NO_VALUE),
+                    right=right_parameters_map.get(key, NO_VALUE),
+                )
+            )
+        else:
+            return super(SchemaWalker, self)._inner_walk(path=path, left=left, right=right)
