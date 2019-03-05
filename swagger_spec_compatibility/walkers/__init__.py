@@ -14,13 +14,14 @@ from six import iterkeys
 from six import text_type
 from six.moves import zip_longest
 
-from swagger_spec_compatibility.cache import typed_lru_cache
+
+class NoValue(object):
+    pass
 
 
 T = typing.TypeVar('T')
-
-
 PathType = typing.Tuple[typing.Union[typing.Text, int], ...]
+NO_VALUE = NoValue()
 
 
 def format_path(path):
@@ -29,38 +30,57 @@ def format_path(path):
 
 
 class Walker(typing.Generic[T]):
-    # TODO: add path blacklists to quickly cut descending
+    """
+    Generic Walker over two objects.
+
+    The abstract class strips away the details related to dictionary vs list iterations,
+    path update etc.
+    """
+
     def __init__(self, left, right, **kwargs):
         # type: (typing.Any, typing.Any, typing.Any) -> None
         self.left = left
         self.right = right
+        self._walk_result = NO_VALUE  # type: typing.Union[NoValue, typing.Iterable[T]]
         self._inner_walk_calls = defaultdict(list)  # type: typing.DefaultDict[typing.Tuple[int, ...], typing.List[PathType]]
         for attr_name, attr_value in iteritems(kwargs):
             setattr(self, attr_name, attr_value)
 
     def should_path_be_walked_through(self, path):
         # type: (PathType) -> bool
+        """
+        Determine whether to traverse or interrupt traversal of a given path.
+
+        This method allows Walkers to skip traversal of area of the specs that are "not interesting".
+        This will allow to write simpler methods and to avoid needless traversing of the Specs.
+        """
         return True
 
     @abstractmethod
     def dict_check(
         self,
         path,  # type: PathType
-        left_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
-        right_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
+        left_dict,  # type: typing.Union[typing.Mapping[typing.Text, typing.Any], NoValue]
+        right_dict,  # type: typing.Union[typing.Mapping[typing.Text, typing.Any], NoValue]
     ):
-        # type: (...) -> None  # noqa
-        pass
+        # type: (...) -> typing.Iterable[T]
+        """
+        Compare the left and right content of path in case both objects are dictionaries.
+        """
+        raise NotImplementedError()
 
     @abstractmethod
     def list_check(
         self,
         path,  # type: PathType
-        left_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
-        right_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
+        left_list,  # type: typing.Union[typing.Sequence[typing.Any], NoValue]
+        right_list,  # type: typing.Union[typing.Sequence[typing.Any], NoValue]
     ):
-        # type: (...) -> None  # noqa
-        pass
+        # type: (...) -> typing.Iterable[T]
+        """
+        Compare the left and right content of path in case both objects are list.
+        """
+        raise NotImplementedError()
 
     @abstractmethod
     def value_check(
@@ -69,11 +89,22 @@ class Walker(typing.Generic[T]):
         left_value,  # type: typing.Any
         right_value,  # type: typing.Any
     ):
-        # type: (...) -> None
-        pass
+        # type: (...) -> typing.Iterable[T]
+        """
+        Compare the left and right content of path in case the objects have different types or are not dictionaries or lists.
+        """
+        raise NotImplementedError()
 
     def _is_recursive_call(self, path, left, right):
         # type: (PathType, typing.Any, typing.Any) -> bool
+        """
+        Determine if the current objects are already been traversed.
+
+        Swagger specification could contain recursive definitions and references.
+        Due to the fact that we fully dereference the specs then there will be no
+        good wait to know if we've already visited the given objects other than
+        using their ids.
+        """
         cache_key = (id(left), id(right))
 
         if cache_key in self._inner_walk_calls and any(
@@ -86,38 +117,60 @@ class Walker(typing.Generic[T]):
         return False
 
     def _inner_walk(self, path, left, right):
-        # type: (PathType, typing.Any, typing.Any) -> None
+        # type: (PathType, typing.Any, typing.Any) -> typing.Iterable[T]
+        """
+        Fully traverse the left and right objects.
 
+        The traversal will short-circuit in case:
+         * a given path should not be traversed
+         * the path has already been traversed (recursive definition)
+        """
         if not self.should_path_be_walked_through(path) or self._is_recursive_call(path, left, right):
-            return
+            return ()
 
-        # TODO: make better walking if the two objects have different type
         if isinstance(left, dict) and isinstance(right, dict):
-            self.dict_check(path, left, right)
-            for key in set(chain(iterkeys(left), iterkeys(right))):
-                self._inner_walk(tuple(chain(path, [key])), left.get(key), right.get(key))
-
+            return chain(
+                self.dict_check(path, left, right),
+                (
+                    value
+                    for key in set(chain(iterkeys(left), iterkeys(right)))
+                        for value in self._inner_walk(
+                        path=tuple(chain(path, [key])),
+                        left=left.get(key, NO_VALUE),
+                        right=right.get(key, NO_VALUE),
+                    )
+                ),
+            )
         elif isinstance(left, list) and isinstance(right, list):
-            self.list_check(path, left, right)
-            for index, (old_item, new_item) in enumerate(zip_longest(left, right)):
-                self._inner_walk(tuple(chain(path, [index])), old_item, new_item)
+            return chain(
+                self.list_check(path, left, right),
+                (
+                    value
+                    for index, (left_item, right_item) in enumerate(zip_longest(left, right, fillvalue=NO_VALUE))
+                    for value in self._inner_walk(
+                        path=tuple(chain(path, [index])),
+                        left=left_item,
+                        right=right_item,
+                    )
+                ),
+            )
         else:
-            self.value_check(path, left, right)
+            return self.value_check(path, left, right)
 
-    @abstractmethod
-    def walk_response(self):
-        # type: () -> typing.Iterable[T]
-        pass
-
-    @typed_lru_cache(maxsize=1)
     def walk(self):
         # type: () -> typing.Iterable[T]
-        self._inner_walk(
-            path=tuple(),
-            left=self.left,
-            right=self.right,
-        )
-        return self.walk_response()
+        """
+        Fully traverse the left and right objects.
+        NOTE:   the traversing is internally cached such that all the subsequent calls
+                to `walk()` are equivalent to an attribute access
+        """
+        if isinstance(self._walk_result, NoValue):
+            self._walk_result = list(self._inner_walk(
+                path=tuple(),
+                left=self.left,
+                right=self.right,
+            ))
+        return self._walk_result
 
 
 class SchemaWalker(Walker[T]):

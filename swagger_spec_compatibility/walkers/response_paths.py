@@ -9,6 +9,7 @@ from bravado_core.spec import Spec
 from bravado_core.util import determine_object_type
 from bravado_core.util import ObjectType
 
+from swagger_spec_compatibility.walkers import NoValue
 from swagger_spec_compatibility.walkers import PathType
 from swagger_spec_compatibility.walkers import SchemaWalker
 
@@ -45,21 +46,23 @@ class ResponsePathsWalker(SchemaWalker[PathType]):
     def dict_check(
         self,
         path,  # type: PathType
-        left_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
-        right_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
+        left_dict,  # type: typing.Union[NoValue, typing.Mapping[typing.Text, typing.Any]]
+        right_dict,  # type: typing.Union[NoValue, typing.Mapping[typing.Text, typing.Any]]
     ):
-        # type: (...) -> None  # noqa
+        # type: (...) -> typing.Iterable[PathType]
         if determine_object_type(left_dict) == ObjectType.RESPONSE or determine_object_type(right_dict) == ObjectType.RESPONSE:
-            self.paths.add(path)
+            return (path, )
+        else:
+            return ()
 
     def list_check(
         self,
         path,  # type: PathType
-        left_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
-        right_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
+        left_list,  # type: typing.Union[NoValue, typing.Sequence[typing.Any]]
+        right_list,  # type: typing.Union[NoValue, typing.Sequence[typing.Any]]
     ):
-        # type: (...) -> None  # noqa
-        pass
+        # type: (...) -> typing.Iterable[PathType]
+        return ()
 
     def value_check(
         self,
@@ -67,5 +70,5 @@ class ResponsePathsWalker(SchemaWalker[PathType]):
         left_value,  # type: typing.Any
         right_value,  # type: typing.Any
     ):
-        # type: (...) -> None  # noqa
-        pass
+        # type: (...) -> typing.Iterable[PathType]
+        return ()
