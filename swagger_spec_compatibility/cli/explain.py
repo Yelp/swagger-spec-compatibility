@@ -3,8 +3,8 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import argparse  # noqa: F401
-import typing  # noqa: F401
+import argparse
+import typing
 
 from termcolor import colored
 

@@ -3,14 +3,14 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import typing  # noqa: F401
+import typing
 
-from bravado_core.spec import Spec  # noqa: F401
+from bravado_core.spec import Spec
 
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleType
-from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
+from swagger_spec_compatibility.rules.common import ValidationMessage
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
 from swagger_spec_compatibility.walkers import format_path
 from swagger_spec_compatibility.walkers.required_properties import RequiredPropertiesDifferWalker

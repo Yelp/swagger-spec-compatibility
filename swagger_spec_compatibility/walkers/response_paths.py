@@ -3,9 +3,9 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import typing  # noqa: F401
+import typing
 
-from bravado_core.spec import Spec  # noqa: F401
+from bravado_core.spec import Spec
 from bravado_core.util import determine_object_type
 from bravado_core.util import ObjectType
 

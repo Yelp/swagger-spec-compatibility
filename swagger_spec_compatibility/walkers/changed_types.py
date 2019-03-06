@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 
 import typing
 
-from bravado_core.spec import Spec  # noqa: F401
+from bravado_core.spec import Spec
 
 from swagger_spec_compatibility.util import EntityMapping
 from swagger_spec_compatibility.walkers import PathType

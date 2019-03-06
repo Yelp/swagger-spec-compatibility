@@ -8,7 +8,7 @@ from abc import abstractmethod
 from collections import defaultdict
 from itertools import chain
 
-from bravado_core.spec import Spec  # noqa: F401
+from bravado_core.spec import Spec
 from six import iteritems
 from six import iterkeys
 from six import text_type

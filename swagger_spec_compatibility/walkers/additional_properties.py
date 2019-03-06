@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import typing
 from enum import Enum
 
-from bravado_core.spec import Spec  # noqa: F401
+from bravado_core.spec import Spec
 
 from swagger_spec_compatibility.spec_utils import get_properties
 from swagger_spec_compatibility.util import EntityMapping

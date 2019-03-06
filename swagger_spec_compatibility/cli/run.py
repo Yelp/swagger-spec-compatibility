@@ -3,10 +3,10 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import argparse  # noqa: F401
+import argparse
 import json
 import sys
-import typing  # noqa: F401
+import typing
 
 from six import iteritems
 
@@ -14,10 +14,9 @@ from swagger_spec_compatibility.cli.common import CLIProtocol
 from swagger_spec_compatibility.cli.common import rules
 from swagger_spec_compatibility.cli.common import uri
 from swagger_spec_compatibility.rules import compatibility_status
-from swagger_spec_compatibility.rules import ValidationMessage  # noqa: F401
-from swagger_spec_compatibility.rules.common import BaseRule  # noqa: F401
+from swagger_spec_compatibility.rules import ValidationMessage
 from swagger_spec_compatibility.rules.common import Level
-from swagger_spec_compatibility.rules.common import RuleProtocol  # noqa: F401
+from swagger_spec_compatibility.rules.common import RuleProtocol
 from swagger_spec_compatibility.spec_utils import load_spec_from_uri
 
 
