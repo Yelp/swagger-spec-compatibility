@@ -9,7 +9,7 @@ import os
 import mock
 import pytest
 import six
-from bravado_core.operation import Operation  # noqa: F401
+from bravado_core.operation import Operation
 
 from swagger_spec_compatibility.cli.common import uri
 from swagger_spec_compatibility.spec_utils import Endpoint

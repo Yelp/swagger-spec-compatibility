@@ -6,8 +6,8 @@ from __future__ import unicode_literals
 import glob
 import os
 import re
-from typing import Any  # noqa: F401
-from typing import Generator  # noqa: F401
+from typing import Any
+from typing import Generator
 from typing import NamedTuple
 from typing import Text
 
@@ -70,9 +70,9 @@ def test_spec_from_test_specs_directory(test_specification):
         for reports in itervalues(result)
         for report in reports
     ]
-    assert len(reports) == test_specification.number_of_reports, \
-        '{} reports were expected but {} reports received\n{}'.format(
-            test_specification.number_of_reports,
-            len(reports),
-            '\n'.join(report.string_representation() for report in reports),
-        )
+    error_message = '{} reports were expected but {} reports received\n{}'.format(
+        test_specification.number_of_reports,
+        len(reports),
+        '\n'.join(report.string_representation() for report in reports),
+    )
+    assert len(reports) == test_specification.number_of_reports, error_message

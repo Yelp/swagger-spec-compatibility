@@ -154,7 +154,7 @@ Use the following steps to define a new rule:
 
 .. code-block:: python
 
-    from swagger_spec_compatibility.rules.FILE import RuleClassName  # noqa: F401
+    from swagger_spec_compatibility.rules.FILE import RuleClassName
 
 3. Add tests to ensure that your rule behaves as expected (tests in ``tests/rules/FILE_test.py``)
 

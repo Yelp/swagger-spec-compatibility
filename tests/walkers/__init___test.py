@@ -9,7 +9,7 @@ from copy import deepcopy
 import mock
 from bravado_core.spec import Spec
 
-from swagger_spec_compatibility.walkers import PathType  # noqa: F401
+from swagger_spec_compatibility.walkers import PathType
 from swagger_spec_compatibility.walkers import SchemaWalker
 
 
