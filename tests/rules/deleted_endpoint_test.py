@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from swagger_spec_compatibility.rules import DeletedEndpoint
+from swagger_spec_compatibility.rules.deleted_endpoint import DeletedEndpoint
 from swagger_spec_compatibility.spec_utils import Endpoint
 from swagger_spec_compatibility.spec_utils import HTTPVerb
 from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
