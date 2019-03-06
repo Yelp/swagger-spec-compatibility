@@ -11,7 +11,6 @@ from six import iteritems
 from swagger_spec_compatibility.cli import explain
 from swagger_spec_compatibility.cli import run
 from swagger_spec_compatibility.cli.common import cli_rules
-from swagger_spec_compatibility.rules import RuleRegistry
 from swagger_spec_compatibility.util import wrap
 
 
@@ -36,11 +35,19 @@ def parser():
     )
 
     rules = cli_rules()
-    parser.add_argument(
+    mutex_group = parser.add_mutually_exclusive_group()
+    mutex_group.add_argument(
         '-r', '--rules',
         nargs='+',
         help='Rules to apply for compatibility detection. (default: %(default)s)',
         default=rules,
+        choices=rules,
+    )
+    mutex_group.add_argument(
+        '-b', '--blacklist-rules',
+        nargs='+',
+        help='Rules to ignore for compatibility detection. (default: %(default)s)',
+        default=[],
         choices=rules,
     )
 
@@ -49,7 +56,7 @@ def parser():
     for add_sub_command_parser, associated_function in iteritems(_SUB_COMMAND_ASSOCIATED_FUNCTION_MAPPING):
         add_sub_command_parser(subparsers).set_defaults(func=associated_function)
 
-    if not RuleRegistry.rule_names():
+    if not rules:
         raise parser.error('No rules are defined.')
 
     return parser

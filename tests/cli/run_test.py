@@ -23,6 +23,7 @@ def cli_args():
         command='execute',
         func=execute,
         rules=('DummyRule',),
+        blacklist_rules=(),
         strict=False,
         old_spec='memory://',
         new_spec='memory://',

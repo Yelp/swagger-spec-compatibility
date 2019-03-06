@@ -46,10 +46,19 @@ def test_uri_raises_if_path_does_not_exists(tmpdir):
         uri(os.path.join(tmpdir.strpath, str('not-existing-file')))
 
 
-def test_rules(mock_RuleRegistry):
+@pytest.mark.parametrize(
+    'cli_rules, cli_blacklist_rules, expected_rules',
+    [
+        [('DummyRule',), (), {DummyRule}],
+        [('DummyRule',), ('DummyRule',), set()],
+        [(), ('DummyRule',), set()],
+    ],
+)
+def test_rules(mock_RuleRegistry, cli_rules, cli_blacklist_rules, expected_rules):
     assert rules(
         mock.Mock(
             spec=CLIRulesProtocol,
-            rules=('DummyRule',),
+            rules=cli_rules,
+            blacklist_rules=cli_blacklist_rules,
         ),
-    ) == {DummyRule}
+    ) == expected_rules

@@ -21,6 +21,7 @@ from swagger_spec_compatibility.spec_utils import load_spec_from_uri
 
 
 class _Namespace(CLIProtocol):
+    blacklist_rules = None  # type: typing.Iterable[typing.Text]
     rules = None  # type: typing.Iterable[typing.Text]
     strict = None  # type: bool
     json_output = None  # type: bool
