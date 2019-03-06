@@ -20,6 +20,7 @@ setup(
         'six',
         'termcolor',
         'typing_extensions',
+        'venusian',
     ],
     extras_require={
         ':python_version<"3.5"': ['typing'],
@@ -47,5 +48,6 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
     ],
 )
