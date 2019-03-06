@@ -150,23 +150,21 @@ Use the following steps to define a new rule:
      #  * `description` and `short_name` are reasonably explicative to support `swagger_spec_compatibility explain` command
      #  * `error_code` has REQ- prefix for `RuleType.REQUEST_CONTRACT`, RES- for `RuleType.RESPONSE_CONTRACT` and MIS- for `RuleType.MISCELLANEOUS`
 
-2. Add import into ``swagger_spec_compatibllity/rules/__init__.py`` to allow rule discovery
-
-.. code-block:: python
-
-    from swagger_spec_compatibility.rules.FILE import RuleClassName
 
 3. Add tests to ensure that your rule behaves as expected (tests in ``tests/rules/FILE_test.py``)
 
-4. Add documentation for the defined rule in ``docs/source/rules/ERROR_CODE.rst``. Try to be consistent with the style
+3. Add documentation for the defined rule in ``docs/source/rules/ERROR_CODE.rst``. Try to be consistent with the style
    of the others documentation pages
 
-5. Add example of a Swagger spec change that triggers the rule in ``docs/source/rules/examples/ERROR_CODE.rst``.
+4. Add example of a Swagger spec change that triggers the rule in ``docs/source/rules/examples/ERROR_CODE.rst``.
    Ensure to define a `tester.py` file that will make explicit the backward incompatible change through the usage of a
    `bravado <https://github.com/Yelp/bravado>`_ client (check the other testers for examples).
    **NOTE**: The testers are executed by automated tests, this is intended to ensure that documentation is in sync with
    the codebase.
-
+5. [Optional] Add integration tests to ensure that no regressions will be introduced and/or to validate edge cases of the new rule.
+   Integration tests are defined as follow: ``case-<incremental number>-<number of expected reports>-reports-<short description>`` directory
+   with two files: ``old.yaml`` and ``new.yaml``. The two files represent two versions of the swagger specs that need to be checked for
+   backward compatibility.
 
 Contributing
 ~~~~~~~~~~~~

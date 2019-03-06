@@ -8,6 +8,11 @@ swagger_spec_compatibility Package
 :mod:`swagger_spec_compatibility` Package
 -----------------------------------------
 
+.. automodule:: swagger_spec_compatibility
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`cache` Module
 -------------------
 
