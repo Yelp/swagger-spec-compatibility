@@ -74,5 +74,5 @@ def test_spec_from_test_specs_directory(test_specification):
         '{} reports were expected but {} reports received\n{}'.format(
             test_specification.number_of_reports,
             len(reports),
-            '\n'.join(report.string_representation() for report in reports)
+            '\n'.join(report.string_representation() for report in reports),
         )

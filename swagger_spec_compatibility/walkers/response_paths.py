@@ -39,10 +39,6 @@ class ResponsePathsWalker(SchemaWalker[PathType]):
         super(ResponsePathsWalker, self).__init__(left_spec=left_spec, right_spec=right_spec)
         self.paths = set()
 
-    def walk_response(self):
-        # type: () -> typing.Iterable[PathType]
-        return self.paths
-
     def dict_check(
         self,
         path,  # type: PathType

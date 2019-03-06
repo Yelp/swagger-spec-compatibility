@@ -167,7 +167,7 @@ class Walker(typing.Generic[T]):
         NOTE:   the traversing is internally cached such that all the subsequent calls
                 to `walk()` are equivalent to an attribute access
         """
-        if isinstance(self._walk_result, NoValue):
+        if isinstance(self._walk_result, NoValue):  # pragma: no branch
             self._walk_result = list(self._inner_walk(
                 path=tuple(),
                 left=self.left,
@@ -218,15 +218,15 @@ class SchemaWalker(Walker[T]):
 
     def _get_original_parameter_path(self, path, parameters_index):
         # type: (PathType, typing.Mapping[typing.Text, int]) -> PathType
-        if isinstance(path[-1], int):
-            # Weird that we got up to this point, this should never happen
+        try:
+            # Ignoring type as path[-1] could be an integer which is not expected for parameters_index
+            # it's not really a big deal as it should not happen and if this happens then KeyError will be thrown
+            return tuple(chain(path[:-1], [parameters_index[path[-1]]]))  # type: ignore
+        except KeyError:
+            # This could happen only if the parameter was present only on the old specs
+            # or if the path was actually not "modified" by the walker (NOTE: the later condition should not be possible)
             # but let's do it so mypy is happy too
             return path
-        else:
-            try:
-                return tuple(chain(path[:-1], [parameters_index[path[-1]]]))
-            except AttributeError:
-                return path
 
     def fix_parameter_path(self, path, original_path, value):
         # type: (PathType, PathType, T) -> T

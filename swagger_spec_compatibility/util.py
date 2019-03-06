@@ -4,7 +4,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import typing
-from functools import total_ordering
 from textwrap import TextWrapper
 
 from swagger_spec_compatibility.walkers import PathType
@@ -25,7 +24,6 @@ def wrap(text, width=120, indent=''):
     return '\n'.join('\n'.join(wrapper.wrap(line)) for line in text.splitlines())
 
 
-@total_ordering
 class EntityMapping(typing.Generic[T]):
     __slots__ = ('_old', '_new')
 
@@ -63,10 +61,6 @@ class EntityMapping(typing.Generic[T]):
             self.__class__.__name__, self.old,
             self.new,
         ))  # pragma: no cover  # This statement is present only to have a nicer REPL experience # noqa
-
-    def __lt__(self, other):
-        # type: (typing.Any) -> bool
-        return isinstance(other, self.__class__) and (self._old, self._new) < (other._old, other._new)
 
 
 def is_path_in_top_level_paths(top_level_paths, path):

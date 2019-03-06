@@ -3,7 +3,8 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import typing  # noqa: F401
+import typing
+from copy import deepcopy
 
 import mock
 from bravado_core.spec import Spec
@@ -202,3 +203,80 @@ def test_SchemaWalker_deals_with_recursive_objects():
         ('value_check_paths', ('list', 2)),
         ('value_check_paths', ('value',)),
     }
+
+
+def test_SchemaWalker_properly_deals_with_parameters():
+    old_spec_dict = {
+        'swagger': '2.0',
+        'info': {
+            'title': 'Test',
+            'version': '1.0',
+        },
+        'paths': {
+            '/endpoint': {
+                'get': {
+                    'parameters': [
+                        {
+                            'in': 'query',
+                            'name': 'param1',
+                            'type': 'string',
+                        },
+                        {
+                            'in': 'query',
+                            'name': 'param2',
+                            'type': 'boolean',
+                        },
+                    ],
+                    'responses': {
+                        'default': {
+                            'description': '',
+                        },
+                    },
+                },
+            },
+        },
+    }  # type: typing.Mapping[typing.Text, typing.Any]
+    new_spec_dict = deepcopy(old_spec_dict)
+    new_spec_dict['paths']['/endpoint']['get']['parameters'] = [new_spec_dict['paths']['/endpoint']['get']['parameters'][1]]
+    old_spec = Spec.from_dict(spec_dict=old_spec_dict, origin_url='memory://')
+    new_spec = Spec.from_dict(spec_dict=new_spec_dict, origin_url='memory://')
+
+    walker = DummySchemaWalker(old_spec, new_spec)
+    assert set(walker.walk()) == {
+        # Ensure that parameters are indexed by parameter name instead of index in the array
+        ('dict_check_paths', ()),
+        ('dict_check_paths', ('info',)),
+        ('dict_check_paths', ('paths',)),
+        ('dict_check_paths', ('paths', '/endpoint')),
+        ('dict_check_paths', ('paths', '/endpoint', 'get')),
+        ('dict_check_paths', ('paths', '/endpoint', 'get', 'parameters', 'param2')),
+        ('dict_check_paths', ('paths', '/endpoint', 'get', 'responses')),
+        ('dict_check_paths', ('paths', '/endpoint', 'get', 'responses', 'default')),
+        ('value_check_paths', ('info', 'title')),
+        ('value_check_paths', ('info', 'version')),
+        ('value_check_paths', ('paths', '/endpoint', 'get', 'parameters', 'param1')),
+        ('value_check_paths', ('paths', '/endpoint', 'get', 'parameters', 'param2', 'in')),
+        ('value_check_paths', ('paths', '/endpoint', 'get', 'parameters', 'param2', 'name')),
+        ('value_check_paths', ('paths', '/endpoint', 'get', 'parameters', 'param2', 'type')),
+        ('value_check_paths', ('paths', '/endpoint', 'get', 'responses', 'default', 'description')),
+        ('value_check_paths', ('swagger',)),
+    }
+
+
+def test_fix_parameter_path_with_wrong_signature(recwarn):
+    class ObjectWithWrongSignature(object):
+        def __init__(self, value):
+            self.value = value
+
+        def fix_parameter_path(self):
+            pass
+
+    value = ObjectWithWrongSignature(1)
+    walker = DummySchemaWalker(mock.Mock(spec=Spec), mock.Mock(spec=Spec))
+
+    assert walker.fix_parameter_path(mock.sentinel.PATH, mock.sentinel.ORIGINAL_PATH, value) == value  # type: ignore
+    assert len(recwarn.list) == 1
+    assert recwarn.list[0].message.args[0] == \
+        'Unexpected ObjectWithWrongSignature.fix_parameter_path signature. ' \
+        'fix_parameter_path() got an unexpected keyword argument \'path\''
+    assert recwarn.list[0].category == RuntimeWarning
