@@ -4,10 +4,12 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import typing
+from itertools import chain
 
-from bravado_core.spec import Spec  # noqa: F401
+from bravado_core.spec import Spec
 
 from swagger_spec_compatibility.util import EntityMapping
+from swagger_spec_compatibility.walkers import NoValue
 from swagger_spec_compatibility.walkers import PathType
 from swagger_spec_compatibility.walkers import SchemaWalker
 
@@ -41,58 +43,55 @@ def _different_enum_values_mapping(
         )
 
 
-EnumValuesDiff = typing.NamedTuple(
+class EnumValuesDiff(typing.NamedTuple(
     'EnumValuesDiff', (
         ('path', PathType),
         ('mapping', EntityMapping[typing.Any]),
     ),
-)
+)):
+    def fix_parameter_path(self, path, original_path):
+        # type: (PathType, PathType) -> 'EnumValuesDiff'
+        return EnumValuesDiff(
+            path=tuple(chain(original_path, self.path[len(original_path):])),
+            mapping=self.mapping,
+        )
 
 
 class EnumValuesDifferWalker(SchemaWalker[EnumValuesDiff]):
     left_spec = None  # type: Spec
     right_spec = None  # type: Spec
-    diffs = None  # type: typing.List[EnumValuesDiff]
-
-    def __init__(
-        self,
-        left_spec,  # type: Spec
-        right_spec,  # type: Spec
-    ):
-        # type: (...) -> None
-        super(EnumValuesDifferWalker, self).__init__(
-            left_spec=left_spec,
-            right_spec=right_spec,
-        )
-        self.diffs = []
 
     def dict_check(
         self,
         path,  # type: PathType
-        left_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
-        right_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
+        left_dict,  # type: typing.Union[NoValue, typing.Mapping[typing.Text, typing.Any]]
+        right_dict,  # type: typing.Union[NoValue, typing.Mapping[typing.Text, typing.Any]]
     ):
-        # type: (...) -> None  # noqa
+        # type: (...) -> typing.Iterable[EnumValuesDiff]
         different_enum_values_mapping = _different_enum_values_mapping(
             left_spec=self.left_spec,
             right_spec=self.right_spec,
-            left_schema=left_dict,
-            right_schema=right_dict,
+            left_schema=None if isinstance(left_dict, NoValue) else left_dict,
+            right_schema=None if isinstance(right_dict, NoValue) else right_dict,
         )
         if different_enum_values_mapping is not None:
-            self.diffs.append(EnumValuesDiff(
-                path=path,
-                mapping=different_enum_values_mapping,
-            ))
+            return (
+                EnumValuesDiff(
+                    path=path,
+                    mapping=different_enum_values_mapping,
+                ),
+            )
+        else:
+            return ()
 
     def list_check(
         self,
         path,  # type: PathType
-        left_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
-        right_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
+        left_list,  # type: typing.Union[NoValue, typing.Sequence[typing.Any]]
+        right_list,  # type: typing.Union[NoValue, typing.Sequence[typing.Any]]
     ):
-        # type: (...) -> None  # noqa
-        pass
+        # type: (...) -> typing.Iterable[EnumValuesDiff]
+        return ()
 
     def value_check(
         self,
@@ -100,9 +99,5 @@ class EnumValuesDifferWalker(SchemaWalker[EnumValuesDiff]):
         left_value,  # type: typing.Any
         right_value,  # type: typing.Any
     ):
-        # type: (...) -> None
-        pass
-
-    def walk_response(self):
-        # type: () -> typing.List[EnumValuesDiff]
-        return self.diffs
+        # type: (...) -> typing.Iterable[EnumValuesDiff]
+        return ()

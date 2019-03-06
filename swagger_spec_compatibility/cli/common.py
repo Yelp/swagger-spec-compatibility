@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import typing  # noqa: F401
+import typing
 from argparse import ArgumentTypeError
 from os.path import abspath
 from os.path import exists
@@ -16,8 +16,8 @@ from six.moves.urllib.parse import urlsplit
 from six.moves.urllib.request import pathname2url
 from six.moves.urllib.request import url2pathname
 
-from swagger_spec_compatibility.rules.common import BaseRule  # noqa: F401
-from swagger_spec_compatibility.rules.common import RuleRegistry  # noqa: F401
+from swagger_spec_compatibility.rules.common import BaseRule
+from swagger_spec_compatibility.rules.common import RuleRegistry
 
 
 class CLIProtocol(typing_extensions.Protocol):

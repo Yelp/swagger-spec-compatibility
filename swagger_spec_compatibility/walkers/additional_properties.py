@@ -5,11 +5,13 @@ from __future__ import unicode_literals
 
 import typing
 from enum import Enum
+from itertools import chain
 
-from bravado_core.spec import Spec  # noqa: F401
+from bravado_core.spec import Spec
 
 from swagger_spec_compatibility.spec_utils import get_properties
 from swagger_spec_compatibility.util import EntityMapping
+from swagger_spec_compatibility.walkers import NoValue
 from swagger_spec_compatibility.walkers import PathType
 from swagger_spec_compatibility.walkers import SchemaWalker
 
@@ -19,14 +21,22 @@ class DiffType(Enum):
     VALUE = 1
 
 
-AdditionalPropertiesDiff = typing.NamedTuple(
-    'EnumValuesDiff', (
+class AdditionalPropertiesDiff(typing.NamedTuple(
+    'AdditionalPropertiesDiff', (
         ('path', PathType),
         ('diff_type', DiffType),
         ('additionalProperties', typing.Optional[EntityMapping[typing.Union[bool, typing.Mapping[typing.Text, typing.Any]]]]),
         ('properties', typing.Optional[EntityMapping[typing.Set[typing.Text]]]),
     ),
-)
+)):
+    def fix_parameter_path(self, path, original_path):
+        # type: (PathType, PathType) -> 'AdditionalPropertiesDiff'
+        return AdditionalPropertiesDiff(
+            path=tuple(chain(original_path, self.path[len(original_path):])),
+            diff_type=self.diff_type,
+            additionalProperties=self.additionalProperties,
+            properties=self.properties,
+        )
 
 
 def _evaluate_additional_properties_diffs(
@@ -81,41 +91,30 @@ class AdditionalPropertiesDifferWalker(SchemaWalker[AdditionalPropertiesDiff]):
     additionalPropertiesValue = None  # type: typing.Union[bool, typing.Mapping[typing.Text, typing.Any]]
     diffs = None  # type: typing.List[AdditionalPropertiesDiff]
 
-    def __init__(
-        self,
-        left_spec,  # type: Spec
-        right_spec,  # type: Spec
-    ):
-        # type: (...) -> None
-        super(AdditionalPropertiesDifferWalker, self).__init__(
-            left_spec=left_spec,
-            right_spec=right_spec,
-        )
-        self.diffs = []
-
     def dict_check(
         self,
         path,  # type: PathType
-        left_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
-        right_dict,  # type: typing.Optional[typing.Mapping[typing.Text, typing.Any]]
+        left_dict,  # type: typing.Union[NoValue, typing.Mapping[typing.Text, typing.Any]]
+        right_dict,  # type: typing.Union[NoValue, typing.Mapping[typing.Text, typing.Any]]
     ):
-        # type: (...) -> None  # noqa
-        self.diffs.extend(_evaluate_additional_properties_diffs(
+        # type: (...) -> typing.Iterable[AdditionalPropertiesDiff]
+
+        return _evaluate_additional_properties_diffs(
             path=path,
             left_spec=self.left_spec,
             right_spec=self.right_spec,
-            left_schema=left_dict,
-            right_schema=right_dict,
-        ))
+            left_schema=None if isinstance(left_dict, NoValue) else left_dict,
+            right_schema=None if isinstance(right_dict, NoValue) else right_dict,
+        )
 
     def list_check(
         self,
         path,  # type: PathType
-        left_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
-        right_list,  # type: typing.Optional[typing.Sequence[typing.Any]]
+        left_list,  # type: typing.Union[NoValue, typing.Sequence[typing.Any]]
+        right_list,  # type: typing.Union[NoValue, typing.Sequence[typing.Any]]
     ):
-        # type: (...) -> None  # noqa
-        pass
+        # type: (...) -> typing.Iterable[AdditionalPropertiesDiff]
+        return ()
 
     def value_check(
         self,
@@ -123,9 +122,5 @@ class AdditionalPropertiesDifferWalker(SchemaWalker[AdditionalPropertiesDiff]):
         left_value,  # type: typing.Any
         right_value,  # type: typing.Any
     ):
-        # type: (...) -> None
-        pass
-
-    def walk_response(self):
-        # type: () -> typing.List[AdditionalPropertiesDiff]
-        return self.diffs
+        # type: (...) -> typing.Iterable[AdditionalPropertiesDiff]
+        return ()

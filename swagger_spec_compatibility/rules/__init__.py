@@ -3,17 +3,17 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import typing  # noqa: F401
+import typing
 
-from bravado_core.spec import Spec  # noqa: F401
+from bravado_core.spec import Spec
 
 from swagger_spec_compatibility.rules.added_enum_value_in_response import AddedEnumValueInRequest  # noqa: F401
 from swagger_spec_compatibility.rules.added_properties_in_response_objects_with_additional_properties_set_to_false import AddedPropertiesInResponseObjectsWithAdditionalPropertiesSetToFalse  # noqa: F401,E501
 from swagger_spec_compatibility.rules.added_required_property_in_request import AddedRequiredPropertyInRequest  # noqa: F401
 from swagger_spec_compatibility.rules.changed_type import ChangedType  # noqa: F401
-from swagger_spec_compatibility.rules.common import RuleProtocol  # noqa: F401
-from swagger_spec_compatibility.rules.common import RuleRegistry  # noqa: F401
-from swagger_spec_compatibility.rules.common import ValidationMessage  # noqa: F401
+from swagger_spec_compatibility.rules.common import RuleProtocol
+from swagger_spec_compatibility.rules.common import RuleRegistry
+from swagger_spec_compatibility.rules.common import ValidationMessage
 from swagger_spec_compatibility.rules.deleted_endpoint import DeletedEndpoint  # noqa: F401
 from swagger_spec_compatibility.rules.removed_enum_value_from_request import RemovedEnumValueFromRequest  # noqa: F401
 from swagger_spec_compatibility.rules.removed_properties_from_request_objects_with_additional_properties_set_to_false import RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse  # noqa: F401,E501

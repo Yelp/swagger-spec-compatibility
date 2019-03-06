@@ -8,8 +8,8 @@ from enum import Enum
 from itertools import chain
 
 from bravado.client import SwaggerClient
-from bravado_core.operation import Operation  # noqa: F401
-from bravado_core.spec import Spec  # noqa: F401
+from bravado_core.operation import Operation
+from bravado_core.spec import Spec
 from bravado_core.util import determine_object_type
 from bravado_core.util import ObjectType
 from six import iterkeys

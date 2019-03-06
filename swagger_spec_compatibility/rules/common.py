@@ -9,7 +9,7 @@ from abc import abstractmethod
 from enum import IntEnum
 
 import typing_extensions
-from bravado_core.spec import Spec  # noqa: F401
+from bravado_core.spec import Spec
 from six import iterkeys
 from six import itervalues
 from six import with_metaclass

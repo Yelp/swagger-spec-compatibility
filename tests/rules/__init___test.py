@@ -3,13 +3,13 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import typing  # noqa: F401
+import typing
 
 import pytest
 
 from swagger_spec_compatibility.rules import compatibility_status
-from swagger_spec_compatibility.rules import RuleProtocol  # noqa: F401
-from swagger_spec_compatibility.rules import ValidationMessage  # noqa: F401
+from swagger_spec_compatibility.rules import RuleProtocol
+from swagger_spec_compatibility.rules import ValidationMessage
 from swagger_spec_compatibility.rules.common import RuleRegistry
 from tests.conftest import DummyRule
 from tests.conftest import DummyRuleFailIfDifferent

@@ -8,7 +8,7 @@ from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalke
 
 
 def test_ResponsePathsWalker_returns_no_paths_if_no_endpoints_defined(minimal_spec):
-    assert ResponsePathsWalker(minimal_spec, minimal_spec).walk() == set()
+    assert ResponsePathsWalker(minimal_spec, minimal_spec).walk() == []
 
 
 def test_ResponsePathsWalker_returns_paths_of_endpoints_responses(minimal_spec, minimal_spec_dict):
@@ -29,7 +29,7 @@ def test_ResponsePathsWalker_returns_paths_of_endpoints_responses(minimal_spec, 
     }
     spec = load_spec_from_spec_dict(minimal_spec_dict)
 
-    assert ResponsePathsWalker(spec, spec).walk() == {
+    assert set(ResponsePathsWalker(spec, spec).walk()) == {
         ('paths', '/endpoint', 'get', 'responses', '200'),
         ('paths', '/endpoint', 'get', 'responses', 'default'),
         ('paths', '/endpoint', 'put', 'responses', '403'),

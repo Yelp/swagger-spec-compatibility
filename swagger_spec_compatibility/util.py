@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import typing
 from textwrap import TextWrapper
 
-from swagger_spec_compatibility.walkers import PathType  # noqa: F401
+from swagger_spec_compatibility.walkers import PathType
 
 T = typing.TypeVar('T')
 

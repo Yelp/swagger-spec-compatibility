@@ -8,8 +8,8 @@ from textwrap import dedent
 
 from six import iteritems
 
-from swagger_spec_compatibility.cli import explain  # noqa: F401
-from swagger_spec_compatibility.cli import run  # noqa: F401
+from swagger_spec_compatibility.cli import explain
+from swagger_spec_compatibility.cli import run
 from swagger_spec_compatibility.cli.common import cli_rules
 from swagger_spec_compatibility.rules import RuleRegistry
 from swagger_spec_compatibility.util import wrap

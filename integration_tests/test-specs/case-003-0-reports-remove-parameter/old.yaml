@@ -1,0 +1,17 @@
+swagger: '2.0'
+info:
+  title: Test
+  version: '1.0'
+paths:
+  /endpoint:
+    get:
+      parameters:
+      - in: query
+        name: param1
+        type: string
+      - in: query
+        name: param2
+        type: integer
+      responses:
+        default:
+          description: ''
