@@ -37,15 +37,15 @@ def _from_path_to_module(PACKAGE_DIR, path):
 
 def _contain_docstring_or_code(path):
     with open(path) as f:
-        lines_with_no_comments = (
+        lines_with_no_comments = [
             re.sub('(#.*)', '', line.rstrip())
             for line in f.readlines()
-        )
-        not_empty_lines = (
+        ]
+        not_empty_lines = [
             line
             for line in lines_with_no_comments
             if line.strip()
-        )
+        ]
         return any(not_empty_lines)
 
 
