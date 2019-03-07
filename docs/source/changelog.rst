@@ -1,11 +1,17 @@
 Changelog
 =========
 
-1.0.1 (2018-02-26)
+1.1.0 (2019-03-07)
+------------------
+* Add ``--blacklist-rules`` CLI option to ignore certain rules during the checks (`PR #6 <https://github.com/Yelp/swagger-spec-compatibility/pull/6>`_)
+* Fixed ``SchemaWalker`` to properly combine old and new parameters during the spec traversal. (`PR #7 <https://github.com/Yelp/swagger-spec-compatibility/pull/7>`_)
+* Simplified creation and registration of new rules (`PR #8 <https://github.com/Yelp/swagger-spec-compatibility/pull/8>`_)
+
+1.0.1 (2019-02-26)
 ------------------
 * Updated package metadata
 
-1.0.0 (2018-02-26)
+1.0.0 (2019-02-26)
 ------------------
 * Initial library implementation with definition of the following rules:
 
