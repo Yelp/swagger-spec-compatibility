@@ -18,6 +18,13 @@ from termcolor import colored
 from swagger_spec_compatibility.util import wrap
 
 
+def _read_the_docs_link(rule):
+    # type: (typing.Type['RuleProtocol']) -> typing.Text
+    return 'https://swagger-spec-compatibility.readthedocs.io/en/latest/rules/{code}.html'.format(
+        code=rule.error_code,
+    )
+
+
 class RuleRegistry(ABCMeta):
     _REGISTRY = {}  # type: typing.MutableMapping[typing.Text, typing.Type['BaseRule']]
 
@@ -161,10 +168,11 @@ class BaseRule(with_metaclass(RuleRegistry)):
     @classmethod
     def explain(cls):
         # type: () -> typing.Text
-        return '[{error_code}] {short_name}:\n{rule_description}'.format(
+        return '[{error_code}] {short_name}:\n{rule_description}\n\nMore info on: {url}'.format(
             error_code=colored(cls.error_code, attrs=['bold']),
             short_name=colored(cls.short_name, color='cyan', attrs=['bold']),
             rule_description=wrap(cls.description, indent='\t'),
+            url=_read_the_docs_link(cls),
         )
 
     @classmethod
