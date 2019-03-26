@@ -73,7 +73,8 @@ def test__print_raw_messages(capsys, warning_message):
     )
     out, _ = capsys.readouterr()
     assert out == 'WARNING rules:\n' \
-        '\t[TEST_WARNING_MSG] DummyWarningRule : reference' \
+        '\t[TEST_WARNING_MSG] DummyWarningRule: reference ' \
+        '(documentation: https://swagger-spec-compatibility.readthedocs.io/en/latest/rules/TEST_WARNING_MSG.html)' \
         '\n'
 
 
@@ -91,6 +92,7 @@ def test__print_json_messages(capsys, warning_message):
                 'error_code': 'TEST_WARNING_MSG',
                 'reference': 'reference',
                 'short_name': 'DummyWarningRule',
+                'documentation': 'https://swagger-spec-compatibility.readthedocs.io/en/latest/rules/TEST_WARNING_MSG.html',
             },
         ],
     }

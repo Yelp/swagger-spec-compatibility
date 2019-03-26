@@ -42,7 +42,9 @@ def test_ValidationMessage_string_representation():
         level=Level.ERROR,
         rule=DummyRule,
         reference='reference',
-    ).string_representation() == '[TEST_NO_MSG] DummyRule : reference'
+    ).string_representation() == \
+        '[TEST_NO_MSG] DummyRule: reference ' \
+        '(documentation: https://swagger-spec-compatibility.readthedocs.io/en/latest/rules/TEST_NO_MSG.html)'
 
 
 def test_initializing_BaseRule_throws_an_exception():

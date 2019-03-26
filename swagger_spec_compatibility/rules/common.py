@@ -128,10 +128,11 @@ class ValidationMessage(typing.NamedTuple(
 )):
     def string_representation(self):
         # type: () -> typing.Text
-        return '[{error_code}] {short_name} : {reference}'.format(
+        return '[{error_code}] {short_name}: {reference} (documentation: {documentation})'.format(
             error_code=self.rule.error_code,
             reference=self.reference,
             short_name=self.rule.short_name,
+            documentation=_read_the_docs_link(self.rule),
         )
 
     def json_representation(self):
@@ -140,6 +141,7 @@ class ValidationMessage(typing.NamedTuple(
             'error_code': self.rule.error_code,
             'reference': self.reference,
             'short_name': self.rule.short_name,
+            'documentation': _read_the_docs_link(self.rule),
         }
 
 
