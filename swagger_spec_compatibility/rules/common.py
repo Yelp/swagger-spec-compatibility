@@ -25,6 +25,22 @@ def _read_the_docs_link(rule):
     )
 
 
+def get_rule_documentation_link(rule):
+    # type: (typing.Type['RuleProtocol']) -> typing.Optional[typing.Text]
+    """
+    Helper method that allows to extract documentation link related to a given rule.
+
+    If the rule is implemented within swagger-spec-compatibility library then the documentation
+    link will fall back to the "default" read-the-docs link
+    """
+    if rule.documentation_link:
+        return rule.documentation_link
+    elif rule.__module__.startswith('swagger_spec_compatibility.rules'):
+        return _read_the_docs_link(rule)
+    else:
+        return None
+
+
 class RuleRegistry(ABCMeta):
     _REGISTRY = {}  # type: typing.MutableMapping[typing.Text, typing.Type['BaseRule']]
 
@@ -53,8 +69,8 @@ class RuleRegistry(ABCMeta):
         cls_fully_qualified_name = '{}.{}'.format(cls.__module__, cls.__name__)
         base_rule_fully_qualified_name = '{}.BaseRule'.format(mcs.__module__)
         assert (  # pragma: no branch
-            cls_fully_qualified_name == base_rule_fully_qualified_name or
-            any(base_rule_fully_qualified_name == '{}.{}'.format(c.__module__, c.__name__) for c in cls.__bases__)
+            cls_fully_qualified_name == base_rule_fully_qualified_name
+            or any(base_rule_fully_qualified_name == '{}.{}'.format(c.__module__, c.__name__) for c in cls.__bases__)
         ), '{} metaclass should be used only by {}.BaseRule'.format(mcs, mcs.__module__)
 
     def __new__(mcs, name, bases, namespace):
@@ -112,6 +128,8 @@ class RuleProtocol(typing_extensions.Protocol):
     error_level = None  # type: Level
     # Type of the rule associated
     rule_type = None  # type: RuleType
+    # Documentation link
+    documentation_link = None  # type: typing.Text
 
     @classmethod
     def validate(cls, left_spec, right_spec):
@@ -128,11 +146,12 @@ class ValidationMessage(typing.NamedTuple(
 )):
     def string_representation(self):
         # type: () -> typing.Text
-        return '[{error_code}] {short_name}: {reference} (documentation: {documentation})'.format(
+        documentation_link = get_rule_documentation_link(self.rule)
+        return '[{error_code}] {short_name}: {reference}{more_info}'.format(
             error_code=self.rule.error_code,
             reference=self.reference,
             short_name=self.rule.short_name,
-            documentation=_read_the_docs_link(self.rule),
+            more_info=' (documentation: {})'.format(documentation_link) if documentation_link else '',
         )
 
     def json_representation(self):
@@ -141,7 +160,7 @@ class ValidationMessage(typing.NamedTuple(
             'error_code': self.rule.error_code,
             'reference': self.reference,
             'short_name': self.rule.short_name,
-            'documentation': _read_the_docs_link(self.rule),
+            'documentation': get_rule_documentation_link(self.rule),
         }
 
 
@@ -156,6 +175,8 @@ class BaseRule(with_metaclass(RuleRegistry)):
     error_level = None  # type: Level
     # Type of the rule associated
     rule_type = None  # type: RuleType
+    # Documentation link
+    documentation_link = None  # type: typing.Text
 
     def __init__(self):
         # type: () -> None
@@ -170,11 +191,12 @@ class BaseRule(with_metaclass(RuleRegistry)):
     @classmethod
     def explain(cls):
         # type: () -> typing.Text
-        return '[{error_code}] {short_name}:\n{rule_description}\n\nMore info on: {url}'.format(
+        documentation_link = get_rule_documentation_link(cls)
+        return '[{error_code}] {short_name}:\n{rule_description}{more_info}'.format(
             error_code=colored(cls.error_code, attrs=['bold']),
             short_name=colored(cls.short_name, color='cyan', attrs=['bold']),
             rule_description=wrap(cls.description, indent='\t'),
-            url=_read_the_docs_link(cls),
+            more_info='\n\nMore info on {}'.format(documentation_link) if documentation_link else '',
         )
 
     @classmethod
