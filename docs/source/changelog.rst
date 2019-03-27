@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.2.0 (2019-03-27)
+------------------
+* Expose read-the-docs documentation links for rules defined by the library (`PR #9 <https://github.com/Yelp/swagger-spec-compatibility/pull/9>`_)
+
 1.1.0 (2019-03-07)
 ------------------
 * Add ``--blacklist-rules`` CLI option to ignore certain rules during the checks (`PR #6 <https://github.com/Yelp/swagger-spec-compatibility/pull/6>`_)
