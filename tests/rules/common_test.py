@@ -6,10 +6,25 @@ from __future__ import unicode_literals
 import mock
 import pytest
 
+from swagger_spec_compatibility.rules.changed_type import ChangedType
+from swagger_spec_compatibility.rules.common import get_rule_documentation_link
 from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleRegistry
 from swagger_spec_compatibility.rules.common import ValidationMessage
 from tests.conftest import DummyRule
+from tests.conftest import DummyRuleWithDocumentationLink
+
+
+@pytest.mark.parametrize(
+    'rule, expected_link',
+    [
+        (DummyRule, None),
+        (ChangedType, 'https://swagger-spec-compatibility.readthedocs.io/en/latest/rules/MIS-E002.html'),
+        (DummyRuleWithDocumentationLink, DummyRuleWithDocumentationLink.documentation_link),
+    ],
+)
+def test_get_rule_documentation_link(rule, expected_link):
+    assert get_rule_documentation_link(rule) == expected_link
 
 
 def test_RuleRegistry_rule_names(mock_RuleRegistry):
@@ -42,7 +57,7 @@ def test_ValidationMessage_string_representation():
         level=Level.ERROR,
         rule=DummyRule,
         reference='reference',
-    ).string_representation() == '[TEST_NO_MSG] DummyRule : reference'
+    ).string_representation() == '[TEST_NO_MSG] DummyRule: reference'
 
 
 def test_initializing_BaseRule_throws_an_exception():

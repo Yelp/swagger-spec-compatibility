@@ -105,6 +105,19 @@ class DummyErrorRule(BaseRule):
         return (cls.validation_message('test'),)
 
 
+class DummyRuleWithDocumentationLink(BaseRule):
+    error_code = 'TEST_DOCUMENTATION_LINK'
+    error_level = Level.INFO
+    description = 'Rule description'
+    rule_type = RuleType.MISCELLANEOUS
+    short_name = 'DummyRuleWithDocLink'
+    documentation_link = 'link'
+
+    @classmethod
+    def validate(cls, left_spec, right_spec):  # pragma: no cover
+        return ()
+
+
 @pytest.fixture
 def mock_RuleRegistry():
     with mock.patch.object(

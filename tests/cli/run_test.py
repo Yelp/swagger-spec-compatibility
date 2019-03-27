@@ -12,6 +12,7 @@ from swagger_spec_compatibility.cli.run import _Namespace
 from swagger_spec_compatibility.cli.run import _print_json_messages
 from swagger_spec_compatibility.cli.run import _print_raw_messages
 from swagger_spec_compatibility.cli.run import execute
+from swagger_spec_compatibility.rules.changed_type import ChangedType
 from swagger_spec_compatibility.rules.common import Level
 from tests.conftest import DummyWarningRule
 
@@ -33,6 +34,11 @@ def cli_args():
 @pytest.fixture
 def warning_message():
     return DummyWarningRule.validation_message('reference')
+
+
+@pytest.fixture
+def error_message_library_rule():
+    return ChangedType.validation_message('reference')
 
 
 @pytest.mark.parametrize('json_output', [True, False])
@@ -64,24 +70,29 @@ def test_execute(
     capsys.readouterr()
 
 
-def test__print_raw_messages(capsys, warning_message):
+def test__print_raw_messages(capsys, warning_message, error_message_library_rule):
     _print_raw_messages(
         messages_by_level={
             Level.INFO: [],
             Level.WARNING: [warning_message],
+            Level.ERROR: [error_message_library_rule],
         },
     )
     out, _ = capsys.readouterr()
     assert out == 'WARNING rules:\n' \
-        '\t[TEST_WARNING_MSG] DummyWarningRule : reference' \
-        '\n'
+                  '\t[TEST_WARNING_MSG] DummyWarningRule: reference\n' \
+                  'ERROR rules:\n' \
+                  '\t[MIS-E002] Changed type: reference (documentation: ' \
+                  'https://swagger-spec-compatibility.readthedocs.io/en/latest/rules/MIS-E002.html)' \
+                  '\n'
 
 
-def test__print_json_messages(capsys, warning_message):
+def test__print_json_messages(capsys, warning_message, error_message_library_rule):
     _print_json_messages(
         messages_by_level={
             Level.INFO: [],
             Level.WARNING: [warning_message],
+            Level.ERROR: [error_message_library_rule],
         },
     )
     out, _ = capsys.readouterr()
@@ -91,6 +102,15 @@ def test__print_json_messages(capsys, warning_message):
                 'error_code': 'TEST_WARNING_MSG',
                 'reference': 'reference',
                 'short_name': 'DummyWarningRule',
+                'documentation': None,
+            },
+        ],
+        'ERROR': [
+            {
+                'documentation': 'https://swagger-spec-compatibility.readthedocs.io/en/latest/rules/MIS-E002.html',
+                'error_code': 'MIS-E002',
+                'reference': 'reference',
+                'short_name': 'Changed type',
             },
         ],
     }
