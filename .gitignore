@@ -1,7 +1,7 @@
 *.egg-info
 *.py[co]
 /.cache
-/.coverage
+/.coverage*
 /.idea/
 /.mypy_cache/
 /.pytest_cache
