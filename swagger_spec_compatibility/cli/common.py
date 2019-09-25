@@ -104,6 +104,7 @@ def add_rules_arguments(argument_parser):
         choices=rules,
         dest='rules',
         help='Rules to apply for compatibility detection. (default: [%(choices)s])',
+        metavar='RULE',
         nargs='+',
     )
     mutex_group.add_argument(
@@ -112,6 +113,7 @@ def add_rules_arguments(argument_parser):
         choices=rules,
         dest='blacklist_rules',
         help='Rules to ignore for compatibility detection. (By default no rules are blacklisted)',
+        metavar='RULE',
         nargs='+',
     )
 

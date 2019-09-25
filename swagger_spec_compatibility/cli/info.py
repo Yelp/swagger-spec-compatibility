@@ -8,6 +8,7 @@ import platform
 
 import pkg_resources
 
+from swagger_spec_compatibility.cli.common import add_rule_discovery_argument
 from swagger_spec_compatibility.cli.common import cli_rules
 from swagger_spec_compatibility.cli.common import CLIProtocol
 from swagger_spec_compatibility.rules import RuleRegistry
@@ -36,4 +37,6 @@ def execute(cli_args):  # pragma: no cover
 
 def add_sub_parser(subparsers):
     # type: (argparse._SubParsersAction) -> argparse.ArgumentParser
-    return subparsers.add_parser('info', help='Reports tool\'s information')
+    info_parser = subparsers.add_parser('info', help='Reports tool\'s information')
+    add_rule_discovery_argument(info_parser)
+    return info_parser
