@@ -8,6 +8,7 @@ import typing
 
 from termcolor import colored
 
+from swagger_spec_compatibility.cli.common import add_rules_arguments
 from swagger_spec_compatibility.cli.common import CLIProtocol
 from swagger_spec_compatibility.cli.common import rules
 
@@ -34,4 +35,6 @@ def execute(cli_args):
 
 def add_sub_parser(subparsers):
     # type: (argparse._SubParsersAction) -> argparse.ArgumentParser
-    return subparsers.add_parser('explain', help='explain selected rules')
+    explain_parser = subparsers.add_parser('explain', help='explain selected rules')
+    add_rules_arguments(explain_parser)
+    return explain_parser

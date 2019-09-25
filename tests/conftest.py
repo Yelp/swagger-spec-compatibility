@@ -118,16 +118,19 @@ class DummyRuleWithDocumentationLink(BaseRule):
         return ()
 
 
+MOCKED_RULE_REGISTRY = {
+    'DummyRule': DummyRule,
+    'DummyInfoRule': DummyInfoRule,
+    'DummyWarningRule': DummyWarningRule,
+    'DummyErrorRule': DummyErrorRule,
+    'DummyRuleFailIfDifferent': DummyRuleFailIfDifferent,
+}
+
+
 @pytest.fixture
 def mock_RuleRegistry():
     with mock.patch.object(
-            RuleRegistry, '_REGISTRY', {
-                'DummyRule': DummyRule,
-                'DummyInfoRule': DummyInfoRule,
-                'DummyWarningRule': DummyWarningRule,
-                'DummyErrorRule': DummyErrorRule,
-                'DummyRuleFailIfDifferent': DummyRuleFailIfDifferent,
-            },
+        RuleRegistry, '_REGISTRY', MOCKED_RULE_REGISTRY,
     ) as m:
         yield m
 

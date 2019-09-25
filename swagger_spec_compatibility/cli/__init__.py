@@ -10,7 +10,6 @@ from six import iteritems
 
 from swagger_spec_compatibility.cli import explain
 from swagger_spec_compatibility.cli import run
-from swagger_spec_compatibility.cli.common import cli_rules
 from swagger_spec_compatibility.util import wrap
 
 
@@ -23,7 +22,7 @@ _SUB_COMMAND_ASSOCIATED_FUNCTION_MAPPING = {
 def parser():
     # type: () -> argparse.ArgumentParser
 
-    parser = argparse.ArgumentParser(
+    argument_parser = argparse.ArgumentParser(
         description=wrap(dedent("""
             Tool for the identification of backward incompatible changes between two swagger specs.
 
@@ -34,29 +33,9 @@ def parser():
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
-    rules = cli_rules()
-    mutex_group = parser.add_mutually_exclusive_group()
-    mutex_group.add_argument(
-        '-r', '--rules',
-        nargs='+',
-        help='Rules to apply for compatibility detection. (default: %(default)s)',
-        default=rules,
-        choices=rules,
-    )
-    mutex_group.add_argument(
-        '-b', '--blacklist-rules',
-        nargs='+',
-        help='Rules to ignore for compatibility detection. (default: %(default)s)',
-        default=[],
-        choices=rules,
-    )
-
-    subparsers = parser.add_subparsers(help='help for sub-command', dest='command')
+    subparsers = argument_parser.add_subparsers(help='help for sub-command', dest='command')
     subparsers.required = True
     for add_sub_command_parser, associated_function in iteritems(_SUB_COMMAND_ASSOCIATED_FUNCTION_MAPPING):
         add_sub_command_parser(subparsers).set_defaults(func=associated_function)
 
-    if not rules:
-        raise parser.error('No rules are defined.')
-
-    return parser
+    return argument_parser
