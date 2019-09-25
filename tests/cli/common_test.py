@@ -11,6 +11,7 @@ import mock
 import pytest
 
 from swagger_spec_compatibility.cli.common import CLIRulesProtocol
+from swagger_spec_compatibility.cli.common import pre_process_cli_to_discover_rules
 from swagger_spec_compatibility.cli.common import rules
 from swagger_spec_compatibility.cli.common import uri
 from tests.conftest import DummyRule
@@ -62,3 +63,41 @@ def test_rules(mock_RuleRegistry, cli_rules, cli_blacklist_rules, expected_rules
             blacklist_rules=cli_blacklist_rules,
         ),
     ) == expected_rules
+
+
+@pytest.mark.parametrize(
+    'argv, import_module_calls',
+    [
+        [[], []],
+        [['-d=a.not.existing.module'], [mock.call('a.not.existing.module')]],
+        [
+            ['-d=a.not.existing.module', '-d=a.not.existing.module.1'],
+            [mock.call('a.not.existing.module'), mock.call('a.not.existing.module.1')],
+        ],
+        [
+            ['-d', 'a.not.existing.module', 'a.not.existing.module.1'],
+            [mock.call('a.not.existing.module'), mock.call('a.not.existing.module.1')],
+        ],
+        [
+            ['-d', 'a.not.existing.module', '--discover-rules-from', 'a.not.existing.module.1'],
+            [mock.call('a.not.existing.module'), mock.call('a.not.existing.module.1')],
+        ],
+    ],
+)
+@mock.patch('swagger_spec_compatibility.cli.common.Scanner', autospec=True)
+@mock.patch('swagger_spec_compatibility.cli.common.import_module', autospec=True)
+def test_pre_process_cli_to_discover_rules(mock_import_module, mock_scanner, argv, import_module_calls):
+    pre_process_cli_to_discover_rules(argv)
+
+    assert mock_import_module.call_count == len(import_module_calls)
+    assert mock_scanner.return_value.scan.call_count == len(import_module_calls)
+
+    mock_import_module.assert_has_calls(import_module_calls, any_order=True)
+
+
+def test_pre_process_cli_to_discover_rules_warns_if_the_module_does_not_exist():
+    with pytest.warns(
+        RuntimeWarning,
+        match='\'a.module.that.does.not.exist\' module, specified via the rule discovery CLI, is not found. Ignoring it.',
+    ):
+        pre_process_cli_to_discover_rules(['-d', 'a.module.that.does.not.exist'])

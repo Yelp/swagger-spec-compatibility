@@ -5,7 +5,9 @@ from __future__ import unicode_literals
 
 import argparse
 import typing
+import warnings
 from argparse import ArgumentTypeError
+from importlib import import_module
 from os.path import abspath
 from os.path import exists
 from os.path import expanduser
@@ -16,6 +18,7 @@ from six.moves.urllib.parse import urljoin
 from six.moves.urllib.parse import urlsplit
 from six.moves.urllib.request import pathname2url
 from six.moves.urllib.request import url2pathname
+from venusian import Scanner
 
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import RuleRegistry
@@ -59,11 +62,40 @@ def rules(cli_args):
     }
 
 
+def add_rule_discovery_argument(argument_parser):
+    # type: (argparse.ArgumentParser) -> None
+    argument_parser.add_argument(
+        '-d', '--discover-rules-from',
+        action='append',
+        dest='packages_to_discover_rules_from',
+        help='Non-standard packages to load rules from',
+        nargs='+',
+    )
+
+
+def pre_process_cli_to_discover_rules(argv=None):
+    # type: (typing.Optional[typing.Sequence[typing.Text]]) -> None
+    scanner = Scanner()
+    rule_discovery_parser = argparse.ArgumentParser(add_help=False)
+    add_rule_discovery_argument(rule_discovery_parser)
+    rule_discovery_args, _ = rule_discovery_parser.parse_known_args(argv)
+    for packages in (rule_discovery_args.packages_to_discover_rules_from or []):
+        for package in packages:
+            try:
+                scanner.scan(import_module(package))
+            except ImportError:
+                warnings.warn(
+                    RuntimeWarning('\'{}\' module, specified via the rule discovery CLI, is not found. Ignoring it.'.format(package)),
+                )
+
+
 def add_rules_arguments(argument_parser):
     # type: (argparse.ArgumentParser) -> None
     rules = cli_rules()
     if not rules:
         raise argument_parser.error('No rules are defined.')
+
+    add_rule_discovery_argument(argument_parser)
 
     mutex_group = argument_parser.add_mutually_exclusive_group()
     mutex_group.add_argument(
