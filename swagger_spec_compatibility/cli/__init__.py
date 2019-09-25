@@ -9,12 +9,14 @@ from textwrap import dedent
 from six import iteritems
 
 from swagger_spec_compatibility.cli import explain
+from swagger_spec_compatibility.cli import info
 from swagger_spec_compatibility.cli import run
 from swagger_spec_compatibility.util import wrap
 
 
 _SUB_COMMAND_ASSOCIATED_FUNCTION_MAPPING = {
     explain.add_sub_parser: explain.execute,
+    info.add_sub_parser: info.execute,
     run.add_sub_parser: run.execute,
 }
 
