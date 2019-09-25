@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import os
 import typing
 import warnings
 from argparse import ArgumentTypeError
@@ -22,6 +23,9 @@ from venusian import Scanner
 
 from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import RuleRegistry
+
+
+_ENV_VARIABLE = str('CUSTOM_RULE_PACKAGES')
 
 
 class CLIProtocol(typing_extensions.Protocol):
@@ -62,13 +66,28 @@ def rules(cli_args):
     }
 
 
+def _get_rule_discovery_from_env():
+    # type: () -> typing.List[typing.Text]
+    return [
+        value
+        for value in (
+            part.strip()
+            for part in os.environ.get(_ENV_VARIABLE, '').split(',')
+        )
+        if value
+    ]
+
+
 def add_rule_discovery_argument(argument_parser):
     # type: (argparse.ArgumentParser) -> None
     argument_parser.add_argument(
         '-d', '--discover-rules-from',
         action='append',
+        default=[_get_rule_discovery_from_env()],
         dest='packages_to_discover_rules_from',
-        help='Non-standard packages to load rules from',
+        help='Non-standard packages to load rules from. '
+             'The values can be defined as CSV in the {} '
+             'environmental variable'.format(_ENV_VARIABLE),
         nargs='+',
     )
 

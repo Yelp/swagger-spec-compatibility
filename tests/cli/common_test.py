@@ -66,28 +66,47 @@ def test_rules(mock_RuleRegistry, cli_rules, cli_blacklist_rules, expected_rules
 
 
 @pytest.mark.parametrize(
-    'argv, import_module_calls',
+    'env_variable_content, argv, import_module_calls',
     [
-        [[], []],
-        [['-d=a.not.existing.module'], [mock.call('a.not.existing.module')]],
+        ['', [], []],
         [
+            'a.not.existing.module',
+            [],
+            [mock.call('a.not.existing.module')],
+        ],
+        [
+            'a.not.existing.module,a.not.existing.module.1',
+            [],
+            [mock.call('a.not.existing.module'), mock.call('a.not.existing.module.1')],
+        ],
+        ['', ['-d=a.not.existing.module'], [mock.call('a.not.existing.module')]],
+        [
+            '',
             ['-d=a.not.existing.module', '-d=a.not.existing.module.1'],
             [mock.call('a.not.existing.module'), mock.call('a.not.existing.module.1')],
         ],
         [
+            '',
             ['-d', 'a.not.existing.module', 'a.not.existing.module.1'],
             [mock.call('a.not.existing.module'), mock.call('a.not.existing.module.1')],
         ],
         [
+            '',
             ['-d', 'a.not.existing.module', '--discover-rules-from', 'a.not.existing.module.1'],
             [mock.call('a.not.existing.module'), mock.call('a.not.existing.module.1')],
+        ],
+        [
+            'a.not.existing.module.environment',
+            ['-d', 'a.not.existing.module', '--discover-rules-from', 'a.not.existing.module.1'],
+            [mock.call('a.not.existing.module'), mock.call('a.not.existing.module.1'), mock.call('a.not.existing.module.environment')],
         ],
     ],
 )
 @mock.patch('swagger_spec_compatibility.cli.common.Scanner', autospec=True)
 @mock.patch('swagger_spec_compatibility.cli.common.import_module', autospec=True)
-def test_pre_process_cli_to_discover_rules(mock_import_module, mock_scanner, argv, import_module_calls):
-    pre_process_cli_to_discover_rules(argv)
+def test_pre_process_cli_to_discover_rules(mock_import_module, mock_scanner, env_variable_content, argv, import_module_calls):
+    with mock.patch.dict(os.environ, {'CUSTOM_RULE_PACKAGES': env_variable_content}):
+        pre_process_cli_to_discover_rules(argv)
 
     assert mock_import_module.call_count == len(import_module_calls)
     assert mock_scanner.return_value.scan.call_count == len(import_module_calls)
