@@ -6,11 +6,12 @@ from __future__ import unicode_literals
 import typing
 
 from swagger_spec_compatibility.cli import parser
+from swagger_spec_compatibility.cli.common import post_process_rules_cli_arguments
 
 
 def main(argv=None):
     # type: (typing.Optional[typing.Sequence[typing.Text]]) -> int
-    args = parser().parse_args(argv)
+    args = post_process_rules_cli_arguments(parser().parse_args(argv))
     exit_code = args.func(args)  # type: int
     return exit_code
 

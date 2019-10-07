@@ -39,6 +39,11 @@ swagger_spec_compatibility Package
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: swagger_spec_compatibility.cli.info
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 .. automodule:: swagger_spec_compatibility.cli.run
     :members:
     :undoc-members:

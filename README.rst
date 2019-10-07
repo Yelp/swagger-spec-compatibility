@@ -50,10 +50,7 @@ The commands below assume that the library is already installed
 .. code-block:: bash
 
     $ swagger_spec_compatibility -h
-
-    usage: swagger_spec_compatibility [-h]
-                                  [-r {MIS-E001,MIS-E002,REQ-E001,REQ-E002,REQ-E003,RES-E001,RES-E002,RES-E003} [{MIS-E001,MIS-E002,REQ-E001,REQ-E002,REQ-E003,RES-E001,RES-E002,RES-E003} ...]]
-                                  {explain,run} ...
+    usage: swagger_spec_compatibility [-h] {explain,info,run} ...
 
     Tool for the identification of backward incompatible changes between two swagger specs.
 
@@ -62,20 +59,17 @@ The commands below assume that the library is already installed
     - ERROR: new Swagger spec does introduce a breaking change respect the old implementation
 
     positional arguments:
-      {explain,run}         help for sub-command
-        explain             explain selected rules
-        run                 run backward compatibility detection
+      {explain,info,run}  help for sub-command
+        explain           explain selected rules
+        info              Reports tool's information
+        run               run backward compatibility detection
 
     optional arguments:
-      -h, --help            show this help message and exit
-      -r {MIS-E001,MIS-E002,REQ-E001,REQ-E002,REQ-E003,RES-E001,RES-E002,RES-E003} [{MIS-E001,MIS-E002,REQ-E001,REQ-E002,REQ-E003,RES-E001,RES-E002,RES-E003} ...], --rules {MIS-E001,MIS-E002,REQ-E001,REQ-E002,REQ-E003,RES-E001,RES-E002,RES-E003} [{MIS-E001,MIS-E002,REQ-E001,REQ-E002,REQ-E003,RES-E001,RES-E002,RES-E003} ...]
-                            Rules to apply for compatibility detection. (default:
-                            ['MIS-E001', 'MIS-E002', 'REQ-E001', 'REQ-E002',
-                            'REQ-E003', 'RES-E001', 'RES-E002', 'RES-E003'])
+      -h, --help          show this help message and exit
 
 .. code-block:: bash
 
-    $ swagger_spec_compatibility explain -r=REQ-E001 -r=REQ-E002 explain
+    $ swagger_spec_compatibility explain -r REQ-E001 REQ-E002
     Rules explanation
     [REQ-E001] Added Required Property in Request contract:
     	Adding a required property to an object used in requests leads client request to fail if the property is not present.
@@ -100,6 +94,22 @@ The commands below assume that the library is already installed
     $ swagger_spec_compatibility -r=MIS-E001 -r=MIS-E002 run ${old_spec_path} ${new_spec_path}
     $ echo $?
     0
+
+.. code-block:: bash
+
+    $ swagger_spec_compatibility info
+    swagger-spec-compatibility: 1.3.0
+    Python version: CPython - 3.6.9
+    Python compiler: GCC 4.2.1 Compatible Apple LLVM 10.0.1 (clang-1001.0.46.4)
+    Discovered rules:
+        MIS-E001: swagger_spec_compatibility.rules.deleted_endpoint.DeletedEndpoint
+        MIS-E002: swagger_spec_compatibility.rules.changed_type.ChangedType
+        REQ-E001: swagger_spec_compatibility.rules.added_required_property_in_request.AddedRequiredPropertyInRequest
+        REQ-E002: swagger_spec_compatibility.rules.removed_enum_value_from_request.RemovedEnumValueFromRequest
+        REQ-E003: swagger_spec_compatibility.rules.removed_properties_from_request_objects_with_additional_properties_set_to_false.RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse
+        RES-E001: swagger_spec_compatibility.rules.added_properties_in_response_objects_with_additional_properties_set_to_false.AddedPropertiesInResponseObjectsWithAdditionalPropertiesSetToFalse
+        RES-E002: swagger_spec_compatibility.rules.removed_required_property_from_response.RemovedRequiredPropertyFromResponse
+        RES-E003: swagger_spec_compatibility.rules.added_enum_value_in_response.AddedEnumValueInRequest
 
 Development
 -----------

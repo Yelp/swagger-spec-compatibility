@@ -10,6 +10,7 @@ import typing
 
 from six import iteritems
 
+from swagger_spec_compatibility.cli.common import add_rules_arguments
 from swagger_spec_compatibility.cli.common import CLIProtocol
 from swagger_spec_compatibility.cli.common import rules
 from swagger_spec_compatibility.cli.common import uri
@@ -98,6 +99,9 @@ def execute(cli_args):
 def add_sub_parser(subparsers):
     # type: (argparse._SubParsersAction) -> argparse.ArgumentParser
     run_detection_parser = subparsers.add_parser('run', help='run backward compatibility detection')
+
+    add_rules_arguments(run_detection_parser)
+
     run_detection_parser.add_argument(
         '--strict',
         action='store_true',
