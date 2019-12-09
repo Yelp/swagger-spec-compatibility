@@ -17,37 +17,29 @@ from swagger_spec_compatibility.walkers.additional_properties import DiffType
 from swagger_spec_compatibility.walkers.request_parameters import RequestParametersWalker
 
 
-class RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse(BaseRule):
+class ChangedAdditionalPropertiesToFalse(BaseRule):
     description = \
         'If the object is defined with additionalProperties set to False then the object will not allow presence of ' \
-        'properties not defined on the properties section of the object definition. Removing a definition of an ' \
-        'existing property makes objects sent from a client, that is using "old" Swagger specs, to the server be ' \
-        'considered invalid by the backend.'
-    error_code = 'REQ-E003'
+        'properties not defined on the properties section of the object definition. ' \
+        'Changing additionalProperties from True to False makes objects sent from a client, ' \
+        'that contain additional properties and were permitted by the "old" Swagger specs, ' \
+        'to the server be considered invalid by the backend.'
+    error_code = 'REQ-E004'
     error_level = Level.ERROR
     rule_type = RuleType.REQUEST_CONTRACT
-    short_name = 'Removing properties from an object with additionalProperties set to False used as request parameter'
+    short_name = 'Changing additionalProperties to False for a request parameter'
 
     @classmethod
     def validate(cls, left_spec, right_spec):
         # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
         request_parameter_paths = RequestParametersWalker(left_spec, right_spec).walk()
         for additional_properties_diff in AdditionalPropertiesDifferWalker(left_spec, right_spec).walk():
-            if additional_properties_diff.diff_type != DiffType.PROPERTIES:
-                continue
-            if additional_properties_diff.properties and not additional_properties_diff.properties.old:
+            if additional_properties_diff.diff_type != DiffType.VALUE:
                 continue
             if not is_path_in_top_level_paths(request_parameter_paths, additional_properties_diff.path):
                 continue
-            if additional_properties_diff.properties:
-                message = '\n \t\t{} {}: {}\n\t\t'.format(
-                    additional_properties_diff.path[2],
-                    additional_properties_diff.path[1],
-                    additional_properties_diff.properties.old,
-                )
-            else:
-                message = '\n \t\t{} {}\n\t\t'.format(
-                    additional_properties_diff.path[2],
-                    additional_properties_diff.path[1],
-                )
+            message = "\n \t\t{} {}: schema's additionalProperties changed to False\n\t\t".format(
+                additional_properties_diff.path[2],
+                additional_properties_diff.path[1],
+            )
             yield cls.validation_message(message)

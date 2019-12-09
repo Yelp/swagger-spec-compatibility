@@ -28,9 +28,11 @@ class DeletedEndpoint(BaseRule):
     def validate(cls, left_spec, right_spec):
         # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
         endpoints_left_spec = get_endpoints(left_spec)
-        endponts_right_spec = get_endpoints(right_spec)
+        endpoints_right_spec = get_endpoints(right_spec)
 
-        return (
-            cls.validation_message(str(removed_endpoint))
-            for removed_endpoint in endpoints_left_spec - endponts_right_spec
-        )
+        for removed_endpoint in endpoints_left_spec - endpoints_right_spec:
+            message = '{} {} \n\t\t'.format(
+                removed_endpoint.http_verb.value,
+                removed_endpoint.path,
+            )
+            yield cls.validation_message(message)

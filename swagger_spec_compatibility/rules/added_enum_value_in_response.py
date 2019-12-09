@@ -12,7 +12,6 @@ from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.rules.common import ValidationMessage
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
-from swagger_spec_compatibility.walkers import format_path
 from swagger_spec_compatibility.walkers.enum_values import EnumValuesDifferWalker
 from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalker
 
@@ -35,4 +34,10 @@ class AddedEnumValueInRequest(BaseRule):
                 continue
             if not is_path_in_top_level_paths(response_paths, enum_values_diff.path):
                 continue
-            yield cls.validation_message(format_path(enum_values_diff.path))
+            message = '\n \t\t{} {}: new enum value {} in property `{}`\n\t\t'.format(
+                enum_values_diff.path[2],
+                enum_values_diff.path[1],
+                enum_values_diff.mapping.new,
+                enum_values_diff.path[-1],
+            )
+            yield cls.validation_message(message)
