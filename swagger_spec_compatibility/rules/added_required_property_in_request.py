@@ -12,7 +12,6 @@ from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.rules.common import ValidationMessage
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
-from swagger_spec_compatibility.walkers import format_path
 from swagger_spec_compatibility.walkers.request_parameters import RequestParametersWalker
 from swagger_spec_compatibility.walkers.required_properties import RequiredPropertiesDifferWalker
 
@@ -37,4 +36,9 @@ class AddedRequiredPropertyInRequest(BaseRule):
                 continue
             if not is_path_in_top_level_paths(request_parameters_paths, required_property_diff.path):
                 continue
-            yield cls.validation_message(format_path(required_property_diff.path))
+            message = '\n \t\t{} {}: {}\n\t\t'.format(
+                required_property_diff.path[2],
+                required_property_diff.path[1],
+                required_property_diff.mapping.new,
+            )
+            yield cls.validation_message(message)

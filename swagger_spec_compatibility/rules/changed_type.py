@@ -12,7 +12,6 @@ from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.rules.common import ValidationMessage
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
-from swagger_spec_compatibility.walkers import format_path
 from swagger_spec_compatibility.walkers.changed_types import ChangedTypesDifferWalker
 from swagger_spec_compatibility.walkers.request_parameters import RequestParametersWalker
 from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalker
@@ -42,4 +41,11 @@ class ChangedType(BaseRule):
                 not is_path_in_top_level_paths(response_paths, changed_types_diff.path)
             ):
                 continue
-            yield cls.validation_message(format_path(changed_types_diff.path))
+            message = '\n \t\t{} {}: `{}` changed from `{}` to `{}`\n\t\t'.format(
+                changed_types_diff.path[2],
+                changed_types_diff.path[1],
+                changed_types_diff.path[-1],
+                changed_types_diff.mapping.old,
+                changed_types_diff.mapping.new,
+            )
+            yield cls.validation_message(message)

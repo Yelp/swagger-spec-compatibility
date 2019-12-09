@@ -12,7 +12,6 @@ from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.rules.common import ValidationMessage
 from swagger_spec_compatibility.util import is_path_in_top_level_paths
-from swagger_spec_compatibility.walkers import format_path
 from swagger_spec_compatibility.walkers.additional_properties import AdditionalPropertiesDifferWalker
 from swagger_spec_compatibility.walkers.additional_properties import DiffType
 from swagger_spec_compatibility.walkers.response_paths import ResponsePathsWalker
@@ -40,4 +39,15 @@ class AddedPropertiesInResponseObjectsWithAdditionalPropertiesSetToFalse(BaseRul
                 continue
             if not is_path_in_top_level_paths(response_paths, additional_properties_diff.path):
                 continue
-            yield cls.validation_message(format_path(additional_properties_diff.path))
+            if additional_properties_diff.properties:
+                message = '\n \t\t{} {}: {}\n\t\t'.format(
+                    additional_properties_diff.path[2],
+                    additional_properties_diff.path[1],
+                    additional_properties_diff.properties.new,
+                )
+            else:
+                message = '\n \t\t{} {}\n\t\t'.format(
+                    additional_properties_diff.path[2],
+                    additional_properties_diff.path[1],
+                )
+            yield cls.validation_message(message)
