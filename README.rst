@@ -116,7 +116,7 @@ Development
 
 Code is documented using `Sphinx <http://sphinx-doc.org/>`__.
 
-`virtualenv <http://virtualenv.readthedocs.org/en/latest/virtualenv.html>`__ is
+`virtualenv <https://virtualenv.readthedocs.io/en/latest/>`__ is
 recommended to keep dependencies and libraries isolated.
 
 Setup
@@ -179,7 +179,7 @@ Use the following steps to define a new rule:
 Contributing
 ~~~~~~~~~~~~
 
-1. Fork it ( http://github.com/Yelp/swagger-spec-compatibility/fork )
+1. Fork it (http://github.com/Yelp/swagger-spec-compatibility/fork)
 2. Create your feature branch (``git checkout -b my-new-feature``)
 3. Add your modifications
 4. Commit your changes (``git commit -m "Add some feature"``)
