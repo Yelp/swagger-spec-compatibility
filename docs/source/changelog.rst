@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.2.1 (2020-01-07)
+------------------
+* Blacklist ``bravado-core==5.16.0`` as not compatible with the library (`PR #18 <https://github.com/Yelp/swagger-spec-compatibility/pull/18>`_)
+
 1.2.0 (2019-03-27)
 ------------------
 * Expose read-the-docs documentation links for rules defined by the library (`PR #9 <https://github.com/Yelp/swagger-spec-compatibility/pull/9>`_)
