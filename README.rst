@@ -38,7 +38,7 @@ How to Install
 .. code-block:: bash
 
     # to install the latest released version
-    $ pip install swagger-spec-compatiblity
+    $ pip install swagger-spec-compatibility
 
     # to install the latest master [from Github]
     $ pip install git+https://github.com/Yelp/swagger-spec-compatibility
