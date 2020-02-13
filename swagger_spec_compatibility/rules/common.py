@@ -169,7 +169,7 @@ class BaseRule(with_metaclass(RuleRegistry)):
     error_code = None  # type: typing_extensions.ClassVar[typing.Text]
     # Short name of the rule. This will be visible on CLI in case the rule is triggered
     short_name = None  # type: typing_extensions.ClassVar[typing.Text]
-    # Short description of the rationale of the rule. This will be visible on CLI only.
+    # Short description of the rationale of the rule. This will be visible on CLI only
     description = None  # type: typing_extensions.ClassVar[typing.Text]
     # Error level associated to the rule
     error_level = None  # type: typing_extensions.ClassVar[Level]
