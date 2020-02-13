@@ -102,6 +102,11 @@ swagger_spec_compatibility Package
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: swagger_spec_compatibility.rules.removed_nullable_property_from_request
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`spec_utils` Module
 ------------------------
 
