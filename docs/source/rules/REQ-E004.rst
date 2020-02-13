@@ -18,6 +18,7 @@ Old Swagger Specs
    :name: Old Swagger Spec
    :language: yaml
    :linenos:
+   :emphasize-lines: 17
 
 New Swagger Specs
 ~~~~~~~~~~~~~~~~~
@@ -26,8 +27,6 @@ New Swagger Specs
    :name: New Swagger Spec
    :language: yaml
    :linenos:
-
-.. Please highlight the different lines by using `:emphasize-lines: #`
 
 Backward Incompatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~

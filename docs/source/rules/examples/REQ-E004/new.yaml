@@ -2,5 +2,21 @@ swagger: '2.0'
 info:
   title: Minimal Case of REQ-E004 Rule
   version: '1.0'
-definitions: {}
-paths: {}
+paths:
+  /endpoint:
+    post:
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          additionalProperties: false
+          properties:
+            property:
+              type: string
+          required:
+          - property
+          type: object
+      responses:
+        default:
+          description: ''
