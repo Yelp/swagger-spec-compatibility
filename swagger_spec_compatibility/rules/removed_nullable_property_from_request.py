@@ -11,6 +11,10 @@ from swagger_spec_compatibility.rules.common import BaseRule
 from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.rules.common import ValidationMessage
+from swagger_spec_compatibility.util import is_path_in_top_level_paths
+from swagger_spec_compatibility.walkers import format_path
+from swagger_spec_compatibility.walkers.changed_xnullable import ChangedXNullableDifferWalker
+from swagger_spec_compatibility.walkers.request_parameters import RequestParametersWalker
 
 
 class RemovedNullablePropertyFromRequest(BaseRule):
@@ -24,4 +28,12 @@ class RemovedNullablePropertyFromRequest(BaseRule):
     @classmethod
     def validate(cls, left_spec, right_spec):
         # type: (Spec, Spec) -> typing.Iterable[ValidationMessage]
-        raise NotImplementedError()
+        request_parameters_paths = RequestParametersWalker(left_spec, right_spec).walk()
+
+        # FIXME: the used walker is not able to merge together parameters defined in different locations
+        for nullable_values_diff in ChangedXNullableDifferWalker(left_spec, right_spec).walk():
+            if not nullable_values_diff.mapping.old:
+                continue
+            if not is_path_in_top_level_paths(request_parameters_paths, nullable_values_diff.path):
+                continue
+            yield cls.validation_message(format_path(nullable_values_diff.path))
