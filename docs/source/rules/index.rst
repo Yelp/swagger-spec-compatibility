@@ -21,6 +21,7 @@ Response Contract Changes
    RES-E001
    RES-E002
    RES-E003
+   RES-E004
 
 Miscellaneous Changes
 ---------------------
