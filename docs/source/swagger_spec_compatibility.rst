@@ -146,6 +146,11 @@ swagger_spec_compatibility Package
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: swagger_spec_compatibility.walkers.changed_xnullable
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 .. automodule:: swagger_spec_compatibility.walkers.enum_values
     :members:
     :undoc-members:
