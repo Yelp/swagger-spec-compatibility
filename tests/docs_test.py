@@ -68,8 +68,8 @@ DOC_FILES = set(chain(
     iglob(os.path.join(DOC_DIR, '**', '**.rst')),
 ))
 DOCUMENTED_MODULES = set(_extract_documented_models(os.path.join(DOC_DIR, 'swagger_spec_compatibility.rst')))
-BACKWARD_INCOMPATIBILITY_TESTERS = sorted(
-    iglob(os.path.join(DOC_DIR, 'rules', 'examples', '*', 'tester.py')),
+BACKWARD_INCOMPATIBILITY_EXAMPLES = sorted(
+    iglob(os.path.join(DOC_DIR, 'rules', 'examples', '*')),
 )
 
 
@@ -83,14 +83,34 @@ def test_ensure_all_modules_are_available_in_documentation():
 
 
 @pytest.mark.parametrize(
-    'backward_incompatibility_tester',
-    BACKWARD_INCOMPATIBILITY_TESTERS,
+    'backward_incompatibility_example_dir',
+    BACKWARD_INCOMPATIBILITY_EXAMPLES,
 )
-def test_backward_incompatibility_testers_are_not_failing(backward_incompatibility_tester):
+def test_backward_incompatibility_testers_are_not_failing(backward_incompatibility_example_dir):
+    tester = os.path.join(backward_incompatibility_example_dir, 'tester.py')
     try:
         check_call(
-            [sys.executable, backward_incompatibility_tester],
-            cwd=os.path.dirname(backward_incompatibility_tester),
+            [sys.executable, tester],
+            cwd=backward_incompatibility_example_dir,
         )
     except CalledProcessError:  # pragma: no cover
-        pytest.fail('{} has failed to run.'.format(backward_incompatibility_tester))
+        pytest.fail('{} has failed to run.'.format(tester))
+
+
+@pytest.mark.parametrize(
+    'backward_incompatibility_example_dir',
+    BACKWARD_INCOMPATIBILITY_EXAMPLES,
+)
+def test_ensure_that_examples_are_covering_the_correct_rule(backward_incompatibility_example_dir):
+    old_spec = os.path.join(backward_incompatibility_example_dir, 'old.yaml')
+    new_spec = os.path.join(backward_incompatibility_example_dir, 'new.yaml')
+    rule_name = os.path.basename(backward_incompatibility_example_dir)
+    try:
+        check_call(
+            [sys.executable, '-m', 'swagger_spec_compatibility', 'run', old_spec, new_spec, '--rule', rule_name],
+            cwd=backward_incompatibility_example_dir,
+        )
+        pytest.fail('{} has failed to highlight rule {}.'.format(backward_incompatibility_example_dir, rule_name))
+    except CalledProcessError:  # pragma: no cover
+        # Not clean exit is expected as we are running the compatibility tool to verify that it exits with non 0 value
+        pass
