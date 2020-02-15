@@ -1,6 +1,4 @@
-sudo: false
-
-matrix:
+jobs:
   include:
   # Please remember to keep TOXENV environment variable and python attribute in sync.
   # This is a workaround to make sure that we can run tests on OSX and Windows (that have no "native" support for python)
@@ -11,7 +9,7 @@ matrix:
   - {env: TOXENV=py35, python: '3.5', os: osx, osx_image: xcode10, language: generic}
   - {env: TOXENV=py36, python: '3.6', os: linux, dist: xenial, language: python}
   - {env: TOXENV=py36, python: '3.6', os: osx, osx_image: xcode10, language: generic}
-  - {env: TOXENV=py37, python: '3.7', os: linux, dist: xenial, language: python, sudo: required}  # NOTE: sudo: required is a workaround to https://github.com/travis-ci/travis-ci/issues/9815
+  - {env: TOXENV=py37, python: '3.7', os: linux, dist: xenial, language: python}
   - {env: TOXENV=py37, python: '3.7', os: osx, osx_image: xcode10, language: generic}
   # TODO(maci): Add Windows tests
   - {env: TOXENV=docs, python: '3.6', os: linux, dist: xenial, language: python}
@@ -50,6 +48,6 @@ deploy:
     repo: Yelp/swagger-spec-compatibility
     tags: true
   skip_existing: true
-  user: yelplabs
+  username: yelplabs
   password:
     secure: kXWMi+oQOi/gimTmdRkZ7Mt8UBsaY6xeMtOCFq8q8Qkuq3+tStAQ0VXnZ662pkMXbmrFAW2k3s0Pw/WJvOUJeeqAbyMpRV0d/GxSZsXAZaANjKI5GXvE5g0xR7yOQiQKFx788fnxbroOjkGmS1PQqbeXi82NEhl1d0y3I5VmrgVwBTJ197PJTp4YVzDGyLiSmnHLHHE30Z8ncCGZ53WnPM+N5izzwWPX0/6iURUA9i7KIHlgvNy2rst3gfBNUEo5T/PreTRd/Pe5IS2moL8qw+rq+W86d/0jSXqfuyLicAh1OV3n5bgtd5y9dQvnx1VW731dcwXMCHO+vQTQgaXWjpzHDXQl/BWrHH/UXc1LWrhbbmN536fElwAACtn+NupLyrhrTFo9+l0MPmuS2ldwgtKIilYsU2HM/dostc5tFC2/ePK0DLuD0xywdaBy6wg0kasS9cOb4ixWBOqmCkl/brGlM7685hI8mJcmQ0inIjvIC/fZCVNjiL2lVu3TLaHAQmKWFPSJKongNzLo9EQxp3x3F1SAKeVQkDMXecnGt6xbZD34AjKO/b8Nn7+0CMHY7KuUsMBJnNVBIMH9Mb/wyvN4Y4zUTRwXswQwix3qMlBMZb+nwaxPJz1x5LqRMhs7dMfuATNb9XkQZbRYt+V25n7UGwC5ILT3UsBb08t1iXs=
