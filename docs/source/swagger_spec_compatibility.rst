@@ -102,6 +102,16 @@ swagger_spec_compatibility Package
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: swagger_spec_compatibility.rules.removed_nullable_property_from_request
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: swagger_spec_compatibility.rules.added_nullable_property_in_response
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`spec_utils` Module
 ------------------------
 
@@ -132,6 +142,11 @@ swagger_spec_compatibility Package
     :show-inheritance:
 
 .. automodule:: swagger_spec_compatibility.walkers.changed_types
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: swagger_spec_compatibility.walkers.changed_xnullable
     :members:
     :undoc-members:
     :show-inheritance:

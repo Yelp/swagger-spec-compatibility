@@ -10,6 +10,7 @@ Request Contract Changes
    REQ-E001
    REQ-E002
    REQ-E003
+   REQ-E004
 
 Response Contract Changes
 -------------------------
@@ -20,6 +21,7 @@ Response Contract Changes
    RES-E001
    RES-E002
    RES-E003
+   RES-E004
 
 Miscellaneous Changes
 ---------------------
