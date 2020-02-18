@@ -102,6 +102,9 @@ swagger_spec_compatibility Package
     :undoc-members:
     :show-inheritance:
 
+.. ADD NEW RULES HERE
+
+
 :mod:`spec_utils` Module
 ------------------------
 

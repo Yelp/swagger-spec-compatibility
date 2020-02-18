@@ -10,6 +10,7 @@ Request Contract Changes
    REQ-E001
    REQ-E002
    REQ-E003
+.. ADD HERE NEW REQ-E{number:03d} rules
 
 Response Contract Changes
 -------------------------
@@ -20,6 +21,7 @@ Response Contract Changes
    RES-E001
    RES-E002
    RES-E003
+.. ADD HERE NEW RES-E{number:03d} rules
 
 Miscellaneous Changes
 ---------------------
@@ -29,3 +31,4 @@ Miscellaneous Changes
 
    MIS-E001
    MIS-E002
+.. ADD HERE NEW MIS-E{number:03d} rules
