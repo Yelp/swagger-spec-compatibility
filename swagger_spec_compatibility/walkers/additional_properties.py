@@ -22,14 +22,16 @@ class DiffType(Enum):
     VALUE = 1
 
 
-class AdditionalPropertiesDiff(typing.NamedTuple(
-    'AdditionalPropertiesDiff', (
-        ('path', PathType),
-        ('diff_type', DiffType),
-        ('additionalProperties', typing.Optional[EntityMapping[typing.Union[bool, typing.Mapping[typing.Text, typing.Any]]]]),
-        ('properties', typing.Optional[EntityMapping[typing.Set[typing.Text]]]),
+class AdditionalPropertiesDiff(
+    typing.NamedTuple(
+        'AdditionalPropertiesDiff', (
+            ('path', PathType),
+            ('diff_type', DiffType),
+            ('additionalProperties', typing.Optional[EntityMapping[typing.Union[bool, typing.Mapping[typing.Text, typing.Any]]]]),
+            ('properties', typing.Optional[EntityMapping[typing.Set[typing.Text]]]),
+        ),
     ),
-)):
+):
     def fix_parameter_path(self, path, original_path):
         # type: (PathType, PathType) -> 'AdditionalPropertiesDiff'
         return AdditionalPropertiesDiff(
@@ -100,27 +102,31 @@ def _evaluate_additional_properties_diffs(
         right_additional_properties = True
 
     if not _cycle_safe_compare(left_additional_properties, right_additional_properties):
-        result.append(AdditionalPropertiesDiff(
-            path=path,
-            diff_type=DiffType.VALUE,
-            additionalProperties=EntityMapping(
-                # casting here is safe as swagger specs are assumed to be valid and bool or dict are the only possible types
-                old=typing.cast(typing.Union[bool, typing.Mapping[typing.Text, typing.Any]], left_additional_properties),
-                new=typing.cast(typing.Union[bool, typing.Mapping[typing.Text, typing.Any]], right_additional_properties),
+        result.append(
+            AdditionalPropertiesDiff(
+                path=path,
+                diff_type=DiffType.VALUE,
+                additionalProperties=EntityMapping(
+                    # casting here is safe as swagger specs are assumed to be valid and bool or dict are the only possible types
+                    old=typing.cast(typing.Union[bool, typing.Mapping[typing.Text, typing.Any]], left_additional_properties),
+                    new=typing.cast(typing.Union[bool, typing.Mapping[typing.Text, typing.Any]], right_additional_properties),
+                ),
+                properties=None,
             ),
-            properties=None,
-        ))
+        )
 
     if (left_additional_properties is False or right_additional_properties is False) and properties_appear_once:
-        result.append(AdditionalPropertiesDiff(
-            path=path,
-            diff_type=DiffType.PROPERTIES,
-            additionalProperties=None,
-            properties=EntityMapping(
-                old=properties_appear_once.intersection(left_properties),
-                new=properties_appear_once.intersection(right_properties),
+        result.append(
+            AdditionalPropertiesDiff(
+                path=path,
+                diff_type=DiffType.PROPERTIES,
+                additionalProperties=None,
+                properties=EntityMapping(
+                    old=properties_appear_once.intersection(left_properties),
+                    new=properties_appear_once.intersection(right_properties),
+                ),
             ),
-        ))
+        )
 
     return result
 

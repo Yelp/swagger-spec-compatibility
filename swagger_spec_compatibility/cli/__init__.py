@@ -25,13 +25,15 @@ def parser():
     # type: () -> argparse.ArgumentParser
 
     argument_parser = argparse.ArgumentParser(
-        description=wrap(dedent("""
+        description=wrap(
+            dedent("""
             Tool for the identification of backward incompatible changes between two swagger specs.
 
             The tool provides the following level of results:
             - WARNING: the Swagger specs are technically compatible but the are likely to break known Swagger implementations
             - ERROR: new Swagger spec does introduce a breaking change respect the old implementation
-        """)),
+        """),
+        ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 

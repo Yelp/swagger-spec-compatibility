@@ -36,12 +36,14 @@ def _different_properties_mapping(
         )
 
 
-class RequiredPropertiesDiff(typing.NamedTuple(
-    'RequiredPropertiesDiff', (
-        ('path', PathType),
-        ('mapping', EntityMapping[typing.Set[typing.Text]]),
+class RequiredPropertiesDiff(
+    typing.NamedTuple(
+        'RequiredPropertiesDiff', (
+            ('path', PathType),
+            ('mapping', EntityMapping[typing.Set[typing.Text]]),
+        ),
     ),
-)):
+):
     def fix_parameter_path(self, path, original_path):
         # type: (PathType, PathType) -> 'RequiredPropertiesDiff'
         return RequiredPropertiesDiff(

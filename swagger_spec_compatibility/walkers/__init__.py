@@ -168,11 +168,13 @@ class Walker(typing.Generic[T]):
                 to `walk()` are equivalent to an attribute access
         """
         if isinstance(self._walk_result, NoValue):  # pragma: no branch
-            self._walk_result = list(self._inner_walk(
-                path=tuple(),
-                left=self.left,
-                right=self.right,
-            ))
+            self._walk_result = list(
+                self._inner_walk(
+                    path=tuple(),
+                    left=self.left,
+                    right=self.right,
+                ),
+            )
         return self._walk_result
 
 
@@ -241,10 +243,12 @@ class SchemaWalker(Walker[T]):
             return value.fix_parameter_path(path=path, original_path=original_path)  # type: ignore
         except TypeError as type_error:
             warnings.warn(
-                str('Unexpected {}.fix_parameter_path signature. {}'.format(
-                    value.__class__.__name__,
-                    type_error,
-                )),
+                str(
+                    'Unexpected {}.fix_parameter_path signature. {}'.format(
+                        value.__class__.__name__,
+                        type_error,
+                    ),
+                ),
                 category=RuntimeWarning,
             )
         except AttributeError:
@@ -267,7 +271,7 @@ class SchemaWalker(Walker[T]):
                     value=value,
                 )
                 for key in set(chain(iterkeys(left_parameters_map), iterkeys(right_parameters_map)))
-                for new_path in (tuple(chain(path, [key])), )  # Small trick to allow variable definition in generator-comprehension
+                for new_path in (tuple(chain(path, [key])),)  # Small trick to allow variable definition in generator-comprehension
                 for value in self._inner_walk(
                     path=tuple(chain(path, [key])),
                     left=left_parameters_map.get(key, NO_VALUE),

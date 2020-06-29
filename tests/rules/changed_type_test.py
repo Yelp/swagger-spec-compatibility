@@ -82,10 +82,12 @@ def test_validate_succeed(
     old_spec = load_spec_from_spec_dict(old_spec_dict)
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
-    assert list(ChangedType.validate(
-        left_spec=old_spec,
-        right_spec=new_spec,
-    )) == []
+    assert list(
+        ChangedType.validate(
+            left_spec=old_spec,
+            right_spec=new_spec,
+        ),
+    ) == []
 
 
 @pytest.mark.parametrize(
@@ -188,7 +190,9 @@ def test_validate_return_an_error(
         for reference in expected_references
     ]
 
-    assert list(ChangedType.validate(
-        left_spec=old_spec,
-        right_spec=new_spec,
-    )) == expected_results
+    assert list(
+        ChangedType.validate(
+            left_spec=old_spec,
+            right_spec=new_spec,
+        ),
+    ) == expected_results

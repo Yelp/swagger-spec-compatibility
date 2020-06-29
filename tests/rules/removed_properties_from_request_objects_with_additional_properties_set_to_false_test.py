@@ -12,10 +12,12 @@ from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
 
 
 def test_validate_succeed(minimal_spec):
-    assert list(RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
-        left_spec=minimal_spec,
-        right_spec=minimal_spec,
-    )) == []
+    assert list(
+        RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
+            left_spec=minimal_spec,
+            right_spec=minimal_spec,
+        ),
+    ) == []
 
 
 def test_validate_succeed_if_parameters_are_defined_in_different_locations(minimal_spec_dict, simple_operation_dict):
@@ -32,31 +34,37 @@ def test_validate_succeed_if_parameters_are_defined_in_different_locations(minim
             'type': 'object',
         },
     }
-    old_spec = load_spec_from_spec_dict(dict(
-        minimal_spec_dict,
-        paths={
-            '/endpoint': {
-                'parameters': [parameter_schema],
-                'get': simple_operation_dict,
+    old_spec = load_spec_from_spec_dict(
+        dict(
+            minimal_spec_dict,
+            paths={
+                '/endpoint': {
+                    'parameters': [parameter_schema],
+                    'get': simple_operation_dict,
+                },
             },
-        },
-    ))
-    new_spec = load_spec_from_spec_dict(dict(
-        minimal_spec_dict,
-        paths={
-            '/endpoint': {
-                'get': dict(
-                    simple_operation_dict,
-                    parameters=[parameter_schema],
-                ),
+        ),
+    )
+    new_spec = load_spec_from_spec_dict(
+        dict(
+            minimal_spec_dict,
+            paths={
+                '/endpoint': {
+                    'get': dict(
+                        simple_operation_dict,
+                        parameters=[parameter_schema],
+                    ),
+                },
             },
-        },
-    ))
+        ),
+    )
 
-    assert list(RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
-        left_spec=old_spec,
-        right_spec=new_spec,
-    )) == []
+    assert list(
+        RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
+            left_spec=old_spec,
+            right_spec=new_spec,
+        ),
+    ) == []
 
 
 @pytest.mark.parametrize(
@@ -167,10 +175,12 @@ def test_validate_return_an_error(
         )
         for reference in expected_references
     ]
-    assert list(RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
-        left_spec=old_spec,
-        right_spec=new_spec,
-    )) == expected_results
+    assert list(
+        RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
+            left_spec=old_spec,
+            right_spec=new_spec,
+        ),
+    ) == expected_results
 
 
 def test_validate_does_not_error_if_changes_in_response_schema(minimal_spec_dict):
@@ -202,10 +212,12 @@ def test_validate_does_not_error_if_changes_in_response_schema(minimal_spec_dict
     old_spec = load_spec_from_spec_dict(old_spec_dict)
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
-    assert list(RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
-        left_spec=old_spec,
-        right_spec=new_spec,
-    )) == []
+    assert list(
+        RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
+            left_spec=old_spec,
+            right_spec=new_spec,
+        ),
+    ) == []
 
 
 def test_validate_does_not_error_if_changes_in_top_level_parameters(minimal_spec_dict):
@@ -233,10 +245,12 @@ def test_validate_does_not_error_if_changes_in_top_level_parameters(minimal_spec
     old_spec = load_spec_from_spec_dict(old_spec_dict)
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
-    assert list(RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
-        left_spec=old_spec,
-        right_spec=new_spec,
-    )) == []
+    assert list(
+        RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
+            left_spec=old_spec,
+            right_spec=new_spec,
+        ),
+    ) == []
 
 
 def test_validate_does_not_error_if_changes_to_additional_properties_type(minimal_spec_dict, simple_operation_dict):
@@ -269,10 +283,12 @@ def test_validate_does_not_error_if_changes_to_additional_properties_type(minima
     old_spec = load_spec_from_spec_dict(old_spec_dict)
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
-    assert list(RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
-        left_spec=old_spec,
-        right_spec=new_spec,
-    )) == []
+    assert list(
+        RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
+            left_spec=old_spec,
+            right_spec=new_spec,
+        ),
+    ) == []
 
 
 # FIXME ensure that the feature is complete and not best guess only
@@ -293,15 +309,17 @@ def test_validate_fails_if_parameters_are_defined_in_different_locations_with_di
             'type': 'object',
         },
     }
-    old_spec = load_spec_from_spec_dict(dict(
-        minimal_spec_dict,
-        paths={
-            '/endpoint': {
-                'parameters': [deepcopy(parameter_schema)],
-                'get': simple_operation_dict,
+    old_spec = load_spec_from_spec_dict(
+        dict(
+            minimal_spec_dict,
+            paths={
+                '/endpoint': {
+                    'parameters': [deepcopy(parameter_schema)],
+                    'get': simple_operation_dict,
+                },
             },
-        },
-    ))
+        ),
+    )
     new_spec_dict = dict(
         minimal_spec_dict,
         paths={
@@ -316,10 +334,12 @@ def test_validate_fails_if_parameters_are_defined_in_different_locations_with_di
     del new_spec_dict['paths']['/endpoint']['get']['parameters'][0]['schema']['properties']['property_2']
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
-    assert list(RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
-        left_spec=old_spec,
-        right_spec=new_spec,
-    )) == [
+    assert list(
+        RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validate(
+            left_spec=old_spec,
+            right_spec=new_spec,
+        ),
+    ) == [
         RemovedPropertiesFromRequestObjectsWithAdditionalPropertiesSetToFalse.validation_message(
             reference='#/paths//endpoint/get/parameters/0/schema',
         ),

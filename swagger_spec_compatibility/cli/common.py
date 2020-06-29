@@ -39,7 +39,7 @@ class CLIRulesProtocol(typing_extensions.Protocol):
 
 
 def uri(param):
-    # type: (str) -> str
+    # type: (typing.Text) -> typing.Text
     if urlsplit(param).scheme:
         return param
 
