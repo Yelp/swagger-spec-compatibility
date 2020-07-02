@@ -37,7 +37,10 @@ def get_test_specifications():  # pragma: no cover # this is used internally by 
     # type: () -> Generator[Specification, None, None]
     test_specs_dir = os.path.join(os.path.dirname(__file__), 'test-specs')
     for case_dir in glob.iglob(os.path.join(test_specs_dir, 'case-*-*-reports*')):
-        match = re.match(r'^.*/case-\d+-(?P<number_of_reports>\d+)-reports.*$', case_dir)
+        match = re.match(
+            r'^case-\d+-(?P<number_of_reports>\d+)-reports(-.*)?$',
+            os.path.basename(case_dir),
+        )
         if not match:
             raise RuntimeError('{} does not follow the expected pattern (case-\\d+-\\d+-reports(-description)?'.format(case_dir))
 
