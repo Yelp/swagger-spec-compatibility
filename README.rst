@@ -1,4 +1,4 @@
-.. image:: https://github.com/Yel/swagger-spec-compatibility/workflows/ci/badge.svg
+.. image:: https://github.com/Yelp/swagger-spec-compatibility/workflows/ci/badge.svg
     :target: https://github.com/Yelp/swagger-spec-compatibility/actions
 
 .. image:: https://img.shields.io/codecov/c/gh/Yelp/swagger-spec-compatibility.svg
