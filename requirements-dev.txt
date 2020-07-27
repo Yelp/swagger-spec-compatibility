@@ -1,11 +1,12 @@
 -r requirements-docs.txt
 codecov
-coverage
+coverage<5
 ipdb
 ipython<6  # iPython>=6 is Python 3.3+ only
 mock
 mypy; python_version >= "3.4"
 pre-commit>=1.12.0
+pygments<2.6
 pytest
 pytest-cov
 pytest-xdist
