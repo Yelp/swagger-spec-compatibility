@@ -30,7 +30,6 @@ repos:
   - id: reorder-python-imports
     args: [--add-import, from __future__ import absolute_import, --add-import, from __future__ import unicode_literals, --add-import, from __future__ import print_function]
     exclude: ^setup\.py$
-    language_version: python3.7
 - repo: https://github.com/asottile/pyupgrade
   rev: v1.12.0
   hooks:
