@@ -10,6 +10,7 @@ Request Contract Changes
    REQ-E001
    REQ-E002
    REQ-E003
+   REQ-E004
 .. ADD HERE NEW REQ-E{number:03d} rules
 
 Response Contract Changes
