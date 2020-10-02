@@ -25,6 +25,7 @@ New Swagger Specs
 .. literalinclude:: examples/REQ-E004/new.yaml
    :name: New Swagger Spec
    :language: yaml
+   :emphasize-lines: 13
    :linenos:
 
 Backward Incompatibility
