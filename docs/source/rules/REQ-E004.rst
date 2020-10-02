@@ -17,7 +17,6 @@ Old Swagger Specs
 .. literalinclude:: examples/REQ-E004/old.yaml
    :name: Old Swagger Spec
    :language: yaml
-   :emphasize-lines: 17-18
    :linenos:
 
 New Swagger Specs
