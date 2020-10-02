@@ -7,7 +7,7 @@ If the object is defined with additionalProperties set to False then the object 
 
 Mitigation
 ----------
-There is not mitigation for this type of issue.
+There is no mitigation for this type of issue.
 The general recommended approach is to not set additionalProperties to False.
 
 Example
