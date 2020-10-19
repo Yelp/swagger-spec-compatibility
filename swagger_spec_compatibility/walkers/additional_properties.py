@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import collections
 import typing
 from enum import Enum
 from itertools import chain
@@ -39,6 +40,45 @@ class AdditionalPropertiesDiff(typing.NamedTuple(
         )
 
 
+CycleSentinel = collections.namedtuple('CycleSentinel', ('path',))
+
+
+def _cycle_safe_dict(dict_with_cycles):
+    # type: (typing.Dict[typing.Any, typing.Any]) -> typing.Dict[typing.Any, typing.Any]
+    """Return a new dict with cycles replaced by sentinels.
+
+    This can be used to do a deep equality comparison against dictionaries
+    which can contain cycles (e.g. expanded Swagger specs).
+    """
+    seen = {}  # type: typing.Dict[int, typing.Tuple[typing.Any, ...]]
+
+    def process(d, path):
+        # type: (typing.Any, typing.Tuple[typing.Any, ...]) -> typing.Any
+        if id(d) in seen:
+            return CycleSentinel(seen[id(d)])
+        else:
+            if isinstance(d, dict):
+                seen[id(d)] = path
+                return {
+                    key: process(value, path + (key,))
+                    for key, value in sorted(d.items())
+                }
+            else:
+                return d
+
+    ret = process(dict_with_cycles, ())
+    assert isinstance(ret, dict)  # mypy isn't smart enough to figure this out
+    return ret
+
+
+def _cycle_safe_compare(a, b):
+    # type: (typing.Any, typing.Any) -> bool
+    if isinstance(a, dict) and isinstance(b, dict):
+        a = _cycle_safe_dict(a)
+        b = _cycle_safe_dict(b)
+    return bool(a == b)
+
+
 def _evaluate_additional_properties_diffs(
     path,  # type: PathType
     left_spec,  # type: Spec
@@ -59,7 +99,7 @@ def _evaluate_additional_properties_diffs(
     if right_additional_properties == {}:  # Normalize additional properties
         right_additional_properties = True
 
-    if left_additional_properties != right_additional_properties:
+    if not _cycle_safe_compare(left_additional_properties, right_additional_properties):
         result.append(AdditionalPropertiesDiff(
             path=path,
             diff_type=DiffType.VALUE,
