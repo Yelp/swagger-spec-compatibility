@@ -191,6 +191,56 @@ def test__evaluate_additional_properties_diffs(mock_get_properties, left_dict, r
     ) == expected_value
 
 
+def _construct_recursive_additional_properties():
+    schema = {
+        'properties': {
+            'foo': {'type': 'string'},
+        },
+        'type': 'object',
+    }
+    schema['additionalProperties'] = schema
+    return schema
+
+
+@mock.patch('swagger_spec_compatibility.walkers.additional_properties.get_properties', autospec=True)
+def test__evaluate_additional_properties_recursive_schema_reference_no_difference(mock_get_properties):
+    left_schema = _construct_recursive_additional_properties()
+    right_schema = _construct_recursive_additional_properties()
+
+    assert _evaluate_additional_properties_diffs(
+        path=mock.sentinel.PATH,
+        left_spec=mock.sentinel.LEFT_SPEC,
+        right_spec=mock.sentinel.RIGHT_SPEC,
+        left_schema=left_schema,
+        right_schema=right_schema,
+    ) == []
+
+
+@mock.patch('swagger_spec_compatibility.walkers.additional_properties.get_properties', autospec=True)
+def test__evaluate_additional_properties_recursive_schema_reference_with_difference(mock_get_properties):
+    left_schema = _construct_recursive_additional_properties()
+    left_schema['properties']['bar'] = {'type': 'string'}
+    right_schema = _construct_recursive_additional_properties()
+
+    assert _evaluate_additional_properties_diffs(
+        path=mock.sentinel.PATH,
+        left_spec=mock.sentinel.LEFT_SPEC,
+        right_spec=mock.sentinel.RIGHT_SPEC,
+        left_schema=left_schema,
+        right_schema=right_schema,
+    ) == [
+        AdditionalPropertiesDiff(
+            path=mock.sentinel.PATH,
+            diff_type=DiffType.VALUE,
+            additionalProperties=EntityMapping(
+                old=left_schema,
+                new=right_schema,
+            ),
+            properties=None,
+        ),
+    ]
+
+
 @pytest.mark.parametrize(
     'left_schema, right_schema, expected_diffs',
     [
