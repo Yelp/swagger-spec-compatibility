@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.2.2 (2020-10-20)
+------------------
+* Fix an issue comparing Swagger specs containing circular references  (`PR #33 <https://github.com/Yelp/swagger-spec-compatibility/pull/33>`_)
+
 1.2.1 (2020-01-07)
 ------------------
 * Blacklist ``bravado-core==5.16.0`` as not compatible with the library (`PR #18 <https://github.com/Yelp/swagger-spec-compatibility/pull/18>`_)
