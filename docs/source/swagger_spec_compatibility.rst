@@ -102,6 +102,11 @@ swagger_spec_compatibility Package
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: swagger_spec_compatibility.rules.changed_additional_properties_to_false
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 .. ADD NEW RULES HERE
 
 
