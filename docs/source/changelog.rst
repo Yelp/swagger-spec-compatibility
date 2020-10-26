@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.2.3 (2020-10-26)
+------------------
+* Improve performance when walking very large Swagger specs (`PR #34 <https://github.com/Yelp/swagger-spec-compatibility/pull/34>`_)
+
 1.2.2 (2020-10-20)
 ------------------
 * Fix an issue comparing Swagger specs containing circular references  (`PR #33 <https://github.com/Yelp/swagger-spec-compatibility/pull/33>`_)
