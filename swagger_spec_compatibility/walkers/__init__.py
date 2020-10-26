@@ -6,7 +6,6 @@ from __future__ import unicode_literals
 import typing
 import warnings
 from abc import abstractmethod
-from collections import defaultdict
 from itertools import chain
 
 from bravado_core.spec import Spec
@@ -45,7 +44,7 @@ class Walker(typing.Generic[T]):
         self.left = left
         self.right = right
         self._walk_result = NO_VALUE  # type: typing.Union[NoValue, typing.Iterable[T]]
-        self._inner_walk_calls = defaultdict(list)  # type: typing.DefaultDict[typing.Tuple[int, ...], typing.List[PathType]]
+        self._inner_walk_calls = {}  # type: typing.Dict
         for attr_name, attr_value in iteritems(kwargs):
             setattr(self, attr_name, attr_value)
 
@@ -105,19 +104,33 @@ class Walker(typing.Generic[T]):
 
         Swagger specification could contain recursive definitions and references.
         Due to the fact that we fully dereference the specs then there will be no
-        good wait to know if we've already visited the given objects other than
+        good way to know if we've already visited the given objects other than
         using their ids.
         """
-        cache_key = (id(left), id(right))
-
-        if cache_key in self._inner_walk_calls and any(
-            path[:len(known_path)] == known_path for known_path in self._inner_walk_calls[cache_key]
-        ):
-            # Deal with recursive objects
-            return True
-
-        self._inner_walk_calls[cache_key].append(path)
-        return False
+        # This function is called a _lot_ on large Swagger specs and requires
+        # some optimization to avoid 20+ minute check times.
+        #
+        # The idea is to check if we have ever walked the same (left, right)
+        # nodes when exploring a parent path. If so, this part of the spec tree
+        # is recursive and already explored, and we can stop walking.
+        #
+        # The below implementation stores each path component in a tree
+        # structure, e.g.
+        #    {(id_left, id_right): {'paths': {'/foo': {'post': True}}}}
+        #
+        # Recursing down the tree and looking for `True` is logically
+        # equivalent to looking for matching prefixes for the cache key, but
+        # much faster.
+        cache_path = (id(left), id(right)) + path  # type: ignore
+        cur = self._inner_walk_calls
+        for path_component in cache_path:
+            prev = cur
+            cur = cur.setdefault(path_component, {})
+            if cur is True:
+                return True
+        else:
+            prev[path_component] = True
+            return False
 
     def _inner_walk(self, path, left, right):
         # type: (PathType, typing.Any, typing.Any) -> typing.Iterable[T]
