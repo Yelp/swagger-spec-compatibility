@@ -3,6 +3,8 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import os
+
 import mock
 import pytest
 
@@ -11,6 +13,9 @@ from swagger_spec_compatibility.rules.common import Level
 from swagger_spec_compatibility.rules.common import RuleRegistry
 from swagger_spec_compatibility.rules.common import RuleType
 from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
+
+
+REPO_ROOT = os.path.dirname(os.path.dirname(__file__))
 
 
 @pytest.fixture

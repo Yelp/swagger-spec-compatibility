@@ -64,4 +64,4 @@ def test_initializing_BaseRule_throws_an_exception():
     with pytest.raises(RuntimeError) as excinfo:
         DummyRule()
 
-    assert excinfo.value.args == ('This class should not be initialized. The assumed usage is via class methods.', )
+    assert excinfo.value.args == ('This class should not be initialized. The assumed usage is via class methods.',)

@@ -59,7 +59,7 @@ class RequestParametersWalker(SchemaWalker[PathType]):
     ):
         # type: (...) -> typing.Iterable[PathType]
         if determine_object_type(left_dict) == ObjectType.PARAMETER or determine_object_type(right_dict) == ObjectType.PARAMETER:
-            return (path, )
+            return (path,)
         else:
             return ()
 

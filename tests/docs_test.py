@@ -52,21 +52,25 @@ def _contain_docstring_or_code(path):
 REPOSITORY_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 DOC_DIR = os.path.join(REPOSITORY_ROOT, 'docs', 'source')
 PACKAGE_DIR = os.path.join(REPOSITORY_ROOT, 'swagger_spec_compatibility')
-SOURCE_FILES = set(chain(
-    iglob(os.path.join(PACKAGE_DIR, '*.py')),
-    iglob(os.path.join(PACKAGE_DIR, '**', '*.py')),
-))
+SOURCE_FILES = set(
+    chain(
+        iglob(os.path.join(PACKAGE_DIR, '*.py')),
+        iglob(os.path.join(PACKAGE_DIR, '**', '*.py')),
+    ),
+)
 PYTHON_MODULES = {
     _from_path_to_module(PACKAGE_DIR, source_file)
     for source_file in SOURCE_FILES
     if _contain_docstring_or_code(source_file)
 } - BLACKLIST_MODULES_FROM_DOCUMENTATION
-DOC_FILES = set(chain(
-    iglob(os.path.join(DOC_DIR, '*.md')),
-    iglob(os.path.join(DOC_DIR, '**', '**.md')),
-    iglob(os.path.join(DOC_DIR, '*.rst')),
-    iglob(os.path.join(DOC_DIR, '**', '**.rst')),
-))
+DOC_FILES = set(
+    chain(
+        iglob(os.path.join(DOC_DIR, '*.md')),
+        iglob(os.path.join(DOC_DIR, '**', '**.md')),
+        iglob(os.path.join(DOC_DIR, '*.rst')),
+        iglob(os.path.join(DOC_DIR, '**', '**.rst')),
+    ),
+)
 DOCUMENTED_MODULES = set(_extract_documented_models(os.path.join(DOC_DIR, 'swagger_spec_compatibility.rst')))
 BACKWARD_INCOMPATIBILITY_EXAMPLES = sorted(
     iglob(os.path.join(DOC_DIR, 'rules', 'examples', '*')),

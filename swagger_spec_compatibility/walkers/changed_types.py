@@ -38,12 +38,14 @@ def _different_types_mapping(
         )
 
 
-class ChangedTypesDiff(typing.NamedTuple(
-    'ChangedTypesDiff', (
-        ('path', PathType),
-        ('mapping', EntityMapping[typing.Optional[typing.Text]]),
+class ChangedTypesDiff(
+    typing.NamedTuple(
+        'ChangedTypesDiff', (
+            ('path', PathType),
+            ('mapping', EntityMapping[typing.Optional[typing.Text]]),
+        ),
     ),
-)):
+):
     def fix_parameter_path(self, path, original_path):
         # type: (PathType, PathType) -> 'ChangedTypesDiff'
         return ChangedTypesDiff(

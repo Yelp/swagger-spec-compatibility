@@ -47,7 +47,7 @@ class ResponsePathsWalker(SchemaWalker[PathType]):
     ):
         # type: (...) -> typing.Iterable[PathType]
         if determine_object_type(left_dict) == ObjectType.RESPONSE or determine_object_type(right_dict) == ObjectType.RESPONSE:
-            return (path, )
+            return (path,)
         else:
             return ()
 

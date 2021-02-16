@@ -16,7 +16,6 @@ from os.path import expandvars
 
 import typing_extensions
 from six.moves.urllib.parse import urljoin
-from six.moves.urllib.parse import urlsplit
 from six.moves.urllib.request import pathname2url
 from six.moves.urllib.request import url2pathname
 from venusian import Scanner
@@ -39,8 +38,8 @@ class CLIRulesProtocol(typing_extensions.Protocol):
 
 
 def uri(param):
-    # type: (str) -> str
-    if urlsplit(param).scheme:
+    # type: (typing.Text) -> typing.Text
+    if len(param.split('://')) > 1:
         return param
 
     path = expanduser(expandvars(url2pathname(param)))

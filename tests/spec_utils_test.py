@@ -88,14 +88,16 @@ def test_load_spec_from_spec(minimal_spec_dict):
 
 @pytest.fixture
 def spec_and_operation(minimal_spec_dict, simple_operation_dict):
-    spec = load_spec_from_spec_dict(dict(
-        minimal_spec_dict,
-        paths={
-            '/endpoint': {
-                'get': simple_operation_dict,
+    spec = load_spec_from_spec_dict(
+        dict(
+            minimal_spec_dict,
+            paths={
+                '/endpoint': {
+                    'get': simple_operation_dict,
+                },
             },
-        },
-    ))
+        ),
+    )
     return spec, spec.resources['endpoint'].operations['get_endpoint']
 
 

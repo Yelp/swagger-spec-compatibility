@@ -35,13 +35,15 @@ class HTTPVerb(Enum):
         return HTTPVerb(operation.http_method)
 
 
-class Endpoint(typing.NamedTuple(
-    '_Endpoint', (
-        ('http_verb', HTTPVerb),
-        ('path', typing.Text),
-        ('operation', Operation),
+class Endpoint(
+    typing.NamedTuple(
+        '_Endpoint', (
+            ('http_verb', HTTPVerb),
+            ('path', typing.Text),
+            ('operation', Operation),
+        ),
     ),
-)):
+):
 
     @staticmethod
     def from_swagger_operation(operation):

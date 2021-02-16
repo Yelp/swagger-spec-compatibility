@@ -74,7 +74,7 @@ class RuleRegistry(ABCMeta):
         ), '{} metaclass should be used only by {}.BaseRule'.format(mcs, mcs.__module__)
 
     def __new__(mcs, name, bases, namespace):
-        # type: (typing.Type['RuleRegistry'], str, typing.Tuple[type, ...], typing.Dict[str, typing.Any]) -> type
+        # type: (typing.Type['RuleRegistry'], str, typing.Tuple[type, ...], typing.Dict[str, typing.Any]) -> 'RuleRegistry'
         new_cls = ABCMeta.__new__(mcs, name, bases, namespace)  # type: typing.Type['BaseRule']
         mcs._prevent_metaclass_usage_from_not_BaseRule_extensions(new_cls)
 
@@ -137,13 +137,15 @@ class RuleProtocol(typing_extensions.Protocol):
         pass
 
 
-class ValidationMessage(typing.NamedTuple(
-    '_ValidationMessage', (
-        ('level', Level),
-        ('rule', typing.Type[RuleProtocol]),
-        ('reference', typing.Text),
+class ValidationMessage(
+    typing.NamedTuple(
+        '_ValidationMessage', (
+            ('level', Level),
+            ('rule', typing.Type[RuleProtocol]),
+            ('reference', typing.Text),
+        ),
     ),
-)):
+):
     def string_representation(self):
         # type: () -> typing.Text
         documentation_link = get_rule_documentation_link(self.rule)

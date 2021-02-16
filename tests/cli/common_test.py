@@ -15,21 +15,23 @@ from swagger_spec_compatibility.cli.common import pre_process_cli_to_discover_ru
 from swagger_spec_compatibility.cli.common import rules
 from swagger_spec_compatibility.cli.common import uri
 from tests.conftest import DummyRule
+from tests.conftest import REPO_ROOT
 
 
 @pytest.mark.parametrize(
     'param, expected_result',
     [
         pytest.param(
-            __file__, 'file://{}'.format(os.path.abspath(__file__)),
+            os.path.relpath(__file__, REPO_ROOT), 'file://{}'.format(os.path.abspath(__file__)),
             marks=pytest.mark.skipif(
                 condition=sys.platform == 'win32',
                 reason='Absolute paths on Windows works differently respect OSX and Linux',
             ),
         ),
         pytest.param(
-            # TODO: It will fail for now, once I have a Windows machine I'll fix it
-            __file__, 'file://{}'.format(os.path.abspath(__file__)),
+            os.path.relpath(__file__, REPO_ROOT), 'file:///{}'.format(
+                os.path.abspath(__file__).replace('\\', '/'),
+            ),
             marks=pytest.mark.skipif(
                 condition=sys.platform != 'win32',
                 reason='Absolute paths on Windows works differently respect OSX and Linux',

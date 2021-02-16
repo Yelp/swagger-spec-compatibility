@@ -30,7 +30,7 @@ class typed_lru_cache(object):
         # assert (self.cached_function is not None) == (self.uncached_function is not None)
 
         if self.cached_function is None:
-            self.uncached_function = fn  # type: T
+            self.uncached_function = fn
             self.cached_function = _lru_cache(maxsize=self.maxsize)(fn)
         else:
             assert self.uncached_function == fn  # pragma: no cover  # defensive approach, this should not happen

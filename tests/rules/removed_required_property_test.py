@@ -12,10 +12,12 @@ from swagger_spec_compatibility.spec_utils import load_spec_from_spec_dict
 
 
 def test_validate_succeed(minimal_spec):
-    assert list(RemovedRequiredPropertyFromResponse.validate(
-        left_spec=minimal_spec,
-        right_spec=minimal_spec,
-    )) == []
+    assert list(
+        RemovedRequiredPropertyFromResponse.validate(
+            left_spec=minimal_spec,
+            right_spec=minimal_spec,
+        ),
+    ) == []
 
 
 @pytest.mark.parametrize(
@@ -116,10 +118,12 @@ def test_validate_return_an_error(
         )
         for reference in expected_references
     ]
-    assert list(RemovedRequiredPropertyFromResponse.validate(
-        left_spec=old_spec,
-        right_spec=new_spec,
-    )) == expected_results
+    assert list(
+        RemovedRequiredPropertyFromResponse.validate(
+            left_spec=old_spec,
+            right_spec=new_spec,
+        ),
+    ) == expected_results
 
 
 @pytest.mark.parametrize(
@@ -223,7 +227,9 @@ def test_validate_does_not_errors_if_changes_in_parameters_or_definitions(
     old_spec = load_spec_from_spec_dict(old_spec_dict)
     new_spec = load_spec_from_spec_dict(new_spec_dict)
 
-    assert list(RemovedRequiredPropertyFromResponse.validate(
-        left_spec=old_spec,
-        right_spec=new_spec,
-    )) == []
+    assert list(
+        RemovedRequiredPropertyFromResponse.validate(
+            left_spec=old_spec,
+            right_spec=new_spec,
+        ),
+    ) == []

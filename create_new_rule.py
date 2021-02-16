@@ -241,10 +241,12 @@ def _create_documentation_skeleton(
 
     add_new_rules_anchor = '.. ADD NEW RULES HERE\n'
     add_new_rules_anchor_index = swagger_spec_compatibility_lines.index(str(add_new_rules_anchor))
-    swagger_spec_compatibility_lines[add_new_rules_anchor_index] = str('{doc}\n{anchor}'.format(
-        anchor=add_new_rules_anchor,
-        doc=_RULE_CLASS_DOC_TEMPLATE.format(module_name=python_file_name_no_ext),
-    ))
+    swagger_spec_compatibility_lines[add_new_rules_anchor_index] = str(
+        '{doc}\n{anchor}'.format(
+            anchor=add_new_rules_anchor,
+            doc=_RULE_CLASS_DOC_TEMPLATE.format(module_name=python_file_name_no_ext),
+        ),
+    )
 
     _write_file(
         path=module_doc_file_path,
@@ -277,18 +279,20 @@ def _create_documentation_skeleton(
         ],
     )
 
-    with open(os.path.join(rules_directory, 'index.rst'.format(error_code)), 'r') as f:
+    with open(os.path.join(rules_directory, 'index.rst'), 'r') as f:
         index_lines = f.readlines()
 
     add_new_rules_index_anchor = '.. ADD HERE NEW {} rules\n'.format(_RULE_TYPE_TEMPLATE[rule_type])
     add_new_rules_index_anchor_index = index_lines.index(str(add_new_rules_index_anchor))
-    index_lines[add_new_rules_index_anchor_index] = str('   {error_code}\n{anchor}'.format(
-        anchor=add_new_rules_index_anchor,
-        error_code=error_code,
-    ))
+    index_lines[add_new_rules_index_anchor_index] = str(
+        '   {error_code}\n{anchor}'.format(
+            anchor=add_new_rules_index_anchor,
+            error_code=error_code,
+        ),
+    )
 
     _write_file(
-        path=os.path.join(rules_directory, 'index.rst'.format(error_code)),
+        path=os.path.join(rules_directory, 'index.rst'),
         lines=index_lines,
         fail_if_file_exist=False,
     )

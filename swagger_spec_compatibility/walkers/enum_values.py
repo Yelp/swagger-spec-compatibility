@@ -43,12 +43,14 @@ def _different_enum_values_mapping(
         )
 
 
-class EnumValuesDiff(typing.NamedTuple(
-    'EnumValuesDiff', (
-        ('path', PathType),
-        ('mapping', EntityMapping[typing.Any]),
+class EnumValuesDiff(
+    typing.NamedTuple(
+        'EnumValuesDiff', (
+            ('path', PathType),
+            ('mapping', EntityMapping[typing.Any]),
+        ),
     ),
-)):
+):
     def fix_parameter_path(self, path, original_path):
         # type: (PathType, PathType) -> 'EnumValuesDiff'
         return EnumValuesDiff(

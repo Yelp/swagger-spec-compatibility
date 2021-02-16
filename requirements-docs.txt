@@ -1,4 +1,4 @@
 recommonmark
+Sphinx<2.0.0
 sphinx-autodoc-annotation
 sphinx-rtd-theme
-Sphinx<2.0.0
