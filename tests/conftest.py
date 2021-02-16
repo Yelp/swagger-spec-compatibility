@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import os
+import typing
 
 import mock
 import pytest
@@ -142,7 +143,7 @@ def mock_RuleRegistry():
 
 @pytest.fixture
 def mock_RuleRegistry_empty():
-    with mock.patch.object(RuleRegistry, '_REGISTRY', {}) as m:
+    with mock.patch.object(RuleRegistry, '_REGISTRY', {}) as m:  # type: typing.Dict[typing.Any, typing.Any]
         yield m
 
 
