@@ -121,7 +121,7 @@ class Walker(typing.Generic[T]):
         # Recursing down the tree and looking for `True` is logically
         # equivalent to looking for matching prefixes for the cache key, but
         # much faster.
-        cache_path = (id(left), id(right)) + path  # type: ignore
+        cache_path = (id(left), id(right)) + path
         cur = self._inner_walk_calls
         for path_component in cache_path:
             prev = cur

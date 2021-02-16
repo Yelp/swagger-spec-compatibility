@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.3.0
+  rev: v3.4.0
   hooks:
   - id: trailing-whitespace
   - id: end-of-file-fixer
@@ -25,21 +25,21 @@ repos:
   - id: flake8
     exclude: ^docs
 - repo: https://github.com/asottile/reorder_python_imports
-  rev: v2.3.5
+  rev: v2.4.0
   hooks:
   - id: reorder-python-imports
     args: [--add-import, from __future__ import absolute_import, --add-import, from __future__ import unicode_literals, --add-import, from __future__ import print_function]
     exclude: ^setup\.py$
 - repo: https://github.com/asottile/pyupgrade
-  rev: v2.7.3
+  rev: v2.10.0
   hooks:
   - id: pyupgrade
 - repo: https://github.com/asottile/add-trailing-comma
-  rev: v2.0.1
+  rev: v2.1.0
   hooks:
   - id: add-trailing-comma
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v1.5.0
+  rev: v2.0.0
   hooks:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
@@ -49,7 +49,7 @@ repos:
   - id: detect-secrets
     args: [--baseline, .secrets.baseline]
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v0.790
+  rev: v0.800
   hooks:
   - id: mypy
     language_version: python3.6
