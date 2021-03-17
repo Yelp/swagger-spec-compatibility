@@ -151,11 +151,8 @@ def test_validate_succeeds_with_changes_to_additional_properties_objects(minimal
         'AnotherObject': {
             'type': 'object',
             'properties': {
-                'property_1': {'type': 'string'}
+                'property_1': {'type': 'string'},
             },
-            'required': [
-                'property_1',
-            ]
         },
     }
     old_spec_dict = dict(
@@ -173,13 +170,12 @@ def test_validate_succeeds_with_changes_to_additional_properties_objects(minimal
         'required': True,
         'schema': {
             'properties': {
-                'property_1': {'$ref': '#/definitions/ObjectThatRefersToAnotherObject'}
+                'property_1': {'$ref': '#/definitions/ObjectThatRefersToAnotherObject'},
             },
         },
     }]
     new_spec_dict = deepcopy(old_spec_dict)
     new_spec_dict['definitions']['AnotherObject']['properties']['property_2'] = {'type': 'string'}
-    new_spec_dict['definitions']['AnotherObject']['required'].append('property_2')
 
     old_spec = load_spec_from_spec_dict(old_spec_dict)
     new_spec = load_spec_from_spec_dict(new_spec_dict)
