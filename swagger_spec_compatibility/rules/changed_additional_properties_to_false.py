@@ -34,4 +34,5 @@ class ChangedAdditionalPropertiesToFalse(BaseRule):
         for additional_properties_diff in AdditionalPropertiesDifferWalker(left_spec, right_spec).walk():
             if additional_properties_diff.diff_type != DiffType.VALUE:
                 continue
-            yield cls.validation_message(format_path(additional_properties_diff.path))
+            if additional_properties_diff.additionalProperties.new == False:
+                yield cls.validation_message(format_path(additional_properties_diff.path))
