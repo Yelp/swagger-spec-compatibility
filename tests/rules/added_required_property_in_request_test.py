@@ -292,3 +292,57 @@ def test_validate_fails_if_parameters_are_defined_in_different_locations_with_di
     ) == [
         AddedRequiredPropertyInRequest.validation_message(reference='#/paths//endpoint/get/parameters/0/schema'),
     ]
+
+
+def test_validate_fails_with_changes_to_required_properties_in_additional_properties_objects(minimal_spec_dict, simple_operation_dict):
+    object_definitions = {
+        'ObjectThatRefersToAnotherObject': {
+            'additionalProperties': {'$ref': '#/definitions/AnotherObject'},
+            'type': 'object',
+        },
+        'AnotherObject': {
+            'type': 'object',
+            'properties': {
+                'property_1': {'type': 'string'},
+            },
+            'required': [
+                'property_1',
+            ],
+        },
+    }
+    old_spec_dict = dict(
+        minimal_spec_dict,
+        paths={
+            '/endpoint': {
+                'get': simple_operation_dict,
+            },
+        },
+        definitions=object_definitions,
+    )
+    old_spec_dict['paths']['/endpoint']['get']['parameters'] = [{
+        'in': 'body',
+        'name': 'body',
+        'required': True,
+        'schema': {
+            'properties': {
+                'property_1': {'$ref': '#/definitions/ObjectThatRefersToAnotherObject'},
+            },
+        },
+    }]
+    new_spec_dict = deepcopy(old_spec_dict)
+    new_spec_dict['definitions']['AnotherObject']['properties']['property_2'] = {'type': 'string'}
+    new_spec_dict['definitions']['AnotherObject']['required'].append('property_2')
+
+    old_spec = load_spec_from_spec_dict(old_spec_dict)
+    new_spec = load_spec_from_spec_dict(new_spec_dict)
+
+    assert list(
+        AddedRequiredPropertyInRequest.validate(
+            left_spec=old_spec,
+            right_spec=new_spec,
+        ),
+    ) == [
+        AddedRequiredPropertyInRequest.validation_message(
+            reference='#/paths//endpoint/get/parameters/0/schema/properties/property_1/additionalProperties',
+        ),
+    ]
