@@ -3,6 +3,10 @@ Changelog
 
 1.2.3 (2020-10-26)
 ------------------
+* Fix an issue with REQ-E004 erroring with false positives (`PR #36 <https://github.com/Yelp/swagger-spec-compatibility/pull/36>`_)
+
+1.2.3 (2020-10-26)
+------------------
 * Improve performance when walking very large Swagger specs (`PR #34 <https://github.com/Yelp/swagger-spec-compatibility/pull/34>`_)
 
 1.2.2 (2020-10-20)

@@ -7,7 +7,7 @@ with open('README.rst') as readme:
 
 setup(
     name='swagger-spec-compatibility',
-    version='1.2.3',
+    version='1.2.4',
     author='Yelp, Inc.',
     author_email='opensource+swagger-spec-compatibility@yelp.com',
     description='Python library to check Swagger Spec backward compatibility',
