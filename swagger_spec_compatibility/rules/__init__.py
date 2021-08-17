@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import typing
+from multiprocessing import Pool
 
 from bravado_core.spec import Spec
 
@@ -18,6 +19,14 @@ class _ALL_RULES(object):
         return str('ALL_RULES')  # pragma: no cover  # This statement is present only to have a nicer REPL experience
 
 
+def validate_rules(
+    old_spec,  # type: Spec
+    new_spec,  # type: Spec
+    rule,
+):
+    return list(rule.validate(left_spec=old_spec, right_spec=new_spec))
+
+
 def compatibility_status(
     old_spec,  # type: Spec
     new_spec,  # type: Spec
@@ -28,9 +37,19 @@ def compatibility_status(
     if isinstance(rules, _ALL_RULES):
         rules = RuleRegistry.rules()
 
+    rules_list = list(rules)
+
+    args = [
+        (old_spec, new_spec, rule)
+        for rule in rules_list
+    ]
+
+    with Pool() as p:
+        results = p.starmap(validate_rules, args)
+
     rules_to_error_level_mapping = {
-        rule: list(rule.validate(left_spec=old_spec, right_spec=new_spec))
-        for rule in rules
+        rules_list[i]: results[i]
+        for i in range(len(rules_list))
     }
 
     return rules_to_error_level_mapping
