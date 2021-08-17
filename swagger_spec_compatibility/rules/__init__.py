@@ -22,9 +22,17 @@ class _ALL_RULES(object):
 def validate_rules(
     old_spec,  # type: Spec
     new_spec,  # type: Spec
-    rule,
+    rule,  # type: typing.Type[RuleProtocol]
 ):
+    # type: (...) -> typing.Iterable[ValidationMessage]
     return list(rule.validate(left_spec=old_spec, right_spec=new_spec))
+
+
+def multi_run_wrapper(
+    args,  # type: typing.Tuple[Spec, Spec, typing.Type[RuleProtocol]]
+):
+    # type: (...) -> typing.Iterable[ValidationMessage]
+    return validate_rules(*args)
 
 
 def compatibility_status(
@@ -44,8 +52,9 @@ def compatibility_status(
         for rule in rules_list
     ]
 
-    with Pool() as p:
-        results = p.starmap(validate_rules, args)
+    pool = Pool(processes=4)
+    results = pool.map(multi_run_wrapper, args)
+    pool.terminate()
 
     rules_to_error_level_mapping = {
         rules_list[i]: results[i]
