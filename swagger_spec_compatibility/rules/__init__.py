@@ -25,14 +25,14 @@ def validate_rules(
     rule,  # type: typing.Type[RuleProtocol]
 ):
     # type: (...) -> typing.Iterable[ValidationMessage]
-    return list(rule.validate(left_spec=old_spec, right_spec=new_spec))
+    return list(rule.validate(left_spec=old_spec, right_spec=new_spec))   # pragma: no cover
 
 
 def multi_run_wrapper(
     args,  # type: typing.Tuple[Spec, Spec, typing.Type[RuleProtocol]]
 ):
     # type: (...) -> typing.Iterable[ValidationMessage]
-    return validate_rules(*args)
+    return validate_rules(*args)   # pragma: no cover
 
 
 def compatibility_status(
@@ -47,13 +47,13 @@ def compatibility_status(
 
     rules_list = list(rules)
 
-    args = [
+    args_list = [
         (old_spec, new_spec, rule)
         for rule in rules_list
     ]
 
     pool = Pool(processes=4)
-    results = pool.map(multi_run_wrapper, args)
+    results = pool.map(multi_run_wrapper, args_list)
     pool.terminate()
 
     rules_to_error_level_mapping = {
