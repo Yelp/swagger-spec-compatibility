@@ -47,5 +47,4 @@ def test_compatibility_status_returns_no_issues_if_same_specs_defined_rules(
         new_spec=minimal_spec,
         rules=rules,
     )
-
     assert result == expected_result
