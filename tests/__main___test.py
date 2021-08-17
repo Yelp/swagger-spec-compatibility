@@ -3,12 +3,16 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import json
+import os
+
 import mock
 import pytest
 
 from swagger_spec_compatibility import cli
 from swagger_spec_compatibility.__main__ import main
 from swagger_spec_compatibility.cli.common import add_rules_arguments
+from swagger_spec_compatibility.cli.common import uri
 from tests.conftest import DummyRule
 from tests.conftest import MOCKED_RULE_REGISTRY
 
@@ -33,9 +37,12 @@ def test_main_explain_succeed(mock_RuleRegistry, capsys):
     assert 'Rule description' in out
 
 
-def test_main_run_succeed(mock_SwaggerClient, mock_RuleRegistry_empty, capsys):
+def test_main_run_succeed(tmpdir, minimal_spec_dict, mock_RuleRegistry_empty, capsys):
+    spec_path = str(os.path.join(tmpdir.strpath, 'swagger.json'))
+    with open(spec_path, 'w') as f:
+        json.dump(minimal_spec_dict, f)
     mock_RuleRegistry_empty['DummyRule'] = DummyRule
-    assert main(['run', __file__, __file__]) == 0
+    assert main(['run', uri(spec_path), uri(spec_path)]) == 0
     capsys.readouterr()
 
 

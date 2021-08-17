@@ -4,10 +4,13 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import json
+import os
+from collections import namedtuple
 
 import mock
 import pytest
 
+from swagger_spec_compatibility.cli.common import uri
 from swagger_spec_compatibility.cli.run import _Namespace
 from swagger_spec_compatibility.cli.run import _print_json_messages
 from swagger_spec_compatibility.cli.run import _print_raw_messages
@@ -17,9 +20,27 @@ from swagger_spec_compatibility.rules.common import Level
 from tests.conftest import DummyWarningRule
 
 
+# Need to use a namedtuple instead of mock because these
+# args are used in multiprocessing and thus need to be
+# serializable with pickle (mock is not)
+MockCLIArgs = namedtuple(
+    'MockCLIArgs', [
+        'spec_set',
+        'command',
+        'func',
+        'rules',
+        'blacklist_rules',
+        'strict',
+        'old_spec',
+        'new_spec',
+        'json_output',
+    ],
+)
+
+
 @pytest.fixture
 def cli_args():
-    return mock.Mock(
+    return MockCLIArgs(
         spec_set=_Namespace,
         command='execute',
         func=execute,
@@ -28,6 +49,7 @@ def cli_args():
         strict=False,
         old_spec='memory://',
         new_spec='memory://',
+        json_output=False,
     )
 
 
@@ -47,11 +69,16 @@ def error_message_library_rule():
 @mock.patch('swagger_spec_compatibility.cli.run._print_json_messages', autospec=True)
 def test_execute(
     mock__print_json_messages, mock__print_raw_messages, capsys,
-    cli_args, json_output, mock_SwaggerClient, mock_RuleRegistry, strict,
+    cli_args, json_output, mock_RuleRegistry, strict, tmpdir, minimal_spec_dict,
 ):
-    cli_args.strict = strict
-    cli_args.json_output = json_output
-    cli_args.rules = ('DummyWarningRule',)
+    spec_path = str(os.path.join(tmpdir.strpath, 'swagger.json'))
+    with open(spec_path, 'w') as f:
+        json.dump(minimal_spec_dict, f)
+    cli_args = cli_args._replace(strict=strict)
+    cli_args = cli_args._replace(json_output=json_output)
+    cli_args = cli_args._replace(rules=('DummyWarningRule',))
+    cli_args = cli_args._replace(old_spec=uri(spec_path))
+    cli_args = cli_args._replace(new_spec=uri(spec_path))
     assert execute(cli_args) == (1 if strict else 0)
     if json_output:
         mock__print_json_messages.assert_called_once_with({

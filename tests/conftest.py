@@ -145,9 +145,3 @@ def mock_RuleRegistry():
 def mock_RuleRegistry_empty():
     with mock.patch.object(RuleRegistry, '_REGISTRY', {}) as m:  # type: typing.Dict[typing.Any, typing.Any]
         yield m
-
-
-@pytest.fixture
-def mock_SwaggerClient():
-    with mock.patch('swagger_spec_compatibility.spec_utils.SwaggerClient', autospec=True) as m:
-        yield m
