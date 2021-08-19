@@ -148,7 +148,6 @@ def post_process_rules_cli_arguments(args):
                 )
             else:
                 setattr(args, field, default_value)
-
     _extract_rules('rules', cli_rules())
     _extract_rules('blacklist_rules', [])
 
