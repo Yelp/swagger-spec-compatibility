@@ -1,7 +1,7 @@
 -r requirements-docs.txt
-# The following requirements are pinned to resolve dependency resolution
-# infinite loops with pip. Remove in the future to see if it can work without
-# them and/or update this list with newer working versions when possible
+# alabaster, attrs, babel, cfgv, commonmark and pytest-xdist are pinned to resolve
+# dependency resolution infinite loops with pip. Remove in the future to see if it
+# can work without them and/or update this list with newer working versions when possible
 alabaster==0.7.12
 attrs==21.2.0
 babel==2.9.1
