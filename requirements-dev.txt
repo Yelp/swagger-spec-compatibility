@@ -1,5 +1,13 @@
 -r requirements-docs.txt
+# alabaster, attrs, babel, cfgv, commonmark and pytest-xdist are pinned to resolve
+# dependency resolution infinite loops with pip. Remove in the future to see if it
+# can work without them and/or update this list with newer working versions when possible
+alabaster==0.7.12
+attrs==21.2.0
+babel==2.9.1
+cfgv==2.0.1
 codecov
+commonmark==0.9.0
 coverage<5
 ipdb
 ipython<6  # iPython>=6 is Python 3.3+ only
@@ -9,4 +17,4 @@ pre-commit>=1.12.0
 pygments<2.6
 pytest
 pytest-cov
-pytest-xdist
+pytest-xdist==1.29.0
