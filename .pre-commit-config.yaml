@@ -19,7 +19,7 @@ repos:
   rev: v1.5.4
   hooks:
   - id: autopep8
-- repo: https://gitlab.com/pycqa/flake8.git
+- repo: https://github.com/pycqa/flake8.git
   rev: 5.0.4
   hooks:
   - id: flake8
