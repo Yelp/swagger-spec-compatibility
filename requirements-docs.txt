@@ -1,4 +1,11 @@
+# workaround for https://github.com/readthedocs/sphinx_rtd_theme/issues/1302
+docutils<0.18
+# Sphinx<2 support
+jinja2<3
+# jinja2<3 support
+MarkupSafe<2.1
 recommonmark
+# python 2.7 support
 Sphinx<2.0.0
 sphinx-autodoc-annotation
 sphinx-rtd-theme
